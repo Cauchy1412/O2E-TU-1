@@ -1,0 +1,22 @@
+{
+  "name": "paperDaily",
+  "version": "1.0.0",
+  "description": "| 简体中文 |",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotEnterprising/PaperDaily_AppFrontEnd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NotEnterprising/PaperDaily_AppFrontEnd.git"
+  },
+  "homepage": "https://github.com/NotEnterprising/PaperDaily_AppFrontEnd#readme"
+}
