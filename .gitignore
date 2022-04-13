@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+.hbuilderx/
+unpackage/
+node_modules/
+db.sqlite3
