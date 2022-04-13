@@ -1,0 +1,18 @@
+{
+  "user1": {
+    "tag_favor": [12, 0, 1, 20],
+    "micro_knowledge": []
+  },
+  "user2": {
+    "tag_favor": [15, 18, 0, 0],
+    "micro_knowledge": []
+  },
+  "user3": {
+    "tag_favor": [0, 0, 15, 12],
+    "micro_knowledge": []
+  },
+  "user4": {
+    "tag_favor": [17, 0, 2, 18],
+    "micro_knowledge": []
+  }
+}

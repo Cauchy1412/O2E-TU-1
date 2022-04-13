@@ -1,0 +1,14 @@
+django==2.2.3
+pylint
+pylint-django
+pyjwt
+djangorestframework
+django-extensions
+
+polls
+pillow
+
+celery
+celery-with-redis
+django-celery
+numpy
