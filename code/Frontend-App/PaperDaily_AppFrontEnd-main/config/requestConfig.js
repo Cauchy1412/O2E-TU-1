@@ -1,11 +1,6 @@
 import request from "./request";
-// let baseUrl=process.env.NODE_ENV === 'development'?"xxx":"xxx";
-// let socketBaseUrl=process.env.NODE_ENV === 'development'?"xxx":"xxx";
+import { baseUrl, socketBaseUrl } from '@/api/common';
 
-//  let baseUrl=process.env.NODE_ENV === 'development'?"http://114.115.168.211:8000/api/":"http://114.115.168.211:8000/api/";
-// let socketBaseUrl=process.env.NODE_ENV === 'development'?"ws://114.115.168.211:8000/api/":"ws://114.115.168.211:8000/api/";
- let baseUrl=process.env.NODE_ENV === 'development'?"http://127.0.0.1:8000/api/":"http://127.0.0.1:8000/api/";
-let socketBaseUrl=process.env.NODE_ENV === 'development'?"ws://127.0.0.1:8000/api/":"ws://127.0.0.1:8000/api/";
 //可以new多个request来支持多个域名请求
 let $http = new request({
 	//接口请求地址

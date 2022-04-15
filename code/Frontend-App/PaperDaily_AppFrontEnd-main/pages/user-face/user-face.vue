@@ -48,7 +48,7 @@
 <script>
 	import {uploudFile} from '@/api/user-face.js'
 	import {
-		picUrl
+		picUrl, baseUrl
 	} from "@/api/common.js";
 	let sysInfo = uni.getSystemInfoSync();
 	let SCREEN_WIDTH = sysInfo.screenWidth
@@ -286,7 +286,7 @@
 							// 成功获得地址的地方
 							var tempFacePath = res.tempFilePath;
 							let ans=uni.uploadFile({
-									url:'http://114.115.168.211:8000/api/user/icon',
+									url: baseUrl + 'user/icon',
 									header: {  
 									        'Content-Type': "multipart/form-data",
 									},
