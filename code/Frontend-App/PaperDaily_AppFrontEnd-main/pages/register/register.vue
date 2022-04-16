@@ -27,6 +27,14 @@
 						</view>
 					</view>
 				</tui-list-cell>
+				<!-- 选择专家/企业用户类型 -->
+				<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
+					<view class="tui-cell-input">
+						<tui-icon name="edit" color="#6d7a87" :size="40"></tui-icon>
+						<input :value="jobType" placeholder="选择用户类型" placeholder-class="tui-phcolor" type="text"
+						 disabled="true" @tap="changeOne('jobType')" />
+					</view>
+				</tui-list-cell>
 				<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 					<view class="tui-cell-input">
 						<tui-icon name="mail" color="#6d7a87" :size="40"></tui-icon>
@@ -65,6 +73,9 @@
 	import {
 		mapMutations
 	} from 'vuex';
+	
+	let job=['企业用户','专家用户'];
+	
 	export default {
 		computed: {
 			disabled: function() {
@@ -73,6 +84,14 @@
 					bool = false;
 				}
 				return bool;
+			},
+			jobValue: function() {
+				if (this.jobType === "专家用户") {
+					return 0;
+				} else if (this.jobType === "企业用户") {
+					return 2;
+				}
+				return -1;
 			}
 		},
 		data() {
@@ -80,12 +99,31 @@
 				username: '',
 				password: '',
 				code: '',
+				jobType: '',
 				email:'',
 				isSend: false,
-				btnSendText: '获取验证码' //倒计时格式：(60秒)
+				btnSendText: '获取验证码' ,//倒计时格式：(60秒)
 			};
 		},
 		methods: {
+			changeOne(val){		//沿用user-set-userinfo中的格式，可用于多个选择菜单的切换
+				let arr=[];
+				switch (val){
+					case 'jobType':
+					arr=job;
+						break;
+				}
+				uni.showActionSheet({
+					itemList: arr,
+					success: res => {
+						switch (val){
+							case 'jobType':
+							this.jobType=arr[res.tapIndex];
+								break;
+						}
+					},
+				});
+			},
 			//验证手机号码
 			isEmail(email) {
 				let mPattern=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
@@ -159,6 +197,7 @@
 					code: this.code,
 					password: this.password,
 					email:this.email,
+					user_type:this.jobValue,
 				})
 				if (!data || (data && !("id" in data))) {
 					let msg = data.error_msg

@@ -101,7 +101,7 @@
 				popupShow: false,
 				code: '',
 				isSend: false,
-				btnSendText: '获取验证码' //倒计时格式：(60秒)
+				btnSendText: '获取验证码', //倒计时格式：(60秒)
 			};
 		},
 		onLoad(options) {
@@ -111,6 +111,9 @@
 		},
 		methods: {
 			...mapMutations(['setUserInfo']),
+			getjob() {
+				console.log(this.jobVal)
+			},
 			// 验证手机号码
 			isPhone(phone) {
 				let mPattern = /^1[34578]\d{9}$/;

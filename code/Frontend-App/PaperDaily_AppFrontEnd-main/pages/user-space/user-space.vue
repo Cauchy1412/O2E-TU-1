@@ -1,4 +1,5 @@
 <template>
+	<!-- 此页面对应个人空间页 -->
 	<view>
 		<!-- 背景图 + 用户基本信息 -->
 		<user-space-head 
@@ -126,7 +127,7 @@
 				topicList:[],
 				titleList:[],
 				spacedata:[
-					{ name:"获赞", num:0 },
+					{ name:"获赞数", num:0 },
 					{ name:"关注", num:0 },
 					{ name:"粉丝", num:0 },
 				],
