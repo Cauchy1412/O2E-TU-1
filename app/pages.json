@@ -10,7 +10,7 @@
 					"titleNView": false//禁用原生导航栏
 				}
 			}
-		}, 
+		},
 		{
 			"path": "pages/login/login",
 			"style": {
@@ -364,7 +364,34 @@
 			"style": {
 				"navigationBarTitleText": "我的评论"
 			}
-        }
+        },
+		{
+			"path": "pages/ent/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": false
+				}
+			}
+		},
+		{
+		    "path" : "pages/demand/create",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+		    "path" : "pages/index-entry",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}
     ],
 	"permission": {
 	    "scope.userLocation": {
@@ -389,8 +416,15 @@
 		"selectedColor": "#FEE42B",
 		"borderStyle": "black",
 		"backgroundColor": "#FFFFFF",
-		"list": [{
+		"list": [
+			/*{
 				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "/static/tabbar/index.png",
+				"selectedIconPath": "/static/tabbar/indexed.png"
+			},*/
+			{
+				"pagePath": "pages/index-entry",
 				"text": "首页",
 				"iconPath": "/static/tabbar/index.png",
 				"selectedIconPath": "/static/tabbar/indexed.png"
