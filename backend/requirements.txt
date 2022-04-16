@@ -11,4 +11,3 @@ numpy
 bs4
 pdfkit
 django-cors-headers
-django-mysql
