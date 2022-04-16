@@ -298,7 +298,7 @@ def getUserInfo(user):
         'nickname': user.nick_name,
         'email': user.email,
         'institution': user.institution,
-        'usertype': user.user_type,
+        'user_type': user.user_type,
         'total_post': user.created_by.count(),
         'total_like': total_like,
         'total_fan': user.user_set.count(),

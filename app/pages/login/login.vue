@@ -209,7 +209,7 @@
 				this.setUserInfo(data.userInfo);
 				uni.switchTab({
 					url: '/pages/home/home'
-				});
+				});	
 				return;
 			}
 

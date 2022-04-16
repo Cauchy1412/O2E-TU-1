@@ -114,6 +114,7 @@ def confirm_create(request: HttpRequest):
     password = data.get("password")
     email = data.get("email")
     code = data.get("code")
+    user_type = data.get("user_type")
     if username is None or password is None or email is None:
         print("print : no useful agrs")
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad ID Information.")
@@ -134,7 +135,7 @@ def confirm_create(request: HttpRequest):
         return failed_api_response(ErrorCode.WRONG_CONFIRM_CODE,
                                    "Confirm code is wrong")
     new_user = User.objects.create_user(
-        username=username, password=password, email=email, is_confirmed=True)
+        username=username, password=password, email=email, is_confirmed=True, user_type=user_type)
     new_user.save()
     data = {"id": new_user.id}
     return success_api_response(data)
