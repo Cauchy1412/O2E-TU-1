@@ -167,7 +167,7 @@ export default {
 
     userpic:{
       type: String,
-      default: 'http://114.115.168.211:8000/api/images/default_user_icon.jpg'
+      default: 'http://127.0.0.1:8000/api/images/default_user_icon.jpg'
     }
   },
   data() {
@@ -256,7 +256,7 @@ export default {
         to: x.to_user ? x.to_user.username : 0,
         toId: x.to_user ? x.to_user.id : "",
         inputShow: false,
-        headImg: 'http://114.115.168.211:8000/api/'+x.userpic,
+        headImg: 'http://127.0.0.1:8000/api/'+x.userpic,
         parent_comment_id: x.parent_comment_id,
         reply: [],
       }));
@@ -281,7 +281,7 @@ export default {
       await getUserInfo().then(res => {
         userid = res.data.id
         username = res.data.username
-        userpic ='http://114.115.168.211:8000/api/'+res.data.userpic
+        userpic ='http://127.0.0.1:8000/api/'+res.data.userpic
       }).catch(error => {
         console.log(error)
       })
