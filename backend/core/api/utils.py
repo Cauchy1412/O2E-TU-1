@@ -29,6 +29,9 @@ def _api_response(success, data) -> dict:
     :param data: requested data
     :return: a dictionary object, like {'success': success, 'data': data}
     """
+    if success:
+        # for compatibility with mysterious frontend behaviours
+        return JsonResponse(data)
     return JsonResponse({'success': success, 'data': data})
 
 
