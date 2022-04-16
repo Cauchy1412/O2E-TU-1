@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'django_extensions',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -154,3 +156,5 @@ DATETIME_FMT = f'%Y-%m-%d %H:%M:%S'
 
 CACHE_DIR = os.path.join(BASE_DIR, 'cache')
 PDF_CACHE_DIR = os.path.join(CACHE_DIR, 'pdfs')
+
+CORS_ALLOW_ALL_ORIGINS = True
