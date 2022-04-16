@@ -41,14 +41,14 @@ def get_profile(request: HttpRequest):
         if user in interpretation.collectors.all():
             total_mycollect += 1
 
-    
+
     data = {
         'id': user.id,
         'username': user.username,
         'nickname': user.nick_name,
         'userpic': str(user.icon),
         'email': user.email,
-        'type' : user.user_type,
+        'user_type' : user.user_type,
         'institution': user.institution,
         'total_post': user.created_by.count(),
         'total_like': total_like,
@@ -61,4 +61,3 @@ def get_profile(request: HttpRequest):
         'is_followed': user.followers.filter(id=request.user.id).exists()
     }
     return success_api_response(data)
-
