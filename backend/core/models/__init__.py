@@ -18,3 +18,4 @@ from .topic import Topic
 from .image import Image
 from .updating import Updating
 from .keyword import Keyword
+from .demand import Demand
