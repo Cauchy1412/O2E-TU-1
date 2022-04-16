@@ -13,6 +13,9 @@ Vue.prototype.lib=lib
 Vue.prototype.$store = store
 App.mpType = 'app'
 
+import '@/common/utils.js';
+Vue.prototype.toast = Vue.prototype.$http.toast;
+
 
 const app = new Vue({
     ...App,

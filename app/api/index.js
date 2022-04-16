@@ -53,3 +53,22 @@ export const  getRecommendList =async () => {
 	}
 	return result
 }
+
+function getHeaders() {
+	const token = uni.getStorageSync('token');
+	if (!token)
+		return {};
+	return {
+		"Authorization":'Bearer ' + token
+	};
+}
+
+export const api = {
+	get(path) {
+		return axios.get(path, {}, getHeaders());
+	},
+	
+	post(path, data) {
+		return axios.post(path, data, getHeaders());
+	}
+};
