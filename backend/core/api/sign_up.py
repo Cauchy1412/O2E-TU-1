@@ -10,6 +10,7 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 from core.api.send_email import make_confirm_string, send_email, send_forget
 from core.models.auth_record import AuthRecord
 from core.models.user import User, ConfirmString
+from core import logger
 
 
 @response_wrapper
@@ -89,11 +90,10 @@ def create_user(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad ID Information.")
     # if User.objects.filter(email=email).exists():
     #     return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Email conflicted.")
-    
+
     code = make_confirm_string(email)
+    logger.info('Generated code: %s', code)
     send_email(email, str(code))
-
-
 
     return success_api_response({'msg': 'Check code is sent'})
 
@@ -128,7 +128,7 @@ def confirm_create(request: HttpRequest):
         print("print : no confirm string")
         return failed_api_response(ErrorCode.WRONG_CONFIRM_CODE,
                                    "Invalid confirm code")
-    
+
     confirm = ConfirmString.objects.get(email=email)
     if confirm.code != code:
         return failed_api_response(ErrorCode.WRONG_CONFIRM_CODE,
@@ -174,7 +174,7 @@ def confirm_forget_password(request: HttpRequest):
     data: dict = parse_data(request)
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
- 
+
     code = data.get('code')
     email = data.get("email")
     password = data.get('password')
@@ -189,7 +189,7 @@ def confirm_forget_password(request: HttpRequest):
                                    "Confirm code is wrong")
     if User.objects.filter(email=email).exists() is False:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, 'Email is not exist')
-    
+
     user = User.objects.get(email=email)
     user.set_password(password)
     user.save()
