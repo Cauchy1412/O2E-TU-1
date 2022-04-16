@@ -31,7 +31,7 @@ def _api_response(success, data) -> dict:
     """
     if success:
         # for compatibility with mysterious frontend behaviours
-        return JsonResponse(data)
+        return JsonResponse(data, safe=False)
     return JsonResponse({'success': success, 'data': data})
 
 
