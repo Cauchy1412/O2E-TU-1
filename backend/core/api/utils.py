@@ -19,7 +19,7 @@ class ErrorCode(Enum):
     WRONG_CONFIRM_CODE = 402
     ITEM_ALREADY_EXISTS = 409
     SERVER_ERROR = 500
-    
+
 
 
 def _api_response(success, data) -> dict:
@@ -29,7 +29,7 @@ def _api_response(success, data) -> dict:
     :param data: requested data
     :return: a dictionary object, like {'success': success, 'data': data}
     """
-    return {'success': success, 'data': data}
+    return JsonResponse({'success': success, 'data': data})
 
 
 def failed_api_response(code, error_msg=None) -> dict:
