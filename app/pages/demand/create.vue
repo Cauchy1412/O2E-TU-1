@@ -1,3 +1,4 @@
+<!-- This file is based on pages/add-input -->
 <template>
 	<view class="container">
 		<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">

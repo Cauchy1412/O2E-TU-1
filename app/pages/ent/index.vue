@@ -1,3 +1,4 @@
+<!-- This file is based on pages/index/index -->
 <template>
 	<view class="index-icontainer">
 		<myNavBar @signIn="signIn"></myNavBar>
