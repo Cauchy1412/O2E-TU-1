@@ -1,0 +1,13 @@
+django~=2.2.0
+pylint
+pylint-django
+pyjwt
+djangorestframework
+django-extensions
+
+pillow
+
+numpy
+bs4
+pdfkit
+django-cors-headers
