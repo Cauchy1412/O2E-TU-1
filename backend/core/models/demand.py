@@ -8,13 +8,15 @@ class Demand(models.Model):
     """comment
 
     Fields:
-        - interpretation: a foreignkey to interpretation
         - user: a foreignkey to User
         - created_at = created time
-        - text: comment content
+        - description: company's descriotion of the demand
+        - title: title of the demand
+        - meta: other informatino about the demand
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sended_comments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sended_demands")
     created_at = models.DateTimeField(auto_now_add=True)
-    content = models.CharField(max_length=500)
-    others = JSONField()
+    description = models.CharField(max_length=500)
+    title = models.CharField(max_length=100)
+    meta = models.CharField(max_length=200)
 
