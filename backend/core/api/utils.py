@@ -29,10 +29,11 @@ def _api_response(success, data) -> dict:
     :param data: requested data
     :return: a dictionary object, like {'success': success, 'data': data}
     """
-    if success:
-        # for compatibility with mysterious frontend behaviours
-        return JsonResponse(data, safe=False)
-    return JsonResponse({'success': success, 'data': data})
+    # To work without response_wrapper
+    resp = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii':False})
+    if not success:
+        resp.status_code = data.get('code', 400)
+    return resp
 
 
 def failed_api_response(code, error_msg=None) -> dict:
