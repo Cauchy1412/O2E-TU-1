@@ -17,26 +17,26 @@
 			<swiper class="swiper-box" :style="{height:swiperheight+'px'}"
 			 :current="tabIndex" @change="tabChange">
 				<swiper-item v-for="(items,index) in newslist" :key="index">
-					<scroll-view 
+					<scroll-view
 					@scroll="handleScroll"
 					 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
 					 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh" >
 						<!-- 图文列表 -->
 						<template v-if="items.list.length>0 && tabIndex == 0">
 							<block v-for="(item,index1) in items.list" :key="index1">
-								<index-list 
+								<index-list
 								@likeOrTread="likeOrTread" @opendDetail="opendDetail" @share="share" :item="item" :userInfo="userInfo"
 								 :index="index1"></index-list>
-							</block> 
+							</block>
 							<load-more :loadtext="items.loadtext"></load-more>
 						</template>
-						
+
 						<!-- <template v-if="items.list.length>0&& tabIndex == 1">
 							<block v-for="(item,index1) in items.list" :key="index1">
-								<index-list 
+								<index-list
 								@likeOrTread="likeOrTread" @opendDetail="opendDetail" @share="share" :item="item" :userInfo="userInfo"
 								 :index="index1"></index-list>
-							</block> 
+							</block>
 							<load-more :loadtext="items.loadtext"></load-more>
 						</template> -->
 						<template v-if="items.list.length>0 && tabIndex == 1">
@@ -46,7 +46,7 @@
 								</block>
 							</view>
 						</template>
-						
+
 						<template v-if="shoNo">
 							<!-- 无内容默认 -->
 							<no-thing></no-thing>
@@ -117,6 +117,7 @@
 		mapMutations
 	} from "vuex"
 	export default {
+		name: 'NaiveIndex',
 		components: {
 			indexList,
 			swiperTabHead,
@@ -228,7 +229,7 @@
 				})
 			}
 		},
-		
+
 		methods: {
 			async requestData(GoPage, Gotype) {
 				// let currentPage = GoPage || this.tabBars[this.tabIndex].page;
@@ -245,7 +246,7 @@
 					console.log(e)
 					return
 				}
-				
+
 				if (items && items.length === 0) {
 					this.tabBars[this.tabIndex].page = page
 					this.newslist[this.tabIndex].loadtext = "没有更多数据了";
@@ -263,6 +264,7 @@
 				}else{
 					this.newslist[this.tabIndex].loadtext = "上拉加载更多";
 				}
+                console.log('upd', this.newslist)
 			},
 			publish() {
 				// 打开发布页面
@@ -364,370 +366,5 @@
 </script>
 
 <style>
-	/* 隐藏scroll-view滚动条*/
-	::-webkit-scrollbar {
-		width: 0;
-		height: 0;
-		color: transparent;
-	}
-
-	.search-wrp {
-		display: flex;
-		position: relative;
-		background: #FFFFFF;
-		justify-content: space-between;
-		height: 80upx;
-		align-items: center;
-		padding: 8upx 16upx 0 16upx;
-	}
-
-	.index-icontainer {
-		background-color: #F9F9F9;
-	}
-
-	.font-x {
-		font-size: 44upx;
-	}
-
-	.uni-input {
-		background: #F9F9F9;
-		text-align: center;
-		margin-right: 20upx;
-		margin-left: 20upx;
-	}
-
-	.serach {
-		position: absolute;
-		top: 10upx;
-		left: 280upx;
-		font-size: 40upx;
-	}
-
-	/* 隐藏scroll-view滚动条*/
-	::-webkit-scrollbar {
-		width: 0;
-		height: 0;
-		color: transparent;
-	}
-
-	/*header*/
-	.tui-header {
-		width: 100%;
-		padding-top: 34upx;
-		/* box-shadow: 0 15rpx 10rpx -15rpx #f2f2f2; */
-		box-sizing: border-box;
-		background-color: #fff;
-		position: fixed;
-		z-index: 1000;
-	}
-
-	.tui-header-top,
-	.tui-header-bottom {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-size: 26rpx;
-		color: #333;
-	}
-
-	.tui-top-item {
-		height: 26rpx;
-		line-height: 26rpx;
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.tui-topitem-active {
-		position: relative;
-		font-weight: bold;
-	}
-
-	.tui-topitem-active::after {
-		content: '';
-		position: absolute;
-		width: 44rpx;
-		height: 6rpx;
-		background: #5677fc;
-		border-radius: 6rpx;
-		bottom: -10rpx;
-		left: 50%;
-		-webkit-transform: translateX(-50%);
-		transform: translateX(-50%);
-	}
-
-	.tui-price-arrow {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		height: 20rpx;
-	}
-
-	.tui-bottom-item .tui-icon-class,
-	.tui-screen .tui-icon-class {
-		margin-left: 6rpx;
-	}
-
-	.tui-icon-box {
-		line-height: 12px !important;
-		padding: 0 !important;
-		display: block !important;
-		position: relative;
-	}
-
-	.tui-arrow-up {
-		top: 5px;
-	}
-
-	.tui-arrow-down {
-		top: -3px;
-	}
-
-	.tui-header-bottom {
-		margin-top: 56rpx;
-		height: 108rpx;
-		padding: 0 30rpx;
-		box-sizing: border-box;
-		font-size: 24rpx;
-		align-items: flex-start;
-		overflow: hidden;
-	}
-
-	.tui-bottom-text {
-		line-height: 24rpx;
-	}
-
-	.tui-bottom-item {
-		flex: 1;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 18rpx 12rpx;
-		border-radius: 40rpx;
-		box-sizing: border-box;
-		background: #f2f2f2;
-		margin-right: 20rpx;
-		white-space: nowrap;
-	}
-
-	.tui-bottom-item:last-child {
-		margin-right: 0;
-	}
-
-	.tui-btmItem-active {
-		padding-bottom: 60rpx;
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-
-	.tui-bold {
-		font-weight: bold;
-	}
-
-	.tui-active {
-		color: #5677fc;
-	}
-
-	.tui-ml {
-		margin-left: 6rpx;
-	}
-
-	.tui-seizeaseat-20 {
-		height: 20rpx;
-	}
-
-	.tui-seizeaseat-30 {
-		height: 30rpx;
-	}
-
-	.tui-middle {
-		vertical-align: middle;
-	}
-
-	.tui-drop-item .tui-icon-class {
-		vertical-align: middle;
-	}
-
-	/*header*/
-
-	/*header 下拉选择*/
-
-	.tui-scroll-box {
-		width: 100%;
-		height: 480rpx;
-		box-sizing: border-box;
-		position: relative;
-		z-index: 99;
-		color: #fff;
-		font-size: 30rpx;
-		word-break: break-all;
-	}
-
-	.tui-drop-item {
-		color: #333;
-		height: 80rpx;
-		font-size: 28rpx;
-		padding: 20rpx 40rpx 20rpx 40rpx;
-		box-sizing: border-box;
-		display: inline-block;
-		width: 50%;
-	}
-
-	.tui-drop-btnbox {
-		width: 100%;
-		height: 100rpx;
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		box-sizing: border-box;
-		display: flex;
-	}
-
-	.tui-drop-btn {
-		width: 50% !important;
-		border-radius: 0 !important;
-		font-size: 32rpx !important;
-		text-align: center;
-		height: 100rpx;
-		line-height: 100rpx;
-		border: 0;
-	}
-
-
-	/*header 下拉选择*/
-
-	.top-dropdown {
-		margin-top: 360rpx;
-		padding: 0 40rpx;
-		box-sizing: border-box;
-	}
-
-	.tui-share-box {
-		padding: 0 50rpx;
-		box-sizing: border-box;
-	}
-
-	.tui-drop-input-box {
-		padding: 50rpx;
-		box-sizing: border-box;
-	}
-
-	.tui-animation {
-		display: inline-block;
-		transform: rotate(0deg);
-		transition: all 0.2s;
-	}
-
-	.tui-animation-show {
-		transform: rotate(180deg);
-	}
-
-	.tui-selected-list {
-		background-color: #fff;
-		border-radius: 20rpx;
-		overflow: hidden;
-		transform: translateZ(0);
-	}
-
-	.tui-dropdown-scroll {
-		height: 400rpx;
-	}
-
-	.tui-cell-class {
-		display: flex;
-		align-items: center;
-		padding: 26rpx 30rpx !important;
-	}
-
-	.tui-ml-20 {
-		margin-left: 20rpx;
-	}
-
-	.tui-share {
-		background: #e8e8e8;
-		position: relative;
-		padding-bottom: env(safe-area-inset-bottom);
-	}
-
-	.tui-share-title {
-		font-size: 26rpx;
-		color: #7E7E7E;
-		text-align: center;
-		line-height: 26rpx;
-		padding: 20rpx 0 50rpx 0;
-	}
-
-	.tui-share-top,
-	.tui-share-bottom {
-		min-width: 101%;
-		padding: 0 20rpx 0 30rpx;
-		white-space: nowrap;
-	}
-
-	.tui-mt {
-		margin-top: 30rpx;
-		padding-bottom: 150rpx;
-	}
-
-	.tui-share-item {
-		width: 126rpx;
-		display: inline-block;
-		margin-right: 24rpx;
-		text-align: center;
-	}
-
-	.tui-item-last {
-		margin: 0;
-	}
-
-	.tui-empty {
-		display: inline-block;
-		width: 30rpx;
-		visibility: hidden;
-	}
-
-	.tui-share-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #fafafa;
-		height: 126rpx;
-		width: 126rpx;
-		border-radius: 32rpx;
-	}
-
-	.tui-share-text {
-		font-size: 24rpx;
-		color: #7E7E7E;
-		line-height: 24rpx;
-		padding: 20rpx 0;
-		white-space: nowrap;
-	}
-
-	.tui-btn-cancle {
-		width: 100%;
-		height: 100rpx;
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		background: #f6f6f6;
-		font-size: 36rpx;
-		color: #3e3e3e;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding-bottom: env(safe-area-inset-bottom);
-	}
-
-	.tui-hover {
-		background: rgba(0, 0, 0, 0.2)
-	}
-	
-	.topic-list{
-		box-sizing: border-box;
-		background-color: #F9F9F9;
-		padding: 5upx 20upx 0 30upx;
-	}
+@import '/styles/index.css'
 </style>
