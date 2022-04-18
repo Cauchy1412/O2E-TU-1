@@ -53,9 +53,10 @@
 		},
 		methods: {
 			back() {
-				uni.reLaunch({
-					url: '/'
-				});
+				// uni.reLaunch({
+				// 	url: '/'
+				// });
+				uni.navigateBack()
 			}
 		}
 	}
