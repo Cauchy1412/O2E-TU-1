@@ -234,7 +234,7 @@
 		border-radius: 10upx;
 		background-color: #f1f1f1;
 		padding: 0 24upx;
-		box-sizing: border-box;
+		box-sizing:border-box;
 		color: #bfbfbf;
 		display: flex;
 		align-items: center;

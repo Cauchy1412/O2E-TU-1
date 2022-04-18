@@ -134,7 +134,7 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         "usingComponents" : true,
-        "appid" : "wx6a6464ba2c0725ae",
+        "appid" : "wxfc8261b827effc8f",
         "setting" : {
             "urlCheck" : true,
             "es6" : true

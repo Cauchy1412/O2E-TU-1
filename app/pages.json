@@ -392,6 +392,15 @@
 				}
 			}
 		}
+        ,{
+            "path" : "pages/needs/needs",
+            "style": {
+            	"app-plus": {
+            		"titleNView": false
+            	}
+            }
+            
+        }
     ],
 	"permission": {
 	    "scope.userLocation": {
