@@ -10,7 +10,28 @@
 				<view class="icon iconfont icon-bianji1"></view>
 			</view>
 		</view>
-		<view class="user-set-userinfo-list u-f-ac u-f-jsb">
+		<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="!userInfo.user_type">
+			<view>机构</view>
+			<view class="u-f-ac">
+				<input type="text" :placeholder="''+userInfo.institution" v-model="institution" @input="inputInstitution"/>
+				<view class="icon iconfont icon-bianji1"></view>
+			</view>
+		</view>
+		<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
+			<view>企业名</view>
+			<view class="u-f-ac">
+				<input type="text" v-model="institution" @input="inputInstitution"/>
+				<view class="icon iconfont icon-bianji1"></view>
+			</view>
+		</view>
+		<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
+			<view>地址</view>
+			<view class="u-f-ac" @tap="showMulLinkageThreePicker">
+				<view>{{pickerText}}</view>
+				<view class="icon iconfont icon-bianji1"></view>
+			</view>
+		</view>
+		<!--<view class="user-set-userinfo-list u-f-ac u-f-jsb">
 			<view>昵称</view>
 			<view class="u-f-ac">
 				<input type="text" v-model="username" />
@@ -47,7 +68,7 @@
 				<view>{{pickerText}}</view>
 				<view class="icon iconfont icon-bianji1"></view>
 			</view>
-		</view>
+		</view>-->
 		
 		<button class="user-set-btn" 
 		type="primary" @tap="submit">完成</button>
@@ -59,9 +80,11 @@
 </template>
 
 <script>
+	/*
 	let sex=['男','女'];
 	let qg=['秘密','未婚','已婚'];
 	let job=['秘密','IT','老师',"学生"];
+	 */
 	import {mapState, mapMutations} from 'vuex'
 	import mpvueCityPicker from "../../components/mpvue-citypicker/mpvueCityPicker.vue";
 	import {uploudFile} from '@/api/add-input.js'
@@ -80,6 +103,7 @@
 				sex:"",
 				job:"",
 				birthday:"",
+				institution:"",
 				cityPickerValueDefault: [0, 0, 1],
 				pickerText: '',
 				authorFile: undefined,
@@ -126,6 +150,10 @@
 		},
 		methods: {
 			...mapMutations(['setUserInfo']),
+			// 输入机构
+			inputInstitution(e) {
+				this.institution = e.detail.value;
+			},
 			// 三级联动
 			showMulLinkageThreePicker() {
 				this.$refs.mpvueCityPicker.show()
@@ -190,6 +218,16 @@
 				});
 			},
 			async submit(){
+			    /*uni.navigateBack({
+					delta: 1
+				}) */
+				this.userInfo.institution = this.institution
+				let res = await updateUserInfo(this.userInfo)
+				if (!res.result) {
+					this.$http.toast("修改失败");
+					return
+				}
+				this.$http.toast("修改成功");
 				uni.navigateBack({
 					delta: 1
 				})

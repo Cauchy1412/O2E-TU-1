@@ -17,7 +17,7 @@
 						<input :adjust-position="false" :value="mobile" placeholder="请输入用户名" placeholder-class="tui-phcolor" type="text"
 						 maxlength="36" @input="inputMobile" />
 						<view class="tui-icon-close" v-show="mobile" @tap="clearInput(1)">
-							<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
+							<tui-icon name="close-fill" :size="32" color="#bfbfbf" @tap="clearInput(1)"></tui-icon>
 						</view>
 					</view>
 				</tui-list-cell>
@@ -27,7 +27,7 @@
 						<input :adjust-position="false" :value="password" placeholder="请输入密码" :password="true" placeholder-class="tui-phcolor"
 						 type="text" maxlength="36" @input="inputPwd" />
 						<view class="tui-icon-close" v-show="password" @tap="clearInput(2)">
-							<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
+							<tui-icon name="close-fill" :size="32" color="#bfbfbf" @tap="clearInput(2)"></tui-icon>
 						</view>
 					</view>
 				</tui-list-cell>

@@ -171,7 +171,7 @@ def change_user_info(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,'Your required user to change is not found!')
     if User.objects.filter(username=username).exists():
         return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Username conflicted.")
-    if User.objects.filter(email=mail).exists():
+    if User.objects.filter(email=email).exists():
         return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Email conflicted.")
     user =  User.objects.filter(pk=pid).first()
     user.username = username

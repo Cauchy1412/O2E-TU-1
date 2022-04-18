@@ -218,15 +218,6 @@
 				return this.newslist.map(item=>{
 					return Math.min(item.list.length - this.end, this.remain);
 				})
-			},
-			newsVlist(){
-				return this.newslist.map((item,index)=>{
-					const start = this.start - this.preCount[index];
-					const end = this.end + this.nextCount[index];
-					console.log(start, end)
-					item.list =  item.list.slice(start, end);
-					return item
-				})
 			}
 		},
 
