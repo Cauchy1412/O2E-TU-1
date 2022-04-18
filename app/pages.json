@@ -1,6 +1,14 @@
 {
 	"pages": [
 		{
+		    "path" : "pages/index-entry",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "首页",
@@ -383,15 +391,16 @@
 					"titleNView": false
 				}
 			}
-		},
-		{
-		    "path" : "pages/index-entry",
-			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
-			}
 		}
+        ,{
+            "path" : "pages/needs/needs",
+            "style": {
+            	"app-plus": {
+            		"titleNView": false
+            	}
+            }
+            
+        }
     ],
 	"permission": {
 	    "scope.userLocation": {
