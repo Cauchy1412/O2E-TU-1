@@ -44,6 +44,7 @@ def create_demand(request: HttpRequest):
 
 def demand2json(demand: Demand) -> dict:
     data = {
+        'id' : demand.id,
         'user': {
             'id': demand.user.id,
             'username': demand.user.username,
