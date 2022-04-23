@@ -12,7 +12,7 @@ from core.api.send_email import make_confirm_string, send_email, send_forget
 from core.models.auth_record import AuthRecord
 from core.models.user import User, ConfirmString
 from core import logger
-from core.models import verify_user, User, Demand
+from core.models import verify_user, User, Demand,resolution
 
 import json
 
@@ -37,7 +37,7 @@ def recommend(request: HttpRequest):
     for expert_id in expert_ids:
         user = User.objects.get(id=expert_id)
         verify_user = user.verified_info.first()
-        resolution = Resolution(demand=demand, user=user, meta=verify_user.meta)
+        resolution = resolution(demand=demand, user=user, meta=verify_user.meta)
         resolution.save()
         resolutions.append(resolution)
         data = {
