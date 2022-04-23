@@ -10,7 +10,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
-from core.models import User, Chatroom, Message
+from core.models import User, Chatroom, Message, Demand
 
 
 """
@@ -41,6 +41,7 @@ def create_chat(request: HttpRequest):
     tu_id = data.get('to_user_id')
     fr_id = data.get('from_user_id')
     chat_name = data.get('chatroom_name')
+    demand_id = data.get('demand_id')
 
     if len(chat_name) > 30:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Chat name size too large.")
@@ -63,6 +64,8 @@ def create_chat(request: HttpRequest):
         return success_api_response({'id':fr.chatroom_list.filter(to_user_id = tu_id).get().id})
 
     chatroom = Chatroom(name=chat_name, owner=fr, to_user=tu)
+    if (demand_id):
+        chatroom.demand = Demand.objects.get(id = demand_id)
     chatroom.save()
     ret_data = {'id': chatroom.id}
     return success_api_response(ret_data)

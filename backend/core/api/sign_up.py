@@ -3,6 +3,7 @@
 
 from django.http import HttpRequest
 from django.views.decorators.http import require_POST, require_http_methods
+from rsa import verify
 
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
@@ -10,8 +11,10 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 from core.api.send_email import make_confirm_string, send_email, send_forget
 from core.models.auth_record import AuthRecord
 from core.models.user import User, ConfirmString
+from core.models.verify_user import VerifyUser
 from core import logger
 
+import json
 
 @response_wrapper
 @jwt_auth()
@@ -115,6 +118,8 @@ def confirm_create(request: HttpRequest):
     email = data.get("email")
     code = data.get("code")
     user_type = data.get("user_type")
+    meta =json.dumps(data.get('meta'))
+    verified_type = data.get('verified_type')
     if username is None or password is None or email is None:
         print("print : no useful agrs")
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad ID Information.")
@@ -137,6 +142,8 @@ def confirm_create(request: HttpRequest):
     new_user = User.objects.create_user(
         username=username, password=password, email=email, is_confirmed=True, user_type=user_type)
     new_user.save()
+    verify_user = VerifyUser(user=new_user, meta=meta, verified_type=verified_type)
+    verify_user.save()
     data = {"id": new_user.id}
     return success_api_response(data)
 

@@ -11,7 +11,7 @@ from core.api.profile import get_profile
 from core.api.search import search_user_list,search_user_full_list
 from core.api.sign_up import change_password, change_email, CREATE_USER_API, FORGET_PASSWORD_API
 from core.api.comment import create_comment, delete_comment, get_comment, get_comment_list
-from core.api.demand import create_demand,  get_demand_list
+from core.api.demand import create_demand,  get_demand_list, get_demand
 
 from core.api.user import follow, unfollow, list_favorite_recent, change_organization
 
@@ -26,7 +26,7 @@ from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
     transmitInterpretation, recommendInterpretation, downloadInterpretation, randomWalkInterpretation, \
       getAllInterpretation, queryVisitorNumber, queryKeywordTops, queryTagRatio
 
-from core.api.user import get_all_user_info,delete_user,change_user_info
+from core.api.user import get_all_user_info,delete_user,change_user_info,get_user_info
 
 urlpatterns = [
 
@@ -42,10 +42,12 @@ urlpatterns = [
     path('user/all',get_all_user_info),
     path('user/delete',delete_user),
     path('user/changeinfo',change_user_info),
+    path('user/get-user-info',get_user_info),
     
     # demand apis
     path('demand/create', create_demand),
     path('demand', get_demand_list),
+    path('demand/<int:id>', get_demand),
 
     # comment apis
     path('comment/create', create_comment),
