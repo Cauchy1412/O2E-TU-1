@@ -26,7 +26,7 @@ from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
     transmitInterpretation, recommendInterpretation, downloadInterpretation, randomWalkInterpretation, \
       getAllInterpretation, queryVisitorNumber, queryKeywordTops, queryTagRatio
 
-from core.api.user import get_all_user_info,delete_user,change_user_info
+from core.api.user import get_all_user_info,delete_user,change_user_info,get_user_info
 
 urlpatterns = [
 
@@ -42,6 +42,7 @@ urlpatterns = [
     path('user/all',get_all_user_info),
     path('user/delete',delete_user),
     path('user/changeinfo',change_user_info),
+    path('user/get-user-info',get_user_info),
     
     # demand apis
     path('demand/create', create_demand),

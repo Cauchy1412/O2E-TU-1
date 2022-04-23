@@ -291,6 +291,7 @@ def getUserInfo(user):
     total_like = 0
     for post in all_post:
         total_like += post.likers.count()
+    verified_user = user.verified_info.first()
     userInfo={
         'id': user.id,
         'username': user.username,
@@ -304,6 +305,8 @@ def getUserInfo(user):
         'total_fan': user.user_set.count(),
         'is_following': user.user_set.filter(id=user.id).exists(),
         'is_followed': user.followers.filter(id=user.id).exists(),
+        'verified_type' : verified_user.verified_type,
+        'meta': json.loads(verified_user.meta)
     }
     return userInfo
 

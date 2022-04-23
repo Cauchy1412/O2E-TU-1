@@ -182,3 +182,9 @@ def change_user_info(request: HttpRequest):
     user.user_type = usertype
     user.save()
     return success_api_response({"result": "Ok, the user info has been changed."})
+
+def get_user_info(request: HttpRequest):
+    data: dict = parse_data(request)
+    user_id = data.get('id')
+    user = User.objects.get(id = user_id)
+    return success_api_response(getUserInfo(user))
