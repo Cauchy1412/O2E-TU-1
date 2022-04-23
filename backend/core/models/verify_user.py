@@ -18,7 +18,7 @@ class VerifyUser(models.Model):
         - title: title of the demand
         - meta: other informatino about the demand
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sended_demands")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="verified_info")
     meta = models.CharField(max_length=1000)
     verified_type = models.IntegerField(choices=VERIFY_TYPE_CHOICES,default= 0)
 
