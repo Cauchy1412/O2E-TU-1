@@ -41,7 +41,7 @@
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
-							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
+							<tui-icon name="listview" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="expertData.professor" placeholder="职称" placeholder-class="tui-phcolor" type="text" maxlength="15" @input="inputProfessor" />
 							<view class="tui-icon-close" v-show="expertData.professor" @tap="clearInput(1, 'professor')">
 								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
@@ -50,7 +50,7 @@
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
-							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
+							<tui-icon name="histogram" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="domain_str" placeholder="研究领域,多个研究领域用中文逗号分隔" placeholder-class="tui-phcolor" type="text" maxlength="36" @input="inputField" />
 							<view class="tui-icon-close" v-show="domain_str" @tap="clearInput(0, 'filed_str')">
 								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
@@ -62,7 +62,7 @@
 				<view class="tui-view-input-enterprise" v-if="(tabIndex===1)">
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
-							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
+							<tui-icon name="home" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="businessData.name" placeholder="企业名" placeholder-class="tui-phcolor" type="text" maxlength="36" @input="inputBusinessName" />
 							<view class="tui-icon-close" v-show="businessData.name" @tap="clearInput(2, 'name')">
 								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
@@ -71,7 +71,7 @@
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
-							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
+							<tui-icon name="home" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="businessData.business_type" placeholder="公司类型" placeholder-class="tui-phcolor" type="text" maxlength="15" @input="inputBusinessType" />
 							<view class="tui-icon-close" v-show="businessData.business_type" @tap="clearInput(2, 'business_type')">
 								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
@@ -80,7 +80,7 @@
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
-							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
+							<tui-icon name="location" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="businessData.place" placeholder="注册地" placeholder-class="tui-phcolor" type="text" maxlength="20" @input="inputRegisPlace" />
 							<view class="tui-icon-close" v-show="businessData.place" @tap="clearInput(2, 'place')">
 								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
@@ -89,20 +89,20 @@
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
-							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
+							<tui-icon name="house" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="businessData.regisnumber" placeholder="注册号" placeholder-class="tui-phcolor" type="text" maxlength="36" @input="inputRegisNumber" />
-						</view>
-						<view class="tui-icon-close" v-show="businessData.regisnumber" @tap="clearInput(2, 'regisnumber')">
-							<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
+							<view class="tui-icon-close" v-show="businessData.regisnumber" @tap="clearInput(2, 'regisnumber')">
+								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
+							</view>
 						</view>
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
 							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
 							<input :value="businessData.legalperson" placeholder="法定代表人" placeholder-class="tui-phcolor" type="text" maxlength="15" @input="inputLegalPerson" />
-						</view>
-						<view class="tui-icon-close" v-show="businessData.legalperson" @tap="clearInput(2, 'legalperson')">
-							<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
+							<view class="tui-icon-close" v-show="businessData.legalperson" @tap="clearInput(2, 'legalperson')">
+								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
+							</view>
 						</view>
 					</tui-list-cell>
 				</view>
@@ -316,6 +316,8 @@
 				console.log("begin");
 				if (this.tabIndex == 0) {
 					this.expertData.domains = this.domain_str.split('，')
+					
+					console.log("domain: " + this.expertData.domains)
 				}
 				let formData = (this.tabIndex == 0)?this.expertData:this.businessData;
 				let data = await userRegister({
@@ -324,7 +326,8 @@
 					password: this.password,
 					email: this.email,
 					user_type: this.jobValue,
-					meta: formData
+					verified_type: 0,		//默认为0，未认证状态
+					meta: formData,
 				})
 				if (!data || (data && !("id" in data))) {
 					let msg = data.error_msg
