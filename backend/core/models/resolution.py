@@ -23,7 +23,7 @@ class Resolution(models.Model):
         - price: price of the resolution
         - created_at = created time
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sended_demands")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_demands")
     demand = models.ForeignKey(Demand, on_delete=models.CASCADE, related_name="resolutions")
     time = models.CharField(max_length=100)
     state = models.IntegerField(choices=RESOLUTION_STATES, default = 0)
