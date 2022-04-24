@@ -1,18 +1,24 @@
 <template>
-	<view class="uni-section" nvue>
-		<view v-if="type" class="uni-section__head">
-			<view :class="type" class="uni-section__head-tag" />
+	<view class="uni-section">
+		<view class="uni-section-header" nvue>
+			<view v-if="type" class="uni-section__head">
+				<view :class="type" class="uni-section__head-tag"/>
+			</view>
+			<view class="uni-section__content">
+				<text :class="{'distraction':!subTitle}" :style="{color:color}" class="uni-section__content-title">{{ title }}</text>
+				<text v-if="subTitle" class="uni-section__content-sub">{{ subTitle }}</text>
+			</view>
+			<view>
+				<slot name="right"></slot>
+			</view>
 		</view>
-		<view class="uni-section__content">
-			<text :class="{'distraction':!subTitle}" class="uni-section__content-title">{{ title }}</text>
-			<text v-if="subTitle" class="uni-section__content-sub">{{ subTitle }}</text>
+		<view :class="{'is--hidden':overflow}" :style="{padding: padding ? '10px' : ''}">
+			<slot/>
 		</view>
-		<slot />
 	</view>
 </template>
 
 <script>
-
 	/**
 	 * Section 标题栏
 	 * @description 标题栏
@@ -22,9 +28,9 @@
 	 * @property {String} title 主标题
 	 * @property {String} subTitle 副标题
 	 */
-
 	export default {
 		name: 'UniSection',
+		emits:['click'],
 		props: {
 			type: {
 				type: String,
@@ -34,9 +40,21 @@
 				type: String,
 				default: ''
 			},
+			color:{
+				type: String,
+				default: '#333'
+			},
 			subTitle: {
 				type: String,
 				default: ''
+			},
+			padding: {
+				type: Boolean,
+				default: false
+			},
+			overflow :{
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -56,53 +74,36 @@
 		}
 	}
 </script>
-<style lang="scss" scoped>
+<style lang="scss" >
+	$uni-primary: #2979ff !default;
 	.uni-section {
+		background-color: #fff;
+		// overflow: hidden;
+		margin-top: 10px;
+	}
+	.uni-section-header {
 		position: relative;
 		/* #ifndef APP-NVUE */
 		display: flex;
 		/* #endif */
-		margin-top: 10px;
 		flex-direction: row;
 		align-items: center;
-		padding: 0 10px;
-		height: 50px;
-		background-color: $uni-bg-color-grey;
-		/* #ifdef APP-NVUE */
-		// border-bottom-color: $uni-border-color;
-		// border-bottom-style: solid;
-		// border-bottom-width: 0.5px;
-		/* #endif */
+		padding: 12px 10px;
+		// height: 50px;
 		font-weight: normal;
 	}
-	/* #ifndef APP-NVUE */
-	// .uni-section:after {
-	// 	position: absolute;
-	// 	bottom: 0;
-	// 	right: 0;
-	// 	left: 0;
-	// 	height: 1px;
-	// 	content: '';
-	// 	-webkit-transform: scaleY(.5);
-	// 	transform: scaleY(.5);
-	// 	background-color: $uni-border-color;
-	// }
-	/* #endif */
-
 	.uni-section__head {
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
 		margin-right: 10px;
 	}
-
 	.line {
-		height: 15px;
-		background-color: $uni-text-color-disable;
-		border-radius: 5px;
-		width: 3px;
+		height: 12px;
+		background-color: $uni-primary;
+		border-radius: 10px;
+		width: 4px;
 	}
-
 	.circle {
 		width: 8px;
 		height: 8px;
@@ -110,27 +111,31 @@
 		border-top-left-radius: 50px;
 		border-bottom-left-radius: 50px;
 		border-bottom-right-radius: 50px;
-		background-color: $uni-text-color-disable;
+		background-color: $uni-primary;
 	}
-
 	.uni-section__content {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
 		flex-direction: column;
 		flex: 1;
-		color: $uni-text-color;
+		color: #333;
 	}
-
 	.uni-section__content-title {
-		font-size: $uni-font-size-base;
-		color: $uni-text-color;
+		font-size: 14px;
+		color: $uni-primary;
 	}
-
 	.distraction {
 		flex-direction: row;
 		align-items: center;
 	}
-
 	.uni-section__content-sub {
-		font-size: $uni-font-size-sm;
-		color: $uni-text-color-grey;
+		font-size: 12px;
+		color: #999;
+		line-height: 16px;
+		margin-top: 2px;
+	}
+	.is--hidden {
+		overflow: hidden;
 	}
 </style>

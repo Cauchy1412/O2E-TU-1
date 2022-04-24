@@ -6,24 +6,24 @@
 					<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 				</view>
 				<view class="tui-search-box">
-					<view class="tui-search-text">需求详情</view>
+					<view class="tui-search-text">专家详情</view>
 				</view>
-				<view class="tui-notice-box" @tap="toExperts">
-					<text class="tui-add-text">专家</text>
+				<view class="tui-notice-box" @tap="chat">
+					<text class="tui-add-text">会话</text>
 				</view>
 			</view>
 		</tui-navigation-bar>
-		<view class="demand-info">
-			<view class="demand-info-item">
-				<view>需求题目：{{ demandinfo.title}} </view>
-				<view>企业名称：{{ demandinfo.comName}} </view>
-				<view>研发经费：{{ demandinfo.fund}} </view>
-				<view>研发周期：{{ demandinfo.period}} </view>
-				<view>研发地点：{{ demandinfo.place}} </view>
+		<view class="expert-info">
+			<view class="expert-info-item">
+				<view>{{ expertinfo.name}} </view>
+				<image :src="expertinfo.img" mode="aspectFit"></image>
+				<view>性别: {{expertinfo.sex}}</view>
+				<view>职称: {{expertinfo.title}}</view>
+				<view>研究领域: {{expertinfo.field}}</view>
 			</view>
-			<view class="demand-info-item">
-				<view>需求内容： </view>
-				<view>{{ demandinfo.content}} </view>
+			<view class="expert-info-detail">
+				<view>简介： </view>
+				<view>{{ expertinfo.info}} </view>
 			</view>
 		</view>
 	</view>
@@ -31,39 +31,31 @@
 
 <script>
 	export default {
-		// onLoad(data) {
-		//  this.id = data.id
-		// 	this.demandinfo.title = data.title
-		// 	this.demandinfo.comName = data.comName
-		// 	this.demandinfo.fund = data.fund
-		// 	this.demandinfo.period = data.period
-		// 	this.demandinfo.place = data.place
-		// 	this.demandinfo.content = data.content
-		// },
+		onLoad(data) {
+			this.expertinfo = data
+			this.demandId = data.demandId
+		},
 		data() {
 			return {
-				demandinfo: {
-					id: '100',
-					title: '自动驾驶开发',
-					comName: '张三有限公司',
-					fund: '200,000元',
-					period: '1个月',
-					place: '北京',
-					content: '自动驾驶汽车（Autonomous vehicles；Self-driving automobile ）又称无人驾驶汽车、电脑驾驶汽车、或轮式移动机器人，是一种通过电脑系统实现无人驾驶的智能汽车。在20世纪已有数十年的历史，21世纪初呈现出接近实用化的趋势。'
+				demandId: '',
+				expertinfo: {
+					id: '',
+					img: '',
+					name: '',
+					sex: '',
+					title: '',
+					field: '',
+					info: ''
 				}
 			}
 		},
 		methods: {
 			back() {
-				// uni.reLaunch({
-				// 	url: '/'
-				// });
 				uni.navigateBack()
 			},
-			toExperts() {
-				const id = this.demandinfo.id
+			chat() {
 				uni.navigateTo({
-					url: '../experts/experts?id=' + id
+					url: '../user-chat/user-chat?demandId=' + this.demandId + '&expertId=' + this.expertinfo.id 
 				})
 			}
 		}
@@ -125,21 +117,38 @@
 		background-color: #FFE933;
 	}
 
-	.demand-info {
+	.expert-info {
 		padding: 0 30upx;
 	}
 
-	.demand-info-item {
+	.expert-info-item {
 		padding: 20upx 0;
 		border-bottom: 1upx solid #EEEEEE;
 	}
 
-	.demand-info-item>view {
+	.expert-info-item>view {
 		color: #AAAAAA;
 		font-size: 16upx;
 	}
 
-	.demand-info-item>view:first-child {
+	.expert-info-item>view:first-child {
+		color: #333333;
+		font-size: 32upx;
+		font-weight: 700;
+		padding: 15upx 0;
+	}
+	
+	.expert-info-detail {
+		padding: 20upx 0;
+		border-bottom: 1upx solid #EEEEEE;
+	}
+	
+	.expert-info-detail>view {
+		color: #AAAAAA;
+		font-size: 16upx;
+	}
+	
+	.expert-info-detail>view:first-child {
 		color: #333333;
 		font-size: 20upx;
 		padding: 15upx 0;
