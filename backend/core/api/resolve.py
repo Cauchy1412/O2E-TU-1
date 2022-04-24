@@ -1,10 +1,9 @@
 """User Management APIs
 """
 
-from this import d
 from django.http import HttpRequest
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
-from backend.core.models import resolution
+from core.models import resolution
 
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
@@ -135,7 +134,7 @@ def get_company_resolutions(request: HttpRequest):
     ret_resolutions = []
     for resolution in resolutions:
         if resolution.state != 0:
-            ret_resolutions.append(resolution) 
+            ret_resolutions.append(resolution)
     ret_data = {'resolution_list': [resolution2json(resolution) for resolution in ret_resolutions]}
     return success_api_response(ret_data)
 
@@ -152,7 +151,7 @@ def update_resolution_state(request: HttpRequest):
     [route]: /api/resolution/update-resolution-state
 
     parms:
-        - id 
+        - id
         - state
     """
     data: dict = parse_data(request)
@@ -183,9 +182,9 @@ def create_order(request: HttpRequest):
     [route]: /api/resolution/create-order
 
     parms:
-        - id 
-        - time 
-        - price 
+        - id
+        - time
+        - price
     """
     data: dict = parse_data(request)
     if not data:

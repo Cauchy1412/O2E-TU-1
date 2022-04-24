@@ -3,7 +3,6 @@
 
 from django.http import HttpRequest
 from django.views.decorators.http import require_POST, require_http_methods
-from rsa import verify
 
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,

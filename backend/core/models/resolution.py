@@ -1,6 +1,5 @@
 from django.db import models
 from pytz import timezone
-from sympy import true
 from .user import User
 from .demand import Demand
 
@@ -28,7 +27,7 @@ class Resolution(models.Model):
     time = models.CharField(max_length=100)
     state = models.IntegerField(choices=RESOLUTION_STATES, default = 0)
     price = models.IntegerField(default = -1)
-    created_at = models.DateTimeField(default = timezone.now())
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def set_Unreceived(self):
         """
