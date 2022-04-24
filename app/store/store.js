@@ -27,6 +27,7 @@ const store = new Vuex.Store({
 		currentChat: [],
 		selTitle: {},
 		category: {},
+		demand_detail: null,
 		socket: undefined,
 		$is_open_socket: false
 	},

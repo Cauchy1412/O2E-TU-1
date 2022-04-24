@@ -40,24 +40,24 @@
 		// 	this.demandinfo.place = data.place
 		// 	this.demandinfo.content = data.content
 		// },
-		data() {
-			return {
-				demandinfo: {
-					id: '100',
-					title: '自动驾驶开发',
-					comName: '张三有限公司',
-					fund: '200,000元',
-					period: '1个月',
-					place: '北京',
-					content: '自动驾驶汽车（Autonomous vehicles；Self-driving automobile ）又称无人驾驶汽车、电脑驾驶汽车、或轮式移动机器人，是一种通过电脑系统实现无人驾驶的智能汽车。在20世纪已有数十年的历史，21世纪初呈现出接近实用化的趋势。'
+		computed: {
+			demandinfo() {
+				const o = this.$store.state.demand_detail;
+				console.log('detail title', o.title);
+				const meta = o.meta || {};
+				return {
+					id: o.id,
+					title: o.title,
+					comName: '张三有限公司', // TODO
+					fund: meta.fund || '',
+					period: meta.period || '',
+					place: meta.place || '',
+					content: o.description,
 				}
 			}
 		},
 		methods: {
 			back() {
-				// uni.reLaunch({
-				// 	url: '/'
-				// });
 				uni.navigateBack()
 			},
 			toExperts() {

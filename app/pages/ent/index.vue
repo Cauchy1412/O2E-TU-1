@@ -19,10 +19,10 @@
 
 						<template v-if="demands.length">
 							<view class="topic-list">
-								<block v-for="(list,index1) in demands" :key="index1">
+								<view v-for="(list,index1) in demands" :key="index1" @tap='() => openDetail(list)'>
 									<!--card @opendDetail="list.title" :cardinfo="list" :index="index1"></card-->
 									<demand-row :demand="list"></demand-row>
-								</block>
+								</view>
 							</view>
 						</template>
 						<template v-else>
@@ -47,7 +47,7 @@
 	import demandRow from '@/components/demand-row.vue';
 	import { api } from '@/api';
 	import { mapState } from "vuex";
-	
+
 	export default {
 		name: 'EntIndex',
 		components: {
@@ -96,8 +96,8 @@
 		},
 		methods: {
 			async requestData() {
-				this.demands = 
-					[
+				/* this.demands =
+				[
 					{
 						description: '我想做一个基于Vue的React框架',
 						title: '基于Vue的React框架',
@@ -108,8 +108,8 @@
 						title: '基于React的OS内核',
 						created_at: new Date(Date.now() - 2000),
 					},
-				];
-				
+				]; */
+
 				const res = await api.get('demand');
 				this.demands = res.demand_list.map(o => ({
 					...o,
@@ -125,9 +125,10 @@
 					uni.showToast({title:'已更新',duration:500})
 				}, 200)
 			},
-			opendDetail(item) {
+			openDetail(o) {
+				this.$store.state.demand_detail = o;
 				uni.navigateTo({
-					url: '../../pages/detail/detail?id=' + item.id,
+					url: '../needs/needs?did=' + o.id,
 				});
 			},
 			async signIn(){
