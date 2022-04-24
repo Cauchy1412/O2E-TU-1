@@ -20,6 +20,7 @@ from core.api.follower import list_followers, list_full_followers
 from core.api.user_icon import USER_ICON_API,read_img,read_default_img
 from core.api.notification import (NOTIFICATION_API, NOTIFICATION_SET_API)
 from core.api.image import (IMAGE_API, IMAGE_SET_API)
+from core.api.resolve import recommend, get_resolution, get_scholar_resolutions, get_company_resolutions, update_resolution_state, create_order
 
 from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
   collectInterpretation, uncollectInterpretation, likeInterpretation, searchInterpretation, \
@@ -127,5 +128,11 @@ urlpatterns = [
     # downloads
     path('download/Interpretation/<int:id>', downloadInterpretation),
 
+    # resolutions
+    path('resolution/recommand', recommend),
+    path('resolution/<int:id>', get_resolution),
+    path('resolution/get-scholar-resolutions', get_scholar_resolutions),
+    path('resolution/get-company-resolutions', get_company_resolutions),
+    path('resolution/update-resolution-state', update_resolution_state),
 ]
 

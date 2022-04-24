@@ -28,6 +28,9 @@ def recommend(request: HttpRequest):
     [method]: GET
 
     [route]: /api/resolve/recommend
+
+    parms:
+		- id: int
     """
     data: dict = parse_data(request)
     if not data:
@@ -98,7 +101,7 @@ def get_scholar_resolutions(request: HttpRequest):
 
     [method]: GET
 
-    [route]: /api/resolution/get_scholar_resolutions
+    [route]: /api/resolution/get-scholar-resolutions
 
     parms:
     """
@@ -120,7 +123,7 @@ def get_company_resolutions(request: HttpRequest):
 
     [method]: GET
 
-    [route]: /api/resolution/get_company_resolutions
+    [route]: /api/resolution/get-company-resolutions
 
     parms:
     """
@@ -146,9 +149,11 @@ def update_resolution_state(request: HttpRequest):
 
     [method]: POST
 
-    [route]: /api/resolution/update_resolution_state
+    [route]: /api/resolution/update-resolution-state
 
     parms:
+        - id 
+        - state
     """
     data: dict = parse_data(request)
     if not data:
@@ -175,9 +180,12 @@ def create_order(request: HttpRequest):
 
     [method]: POST
 
-    [route]: /api/resolution/create_order
+    [route]: /api/resolution/create-order
 
     parms:
+        - id 
+        - time 
+        - price 
     """
     data: dict = parse_data(request)
     if not data:
