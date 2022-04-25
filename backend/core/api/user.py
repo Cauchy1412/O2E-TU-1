@@ -183,6 +183,9 @@ def change_user_info(request: HttpRequest):
     user.save()
     return success_api_response({"result": "Ok, the user info has been changed."})
 
+@response_wrapper
+@jwt_auth()
+@require_http_methods('POST')
 def get_user_info(request: HttpRequest):
     data: dict = parse_data(request)
     user_id = data.get('id')

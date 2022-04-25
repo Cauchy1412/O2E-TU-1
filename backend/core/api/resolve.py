@@ -20,7 +20,7 @@ import json
 
 @response_wrapper
 @jwt_auth()
-@require_GET
+@require_POST
 def recommend(request: HttpRequest):
     """set_verified
 
@@ -37,15 +37,16 @@ def recommend(request: HttpRequest):
     demand_id = data.get('demand_id')
     demand = Demand.objects.get(id=demand_id)
     user = User.objects.filter(user_type=0).first()
+    verified_user = user.verified_info.first()
     resolutions = []
     data_list = []
     for i in range(3):
-        resolution = resolution(demand=demand, user=user, meta=verify_user.meta)
+        resolution = resolution(demand=demand, user=user, meta=verified_user and verified_user.meta)
         resolution.save()
         resolutions.append(resolution)
         data = {
             'id': resolution.id,
-            'meta': json.loads(verify_user.meta),
+            'meta': json.loads(verified_user.meta),
         }
         data_list.append(data)
     re_data = {'data_list': data_list}

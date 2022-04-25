@@ -28,6 +28,7 @@ from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
       getAllInterpretation, queryVisitorNumber, queryKeywordTops, queryTagRatio
 
 from core.api.user import get_all_user_info,delete_user,change_user_info,get_user_info
+from core.api.verify import set_failed, set_verified
 
 urlpatterns = [
 
@@ -134,5 +135,9 @@ urlpatterns = [
     path('resolution/get-scholar-resolutions', get_scholar_resolutions),
     path('resolution/get-company-resolutions', get_company_resolutions),
     path('resolution/update-resolution-state', update_resolution_state),
+
+    # verify
+    path('verify/set-verified', set_verified),
+    path('verify/set-failed', set_failed),
 ]
 
