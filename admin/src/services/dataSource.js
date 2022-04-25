@@ -129,12 +129,12 @@ export const UserModify = (params) => {
 }
 
 export const set_verified = (params) => {
-  const url = `/api/verify/set_verified`
+  const url = `/api/verify/set-verified`
   return request(url, "post", params)
 }
 
 export const set_failed = (params) => {
-  const url = `/api/verify/set_failed`
+  const url = `/api/verify/set-failed`
   return request(url, "post", params)
 }
 
