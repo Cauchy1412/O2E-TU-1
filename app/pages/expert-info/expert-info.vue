@@ -6,53 +6,48 @@
 					<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 				</view>
 				<view class="tui-search-box">
-					<view class="tui-search-text">需求详情</view>
+					<view class="tui-search-text">专家详情</view>
 				</view>
-				<view class="tui-notice-box" @tap="toExperts">
-					<text class="tui-add-text">专家</text>
+				<view class="tui-notice-box" @tap="chat">
+					<text class="tui-add-text">会话</text>
 				</view>
 			</view>
 		</tui-navigation-bar>
-		<view class="demand-info">
-			<view class="demand-info-item">
-				<view>需求题目：{{ demandinfo.title}} </view>
-				<view>企业名称：{{ demandinfo.comName}} </view>
-				<view>研发经费：{{ demandinfo.fund}} </view>
-				<view>研发周期：{{ demandinfo.period}} </view>
-				<view>研发地点：{{ demandinfo.place}} </view>
+		<view class="expert-info">
+			<view class="expert-info-item">
+				<view>{{ expertinfo.name}} </view>
+				<image :src="expertinfo.img" mode="aspectFit"></image>
+				<view>性别: {{expertinfo.sex}}</view>
+				<view>职称: {{expertinfo.title}}</view>
+				<view>研究领域: {{expertinfo.field}}</view>
 			</view>
-			<view class="demand-info-item">
-				<view>需求内容： </view>
-				<view>{{ demandinfo.content}} </view>
+			<view class="expert-info-detail">
+				<view>简介： </view>
+				<view>{{ expertinfo.info}} </view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import { api } from '@/api';
+	
 	export default {
-		// onLoad(data) {
-		//  this.id = data.id
-		// 	this.demandinfo.title = data.title
-		// 	this.demandinfo.comName = data.comName
-		// 	this.demandinfo.fund = data.fund
-		// 	this.demandinfo.period = data.period
-		// 	this.demandinfo.place = data.place
-		// 	this.demandinfo.content = data.content
-		// },
-		computed: {
-			demandinfo() {
-				const o = this.$store.state.demand_detail;
-				console.log('detail title', o.title);
-				const meta = o.meta || {};
-				return {
-					id: o.id,
-					title: o.title,
-					comName: '张三有限公司', // TODO
-					fund: meta.fund || '',
-					period: meta.period || '',
-					place: meta.place || '',
-					content: o.description,
+		onLoad(data) {
+			this.expertinfo = data
+			this.demandId = data.demandId
+		},
+		data() {
+			return {
+				demandId: '',
+				expertinfo: {
+					id: 22,
+					img: '',
+					name: '',
+					sex: '',
+					title: '',
+					field: '',
+					info: ''
 				}
 			}
 		},
@@ -60,11 +55,19 @@
 			back() {
 				uni.navigateBack()
 			},
-			toExperts() {
-				const id = this.demandinfo.id
+			async chat() {
+				const uid = this.$store.state.userInfo.id;
+				const eid = this.expertinfo.id;
+				const demand_id = this.demandId;
+				const res = await api.post('chat/create', {
+					chatroom_name: "聊天",  // TODO
+					from_user_id: uid,
+					to_user_id: eid,
+					demand_id
+				});
 				uni.navigateTo({
-					url: '../experts/experts?id=' + id
-				})
+					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
+				});
 			}
 		}
 	}
@@ -125,21 +128,38 @@
 		background-color: #FFE933;
 	}
 
-	.demand-info {
+	.expert-info {
 		padding: 0 30upx;
 	}
 
-	.demand-info-item {
+	.expert-info-item {
 		padding: 20upx 0;
 		border-bottom: 1upx solid #EEEEEE;
 	}
 
-	.demand-info-item>view {
+	.expert-info-item>view {
 		color: #AAAAAA;
 		font-size: 16upx;
 	}
 
-	.demand-info-item>view:first-child {
+	.expert-info-item>view:first-child {
+		color: #333333;
+		font-size: 32upx;
+		font-weight: 700;
+		padding: 15upx 0;
+	}
+	
+	.expert-info-detail {
+		padding: 20upx 0;
+		border-bottom: 1upx solid #EEEEEE;
+	}
+	
+	.expert-info-detail>view {
+		color: #AAAAAA;
+		font-size: 16upx;
+	}
+	
+	.expert-info-detail>view:first-child {
 		color: #333333;
 		font-size: 20upx;
 		padding: 15upx 0;

@@ -1,5 +1,5 @@
 from django.db import models
-from sympy import true
+from pytz import timezone
 from .user import User
 from .demand import Demand
 
@@ -20,12 +20,14 @@ class Resolution(models.Model):
         - time: begining time of the order
         - state: state of the resolution
         - price: price of the resolution
+        - created_at = created time
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sended_demands")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_demands")
     demand = models.ForeignKey(Demand, on_delete=models.CASCADE, related_name="resolutions")
     time = models.CharField(max_length=100)
     state = models.IntegerField(choices=RESOLUTION_STATES, default = 0)
     price = models.IntegerField(default = -1)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def set_Unreceived(self):
         """
@@ -47,6 +49,7 @@ class Resolution(models.Model):
         """
         try:
             self.state = 2
+            self.created_at = timezone.now()
             self.save()
             # print("[DBEUG] message already read"+ self.read_state)
             return True

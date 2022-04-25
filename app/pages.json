@@ -1,7 +1,6 @@
 {
-	"pages": [
-		{
-		    "path" : "pages/index-entry",
+	"pages": [{
+			"path": "pages/index-entry",
 			"style": {
 				"app-plus": {
 					"titleNView": false
@@ -15,7 +14,7 @@
 				"app-plus": {
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", //关闭反弹效果
-					"titleNView": false//禁用原生导航栏
+					"titleNView": false //禁用原生导航栏
 				}
 			}
 		},
@@ -39,14 +38,14 @@
 					"bounce": "none" //关闭反弹效果
 				}
 			}
-		},{
+		}, {
 			"path": "pages/paper/paper",
 			"style": {
 				"enablePullDownRefresh": true, //开启下拉刷新功能
 				"navigationBarTitleText": "消息",
 				"app-plus": {
 					"titleNView": {
-						"titleSize":"32upx",
+						"titleSize": "32upx",
 						"buttons": [
 							// 左边
 							{
@@ -79,10 +78,10 @@
 					"scrollIndicator": "none",
 					"bounce": "none",
 					"titleNView": {
-						"titleSize":"32upx",
+						"titleSize": "32upx",
 						"buttons": [{
 							"type": "menu",
-							"fontSize":"44upx"
+							"fontSize": "44upx"
 						}]
 					}
 				}
@@ -159,7 +158,7 @@
 						"type": "transparent", //渐变
 						"buttons": [{
 							"type": "menu",
-							"fontSize":"32upx"
+							"fontSize": "32upx"
 						}]
 					}
 				}
@@ -234,9 +233,9 @@
 			"path": "pages/user-set/user-set",
 			"style": {
 				"navigationBarTitleText": "设置",
-				"app-plus":{
-					"titleNView":{
-						"titleSize":"32upx"
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "32upx"
 					}
 				}
 			}
@@ -346,33 +345,27 @@
 		}, {
 			"path": "pages/user-collect/user-collect",
 			"style": {}
-		}
-	    ,{
-            "path" : "pages/select-title/select-title",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/forgetPwd/forgetPwd",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/select-category/select-category",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/check-in/check-in",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/user-face/user-face",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/user-comment/user-comment",
+		}, {
+			"path": "pages/select-title/select-title",
+			"style": {}
+		}, {
+			"path": "pages/forgetPwd/forgetPwd",
+			"style": {}
+		}, {
+			"path": "pages/select-category/select-category",
+			"style": {}
+		}, {
+			"path": "pages/check-in/check-in",
+			"style": {}
+		}, {
+			"path": "pages/user-face/user-face",
+			"style": {}
+		}, {
+			"path": "pages/user-comment/user-comment",
 			"style": {
 				"navigationBarTitleText": "我的评论"
 			}
-        },
+		},
 		{
 			"path": "pages/ent/index",
 			"style": {
@@ -385,28 +378,45 @@
 			}
 		},
 		{
-		    "path" : "pages/demand/create",
+			"path": "pages/demand/create",
 			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 			}
+		}, {
+			"path": "pages/needs/needs",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+
+		}, {
+			"path": "pages/experts/experts",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+
 		}
-        ,{
-            "path" : "pages/needs/needs",
-            "style": {
-            	"app-plus": {
-            		"titleNView": false
-            	}
+	    ,{
+            "path" : "pages/expert-info/expert-info",
+            "style" :                                                                                    
+            {
+                "app-plus": {
+                	"titleNView": false
+                }
             }
             
         }
     ],
 	"permission": {
-	    "scope.userLocation": {
-	      "desc": "你的位置信息将用于小程序位置接口的效果展示"
-	    }
-	  },
+		"scope.userLocation": {
+			"desc": "你的位置信息将用于小程序位置接口的效果展示"
+		}
+	},
 	"easycom": {
 		"autoscan": true,
 		"custom": {

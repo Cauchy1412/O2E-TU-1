@@ -98,7 +98,7 @@ def verify_jwt_token(request: HttpRequest) -> (bool, str, int):
     """[summary]
     """
     # get header
-    
+
     flag = True
     message = ""
     user_id = ""
@@ -129,7 +129,7 @@ def verify_jwt_token2(request: HttpRequest) -> (bool, str, int):
     """[summary]
     """
     # get header
-    
+
     flag = True
     message = ""
     user_id = ""
@@ -306,8 +306,8 @@ def getUserInfo(user):
         'total_fan': user.user_set.count(),
         'is_following': user.user_set.filter(id=user.id).exists(),
         'is_followed': user.followers.filter(id=user.id).exists(),
-        'verified_type' : verified_user.verified_type,
-        'meta': json.loads(verified_user.meta)
+        'verified_type' : verified_user and verified_user.verified_type,
+        'meta': verified_user and json.loads(verified_user.meta)
     }
     return userInfo
 

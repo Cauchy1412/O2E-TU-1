@@ -28,11 +28,11 @@ class Chatroom(models.Model):
                                 related_name="joined_chatroom_list")
     demand = models.ForeignKey('Demand', on_delete=models.CASCADE, null=True, related_name= "demand_rooms")
 
-    
+
     # parent_chatroom = models.ForeignKey('Chatroom',
     #                                       on_delete=models.CASCADE, null=True,
     #                                       related_name="son_chatroom")
-    
+
 
     def to_dict(self) -> dict:
         rst = dict()
@@ -44,7 +44,7 @@ class Chatroom(models.Model):
              'to_user_name' : self.to_user.username,
              'from_user_pic': self.owner.get_icon(),
              'to_user_pic': self.to_user.get_icon(),
-             'demand_id' : self.demand.id,
+             'demand_id' : self.demand and self.demand.id,
              #'created_at': self.created_at,
              'message_list': [mess.to_dict() for mess in self.message.all()]
              }
