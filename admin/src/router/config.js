@@ -77,6 +77,11 @@ const options = {
                             name: '用户列表',
                             component: () => import('@/pages/form/advance/UserForm'),
                         },
+                        {
+                            path: 'register',
+                            name: '注册审核',
+                            component: () => import('@/pages/form/advance/RegisterForm'),
+                        },
                         
                         // {
                         //     path: 'new',

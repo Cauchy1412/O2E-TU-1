@@ -128,6 +128,16 @@ export const UserModify = (params) => {
   return request(url, "post",params)
 }
 
+export const set_verified = (params) => {
+  const url = `/api/verify/set_verified`
+  return request(url, "post", params)
+}
+
+export const set_failed = (params) => {
+  const url = `/api/verify/set_failed`
+  return request(url, "post", params)
+}
+
 export default {
   goodsList,
   goodsColumns,
@@ -148,5 +158,7 @@ export default {
   deleteComment,
   deleteDiscussionComment,
   UserDel,
-  UserModify
+  UserModify,
+  set_verified,
+  set_failed,
 };
