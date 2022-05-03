@@ -117,7 +117,7 @@ export default {
           const password = this.form.getFieldValue("password");
           if(name!="SUPERMAN"){
             // login(name, password)
-            this.$message.error("账号或密码错误")
+            this.$message.error("管理员账号不存在")
             // this.$router.push("");
             this.logging = false;
           }else{

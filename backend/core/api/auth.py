@@ -182,7 +182,8 @@ def obtain_jwt_token(request: HttpRequest):
             "access_token": generate_access_token(user.id),
             "refresh_token": generate_refresh_token2(user),
         }
-        return failed_api_response(ErrorCode.UNAUTHORIZED, "Login required.")
+        # return failed_api_response(ErrorCode.UNAUTHORIZED, "Login required.")
+        return success_api_response(result)
     userInfo = getUserInfo(user)
     result = {
         "userInfo":userInfo,

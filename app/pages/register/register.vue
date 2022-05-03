@@ -81,7 +81,7 @@
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
 							<tui-icon name="location" color="#6d7a87" :size="40"></tui-icon>
-							<input :value="businessData.place" placeholder="注册地" placeholder-class="tui-phcolor" type="text" maxlength="20" @input="inputRegisPlace" />
+							<input :value="businessData.place" placeholder="注册地" placeholder-class="tui-phcolor" type="text" maxlength="36" @input="inputRegisPlace" />
 							<view class="tui-icon-close" v-show="businessData.place" @tap="clearInput(2, 'place')">
 								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
 							</view>
