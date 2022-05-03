@@ -104,3 +104,11 @@ def get_demand_list(request: HttpRequest):
     demands = user.sended_demands.all()
     re_data = {'demand_list': [demand2json(demand) for demand in demands]}
     return success_api_response(re_data)
+
+@response_wrapper
+@jwt_auth()
+@require_http_methods('GET')
+def get_all_demands(request: HttpRequest):
+    demands = Demand.objects.all()
+    re_data = {'demand_list': [demand2json(demand) for demand in demands]}
+    return success_api_response(data)

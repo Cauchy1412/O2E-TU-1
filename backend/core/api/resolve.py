@@ -139,6 +139,17 @@ def get_company_resolutions(request: HttpRequest):
     ret_data = {'resolution_list': [resolution2json(resolution) for resolution in ret_resolutions]}
     return success_api_response(ret_data)
 
+@response_wrapper
+@jwt_auth()
+@require_http_methods('GET')
+def get_all_orders(request: HttpRequest):
+    resolutions = Resolution.objects.all()
+    ret_resolutions = []
+    for resolution in resolutions:
+        if resolution.state != 0:
+            ret_resolutions.append(resolution)
+    ret_data = {'resolution_list': [resolution2json(resolution) for resolution in ret_resolutions]}
+    return success_api_response(ret_data)
 
 @jwt_auth()
 @require_POST
