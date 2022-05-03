@@ -43,12 +43,14 @@ def create_demand(request: HttpRequest):
 
 
 def demand2json(demand: Demand) -> dict:
+    verified_user = demand.user.verified_info.first()
     data = {
         'id' : demand.id,
         'user': {
             'id': demand.user.id,
             'username': demand.user.username,
         },
+        'company_meta' : verified_user.meta,
         'created_at': demand.created_at,
         'description': demand.description,
         'title': demand.title,
