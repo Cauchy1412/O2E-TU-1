@@ -1,5 +1,5 @@
 from django.http import HttpRequest
-from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.core.exceptions import ObjectDoesNotExist
 
 
