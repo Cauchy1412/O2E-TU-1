@@ -26,12 +26,17 @@
 				<view>{{ expertinfo.info}} </view>
 			</view>
 		</view>
+		<view class="subBtnBox" @tap="createOrder">
+			<view class="subBtn">发起订单 </view>
+		</view>
 	</view>
 </template>
 
 <script>
-	import { api } from '@/api';
-	
+	import {
+		api
+	} from '@/api';
+
 	export default {
 		onLoad(data) {
 			this.expertinfo = data
@@ -40,6 +45,7 @@
 		data() {
 			return {
 				demandId: '',
+				resolusionId: 111,
 				expertinfo: {
 					id: 22,
 					img: '',
@@ -60,7 +66,7 @@
 				const eid = this.expertinfo.id;
 				const demand_id = this.demandId;
 				const res = await api.post('chat/create', {
-					chatroom_name: "聊天",  // TODO
+					chatroom_name: "聊天", // TODO
 					from_user_id: uid,
 					to_user_id: eid,
 					demand_id
@@ -68,6 +74,11 @@
 				uni.navigateTo({
 					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
 				});
+			},
+			createOrder() {
+				uni.navigateTo({
+					url: '../create-order/create-order?resolusionId=' + this.resolusionId 
+				})
 			}
 		}
 	}
@@ -148,20 +159,39 @@
 		font-weight: 700;
 		padding: 15upx 0;
 	}
-	
+
 	.expert-info-detail {
 		padding: 20upx 0;
 		border-bottom: 1upx solid #EEEEEE;
 	}
-	
+
 	.expert-info-detail>view {
 		color: #AAAAAA;
 		font-size: 16upx;
 	}
-	
+
 	.expert-info-detail>view:first-child {
 		color: #333333;
 		font-size: 20upx;
 		padding: 15upx 0;
+	}
+
+	.subBtnBox {
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	.subBtn {
+		width: 80%;
+		height: 72rpx;
+		background: linear-gradient(90deg, #ffff00 0%, #f0f000 100%);
+		border-radius: 44rpx;
+		text-align: center;
+		line-height: 72rpx;
+		font-size: 32rpx;
+		font-weight: 600;
+		color: #000000;
+		margin: 46rpx auto;
 	}
 </style>
