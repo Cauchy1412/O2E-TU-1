@@ -411,6 +411,16 @@
             }
             
         }
+        ,{
+            "path" : "pages/create-order/create-order",
+            "style" :                                                                                    
+            {
+                "app-plus": {
+                	"titleNView": false
+                }
+            }
+            
+        }
     ],
 	"permission": {
 		"scope.userLocation": {

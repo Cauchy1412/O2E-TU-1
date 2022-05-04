@@ -45,6 +45,7 @@
 		data() {
 			return {
 				demandId: '',
+				resolusionId: 111,
 				expertinfo: {
 					id: 22,
 					img: '',
@@ -73,6 +74,11 @@
 				uni.navigateTo({
 					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
 				});
+			},
+			createOrder() {
+				uni.navigateTo({
+					url: '../create-order/create-order?resolusionId=' + this.resolusionId 
+				})
 			}
 		}
 	}

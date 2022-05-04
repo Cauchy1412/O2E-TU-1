@@ -38,8 +38,9 @@
 		},
 		data() {
 			return {
-				demandId: '',
+				demandId: 111,
 				expertsList: [{
+						resolusionId: 111,
 						id: 111,
 						img: 'https://img-blog.csdnimg.cn/2020062923175961.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NnMTI5MDU0MDM2,size_16,color_FFFFFF,t_70',
 						name: 'Sebastian Thrun',
@@ -49,6 +50,7 @@
 						info: '我是计算机科学教授，领导着自主视觉小组(AVG)。我的小组是Tübingen大学和位于德国网络谷中心Tübingen的智能系统MPI的一部分。我是Tübingen大学计算机科学系的副系主任，是卓越集群“ML in science”和CRC“Robust Vision”的PI。我也是ELLIS的研究员、董事会成员和ELLIS博士项目的协调员。我的研究小组正在开发用于计算机视觉、自然语言和机器人的机器学习模型，应用于自动驾驶、VR/AR和科学文献分析。'
 					},
 					{
+						resolusionId: 112,
 						id: 22,
 						img: 'http://www.cvlibs.net/site/andreas_geiger.jpg',
 						name: 'Andreas Geiger',
@@ -70,7 +72,7 @@
 				uni.navigateTo({
 					url: '/pages/expert-info/expert-info?id=' + item.id + '&demandId=' + this.demandId + '&img=' +
 						item.img + '&name=' + item.name + '&sex=' + item.sex + '&title=' + item.title + '&field=' +
-						item.field + '&info=' + item.info
+						item.field + '&info=' + item.info + '&resolutioId=' + item.resolutionId
 				})
 			},
 			async requestData() {
