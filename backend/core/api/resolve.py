@@ -26,27 +26,38 @@ def recommend(request: HttpRequest):
 
     [method]: GET
 
-    [route]: /api/resolve/recommend
+    [route]: /resolution/recommand
 
-    parms:
-		- id: int
+    request: {
+		demand_id: int
+    }
     """
     data: dict = parse_data(request)
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
     demand_id = data.get('demand_id')
     demand = Demand.objects.get(id=demand_id)
+
     user = User.objects.filter(user_type=0).first()
     verified_user = user.verified_info.first()
     resolutions = []
     data_list = []
     for i in range(3):
-        resolution = resolution(demand=demand, user=user, meta=verified_user and verified_user.meta)
-        resolution.save()
+        resolution = Resolution.objects.filter(demand=demand, user=user).first()
+        if not resolution:
+            resolution = Resolution(demand=demand, user=user) # , meta=verified_user and verified_user.meta)
+            resolution.save()
         resolutions.append(resolution)
         data = {
             'id': resolution.id,
-            'meta': json.loads(verified_user.meta),
+            'uid': user.id,
+            'meta': json.loads(verified_user.meta) if verified_user else {
+                'name': 'Sebastian Thrun',
+                'title': '谷歌无人车之父',
+                'sex': '男',
+                'field': '人工智能，无人驾驶',
+                'info': '我是计算机科学教授，领导着自主视觉小组(AVG)。我的小组是Tübingen大学和位于德国网络谷中心Tübingen的智能系统MPI的一部分。我是Tübingen大学计算机科学系的副系主任，是卓越集群“ML in science”和CRC“Robust Vision”的PI。我也是ELLIS的研究员、董事会成员和ELLIS博士项目的协调员。我的研究小组正在开发用于计算机视觉、自然语言和机器人的机器学习模型，应用于自动驾驶、VR/AR和科学文献分析。'
+            }
         }
         data_list.append(data)
     re_data = {'data_list': data_list}

@@ -6,13 +6,10 @@
 					<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 				</view>
 				<view class="tui-search-box">
-					<view class="tui-search-text">需求详情</view>
+					<view class="tui-search-text">订单发起</view>
 				</view>
-				<view class="tui-notice-box" @tap="openEntChat" v-if='isUserExpert'>
-					<text class="tui-add-text">企业</text>
-				</view>
-				<view class="tui-notice-box" @tap="toExperts" v-else>
-					<text class="tui-add-text">专家</text>
+				<view class="tui-notice-box" @tap="confirm">
+					<text class="tui-add-text">确认</text>
 				</view>
 			</view>
 		</tui-navigation-bar>
@@ -20,77 +17,103 @@
 			<view class="demand-info-item">
 				<view>需求题目：{{ demandinfo.title}} </view>
 				<view>企业名称：{{ demandinfo.comName}} </view>
-				<view>研发经费：{{ demandinfo.fund}} </view>
-				<view>研发周期：{{ demandinfo.period}} </view>
+				<view>需求内容：{{ demandinfo.content}} </view>
 				<view>研发地点：{{ demandinfo.place}} </view>
 			</view>
-			<view class="demand-info-item">
-				<view>需求内容： </view>
-				<view>{{ demandinfo.content}} </view>
-			</view>
+		</view>
+		<view class="example">
+			<uni-forms>
+				<uni-forms-item label='研发经费'>
+					<uni-easyinput v-model="form_price" placeholder='必填' />
+				</uni-forms-item>
+				<uni-forms-item label='研发周期'>
+					<uni-easyinput v-model="form_time" placeholder='必填' />
+				</uni-forms-item>
+			</uni-forms>
 		</view>
 	</view>
 </template>
 
 <script>
-	
-import { api } from '@/api';
 
+import { api } from '@/api';
+	
+	
 	export default {
-		// onLoad(data) {
-		//  this.id = data.id
-		// 	this.demandinfo.title = data.title
-		// 	this.demandinfo.comName = data.comName
-		// 	this.demandinfo.fund = data.fund
-		// 	this.demandinfo.period = data.period
-		// 	this.demandinfo.place = data.place
-		// 	this.demandinfo.content = data.content
-		// },
+		onLoad(data) {
+			this.resolusionId = data.rid
+			this.form_price = this.demandinfo.fund
+			this.form_time = this.demandinfo.period
+		},
 		computed: {
 			demandinfo() {
-				const o = this.rawDemand;
+				const o = this.$store.state.demand_detail;
 				console.log('detail title', o.title);
 				const meta = o.meta || {};
 				return {
 					id: o.id,
 					title: o.title,
-					comName: o.company_meta?.name, // '张三有限公司'
+					comName: '张三有限公司', // TODO
 					fund: meta.fund || '',
 					period: meta.period || '',
 					place: meta.place || '',
 					content: o.description,
 				}
-			},
-			rawDemand() {
-				return this.$store.state.demand_detail;
-			},
-			isUserExpert() {
-				return this.$store.state.userInfo.user_type == 0;
+				// return {
+				// 	id: 111,
+				// 	title: '无人驾驶',
+				// 	comName: '张三有限公司', // TODO
+				// 	fund: '200000',
+				// 	period: '1个月',
+				// 	place: '北京',
+				// 	content: '无人驾驶汽车真牛',
+				// }
+			}
+		},
+		data() {
+			return {
+				resolusionId: 111,
+				form_price: '',
+				form_time: '',
 			}
 		},
 		methods: {
 			back() {
 				uni.navigateBack()
 			},
-			toExperts() {
-				const id = this.demandinfo.id
-				uni.navigateTo({
-					url: '../experts/experts?id=' + id
-				})
-			},
-			async openEntChat() {
-				const uid = this.$store.state.userInfo.id;
-				const eid = this.rawDemand.user.id;
-				const demand_id = this.rawDemand.id;
-				const res = await api.post('chat/create', {
-					chatroom_name: "聊天", // TODO
-					from_user_id: uid,
-					to_user_id: eid,
-					demand_id
+			async confirm() {
+				const id = this.resolusionId
+				const time = this.form_time.trim()
+				const price = this.form_price.trim()
+
+				if (!time) {
+					return this.toast("请填写研发周期");
+				}
+				if (!price) {
+					return this.toast("请填写研发经费");
+				}
+				
+				const resp = await api.post('resolution/create-order', {
+					id,
+					time,
+					price
 				});
-				uni.navigateTo({
-					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
-				});
+
+				if (resp.msg) {
+					uni.navigateBack({
+						url: '/',
+						complete() {
+							setTimeout(() => {
+								uni.showToast({
+									title: '订单发起成功',
+									icon: "success",
+									duration: 1000
+								});
+							}, 100);
+						}
+					});
+				} else
+					this.toast('订单发起失败');
 			}
 		}
 	}
@@ -169,5 +192,10 @@ import { api } from '@/api';
 		color: #333333;
 		font-size: 20upx;
 		padding: 15upx 0;
+	}
+
+	.example {
+		padding: 15px;
+		background-color: #fff;
 	}
 </style>

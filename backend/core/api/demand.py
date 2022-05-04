@@ -50,7 +50,7 @@ def demand2json(demand: Demand) -> dict:
             'id': demand.user.id,
             'username': demand.user.username,
         },
-        'company_meta' : verified_user.meta,
+        'company_meta' : json.loads(verified_user.meta) if verified_user else None,
         'created_at': demand.created_at,
         'description': demand.description,
         'title': demand.title,
@@ -112,5 +112,5 @@ def get_demand_list(request: HttpRequest):
 @require_http_methods('GET')
 def get_all_demands(request: HttpRequest):
     demands = Demand.objects.all()
-    re_data = {'demand_list': [demand2json(demand) for demand in demands]}
+    data = {'demand_list': [demand2json(demand) for demand in demands]}
     return success_api_response(data)

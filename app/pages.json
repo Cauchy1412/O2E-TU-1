@@ -392,6 +392,24 @@
 				}
 			}
 
+		},
+		{
+			"path": "pages/Order/OrderManagement",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		
+		},
+		{
+			"path": "pages/Order/OrderDetail",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		
 		}, {
 			"path": "pages/experts/experts",
 			"style": {
@@ -403,6 +421,16 @@
 		}
 	    ,{
             "path" : "pages/expert-info/expert-info",
+            "style" :                                                                                    
+            {
+                "app-plus": {
+                	"titleNView": false
+                }
+            }
+            
+        }
+        ,{
+            "path" : "pages/create-order/create-order",
             "style" :                                                                                    
             {
                 "app-plus": {

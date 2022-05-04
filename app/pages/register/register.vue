@@ -33,10 +33,7 @@
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
 						<view class="tui-cell-input">
 							<tui-icon name="people" color="#6d7a87" :size="40"></tui-icon>
-							<input :value="expertData.gender" placeholder="性别" placeholder-class="tui-phcolor" type="text" maxlength="15" @input="inputGender" />
-							<view class="tui-icon-close" v-show="expertData.gender" @tap="clearInput(1, 'gender')">
-								<tui-icon name="close-fill" :size="32" color="#bfbfbf"></tui-icon>
-							</view>
+							<input :value="expertData.gender" placeholder="性别" placeholder-class="tui-phcolor" type="text" disabled="true" @tap="changeGender" />
 						</view>
 					</tui-list-cell>
 					<tui-list-cell :hover="false" :lineLeft="false" backgroundColor="transparent">
@@ -141,21 +138,18 @@
 			</view>
 			<view class="tui-cell-text">
 				注册代表同意
-				<view class="tui-color-primary" hover-class="tui-opcity" :hover-stay-time="150" @tap="protocol">PaperDaily用户服务协议、隐私政策</view>
+				<view class="tui-color-primary" hover-class="tui-opcity" :hover-stay-time="150" @tap="protocol">本平台用户服务协议及隐私政策</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {
-		userRegister,
-		getCode,
-	} from '@/api/register.js'
-	import {
-		mapMutations
-	} from 'vuex';
+	import { userRegister, getCode,} from '@/api/register.js'
+	import { mapMutations } from 'vuex';
 	import swiperTabHead from "../../components/index/swiper-tab-head.vue";
+	
+	let gender=['男','女'];
 	
 	export default {
 		components: {
@@ -187,6 +181,7 @@
 				isSend: false,
 				btnSendText: '获取验证码' ,//倒计时格式：(60秒)
 				domain_str:'',
+				dropdownShow: false,
 				expertData: {
 					name:'',				//真实姓名
 					gender:'',				
@@ -244,6 +239,14 @@
 			},
 			inputGender: function(e) {
 				this.expertData.gender = e.detail.value;
+			},
+			changeGender: function(e) {
+				uni.showActionSheet({
+					itemList: gender,
+					success: res => {
+						this.expertData.gender = gender[res.tapIndex]
+					}
+				})
 			},
 			inputProfessor: function(e) {
 				this.expertData.professor = e.detail.value;

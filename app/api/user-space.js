@@ -42,3 +42,11 @@ export const getTopicTitleByUid = async (id) => {
 	let result = await axios.get('topic/title/user/'+id);
 	return result
 }
+
+export const get_user_info = async (data) => {
+	let headers = {
+		"Authorization":'Bearer ' + uni.getStorageSync('token')
+	}
+	let result = await axios.post('user/get-user-info',data,headers);
+	return result
+}
