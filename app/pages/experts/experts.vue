@@ -26,11 +26,9 @@
 </template>
 
 <script>
-	import { api } from '@/api';
-<<<<<<< HEAD
-=======
-	
->>>>>>> 6a2c73ded47de9cd3280a9a9000fc144a6169ee0
+	import {
+		api
+	} from '@/api';
 	export default {
 		onLoad(data) {
 			this.demandId = data.id
@@ -70,22 +68,19 @@
 			goDetail(item) {
 				// FIXME: urls have length limits, use Vuex store to share lengthy objects or leave the detail page call backend
 				uni.navigateTo({
-					url: '/pages/expert-info/expert-info?id=' + item.id + '&demandId=' + this.demandId + '&img=' + item.img + '&name=' + item.name + '&sex=' + item.sex + '&title=' + item.title + '&field=' + item.field + '&info=' + item.info
+					url: '/pages/expert-info/expert-info?id=' + item.id + '&demandId=' + this.demandId + '&img=' +
+						item.img + '&name=' + item.name + '&sex=' + item.sex + '&title=' + item.title + '&field=' +
+						item.field + '&info=' + item.info
 				})
 			},
 			async requestData() {
-<<<<<<< HEAD
-				const res = await api.get('resovle/recommend?id=' + this.demandId);
-				this.expertsList = res.datalist.map(o => ({
-=======
 				// TODO: backend is not implemented
 				return;
-				const res = await api.get('experts/experts?demandId=' + this.demandId);
-				this.expertsList = res.expertsList.map(o => ({
->>>>>>> 6a2c73ded47de9cd3280a9a9000fc144a6169ee0
-					...o,
-				}));
-			},
+				const res = await api.get('resovle/recommend?id=' + this.demandId);
+				this.expertsList = res.datalist.map(o => ({
+					// TODO: backend is not implemented
+				}))
+			}
 		}
 	}
 </script>
