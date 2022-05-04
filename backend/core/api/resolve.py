@@ -209,6 +209,7 @@ def create_order(request: HttpRequest):
         resolution = Resolution.objects.get(id=id)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Knowledge ID.")
+    resolution.state = 1
     resolution.time = time
     resolution.price = price
     resolution.save()
