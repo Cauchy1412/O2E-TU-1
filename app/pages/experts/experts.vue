@@ -26,6 +26,7 @@
 </template>
 
 <script>
+	import { api } from '@/api';
 	export default {
 		onLoad(data) {
 			this.demandId = data.id
@@ -68,8 +69,8 @@
 				})
 			},
 			async requestData() {
-				const res = await api.get('experts/experts?demandId=' + this.demandId);
-				this.expertsList = res.expertsList.map(o => ({
+				const res = await api.get('resovle/recommend?id=' + this.demandId);
+				this.expertsList = res.datalist.map(o => ({
 					...o,
 				}));
 			},

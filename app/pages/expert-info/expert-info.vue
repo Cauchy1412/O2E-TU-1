@@ -26,6 +26,9 @@
 				<view>{{ expertinfo.info}} </view>
 			</view>
 		</view>
+		<view class="subBtnBox"  @tap="createOrder">
+			<view class="subBtn">发起订单 </view>
+		</view>
 	</view>
 </template>
 
@@ -57,6 +60,9 @@
 				uni.navigateTo({
 					url: '../user-chat/user-chat?demandId=' + this.demandId + '&expertId=' + this.expertinfo.id 
 				})
+			},
+			createOrder() {
+				
 			}
 		}
 	}
@@ -152,5 +158,24 @@
 		color: #333333;
 		font-size: 20upx;
 		padding: 15upx 0;
+	}
+	
+	.subBtnBox{
+	width:100%;
+	position: fixed;
+	bottom:0;
+	}
+	
+	.subBtn{
+	width: 80%;
+	height: 72rpx;
+	background: linear-gradient(90deg, #ffff00 0%, #f0f000 100%);
+	border-radius: 44rpx;
+	text-align: center;
+	line-height:72rpx;
+	font-size: 32rpx;
+	font-weight: 600;
+	color:#000000;
+	margin:46rpx auto;
 	}
 </style>
