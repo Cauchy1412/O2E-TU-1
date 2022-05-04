@@ -108,6 +108,8 @@ export default {
       this.getDemand()
     },
     getDemand() {
+      this.loading = true;
+      listData.length=0;
       get_demand_all()
           .then((res) => {
             console.log(res);
@@ -124,6 +126,7 @@ export default {
               })
             }
             console.log(listData)
+            this.loading = false
           })
           .catch((error) => {
             console.log(error)

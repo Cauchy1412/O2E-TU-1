@@ -119,14 +119,14 @@ export default {
           console.log(res)
           for (let i = 0; i < res.ret_data.length; i++) {
             data.push({
-              key:res.ret_data[i].id,
-              company:res.ret_data[i].company_meta['name'],
-              expert:res.ret_data[i].scholar_meta['name'],
-              time:res.ret_data[i].time,
-              created_at:res.ret_data[i].created_at,
-              title: res.ret_data[i].title,
-              state: this.status(res.ret_data[i].state),
-              price: res.ret_data[i].price,
+              key:res.data[i].id,
+              company:res.data[i].company_meta['name'],
+              expert:res.data[i].scholar_meta['name'],
+              time:res.data[i].time,
+              created_at:res.data[i].created_at,
+              title: res.data[i].title,
+              state: this.status(res.data[i].state),
+              price: res.data[i].price,
             })
           }
         })
