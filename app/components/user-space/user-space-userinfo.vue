@@ -4,12 +4,22 @@
 			<view>账号信息</view>
 			<view>用户名：{{userinfo.username}}</view>
 			<view>邮箱：{{userinfo.email}}</view>
-			<view>ID：{{userinfo.id}}</view>
+			<!--<view>ID：{{userinfo.id}}</view>-->
 		</view>
-		<view class="user-space-userinfo-item">
+		<view class="user-space-userinfo-item" v-if="userinfo.user_type==0">
 			<view>个人信息</view>
-			<view>机构：{{userinfo.institution}}</view>
-<!-- 			<view>故乡：{{userinfo.path}}</view> -->
+			<view>真实姓名：{{userinfo.truename}}</view>
+			<view>性别：{{userinfo.gender}}</view>
+			<view>职称：{{userinfo.professor}}</view>
+			<view>研究领域：{{userinfo.domains}}</view>
+		</view>
+		<view class="user-space-userinfo-item" v-if="userinfo.user_type==2">
+			<view>个人信息</view>
+			<view>企业名：{{userinfo.truename}}</view>
+			<view>公司类型：{{userinfo.business_type}}</view>
+			<view>注册地：{{userinfo.place}}</view>
+			<view>注册号：{{userinfo.regisnumber}}</view>
+			<view>法定代表人：{{userinfo.legalperson}}</view>
 		</view>
 	</view>
 </template>

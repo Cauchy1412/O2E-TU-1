@@ -10,27 +10,59 @@
 				<view class="icon iconfont icon-bianji1"></view>
 			</view>
 		</view>
-		<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="!userInfo.user_type">
-			<view>机构</view>
-			<view class="u-f-ac">
-				<input type="text" :placeholder="''+userInfo.institution" v-model="institution" @input="inputInstitution"/>
-				<view class="icon iconfont icon-bianji1"></view>
+		<view v-if="!userInfo.user_type">
+			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="!userInfo.user_type">
+				<view>真实姓名</view>
+				<view class="u-f-ac">
+					<input type="text" v-model="username"/>
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
+			</view>
+			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="!userInfo.user_type">
+				<view>性别</view>
+				<view class="u-f-ac">
+					<input type="text" v-model="institution" />
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
+			</view>		
+			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="!userInfo.user_type">
+				<view>职称</view>
+				<view class="u-f-ac">
+					<input type="text" v-model="job" />
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
+			</view>	
+		</view>
+		<view>
+			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
+				<view>企业名</view>
+				<view class="u-f-ac">
+					<input type="text" v-model="name" />
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
+			</view>
+			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
+				<view>企业类型</view>
+				<view class="u-f-ac">
+					<input type="text" v-model="type" />
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
+			</view>
+			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
+				<view>法定代表人</view>
+				<view class="u-f-ac">
+					<input type="text" v-model="institution" />
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
 			</view>
 		</view>
-		<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
-			<view>企业名</view>
-			<view class="u-f-ac">
-				<input type="text" v-model="institution" @input="inputInstitution"/>
-				<view class="icon iconfont icon-bianji1"></view>
-			</view>
-		</view>
-		<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
+		<!--<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="userInfo.user_type">
 			<view>地址</view>
 			<view class="u-f-ac" @tap="showMulLinkageThreePicker">
 				<view>{{pickerText}}</view>
 				<view class="icon iconfont icon-bianji1"></view>
 			</view>
-		</view>
+		</view>-->
 		<!--<view class="user-set-userinfo-list u-f-ac u-f-jsb">
 			<view>昵称</view>
 			<view class="u-f-ac">
@@ -123,6 +155,7 @@
 			}
 		},
 		mounted() {
+			console.log(this.userInfo)
 			if(this.userInfo&&this.userInfo.id){
 				this.userpic = this.userInfo.authorUrl
 				this.username = this.userInfo.userName

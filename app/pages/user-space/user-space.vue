@@ -22,6 +22,14 @@
 		<view style="margin-bottom: 5upx;"></view>
 		
 		<template v-if="tabIndex==0">
+			<!-- 主页 -->
+			<user-space-userinfo 
+				:userinfo="info"
+				:authInfo="userInfo"
+				></user-space-userinfo>
+		</template>
+		
+		<template v-if="tabIndex==1">
 			<!-- 列表 -->
 			<view class="topic-list">
 			<block v-for="(list,listindex) in topicList" :key="listindex">
@@ -30,16 +38,6 @@
 			</view>
 			<!-- 上拉加载 -->
 		</template>
-		
-		<template v-if="tabIndex==1">
-			<!-- 主页 -->
-			<user-space-userinfo 
-				:userinfo="info"
-				:authInfo="userInfo"
-				></user-space-userinfo>
-		</template>
-
-		
 
 		<!-- 操作菜单 -->
 		<user-space-popup :show="show" 
@@ -62,7 +60,7 @@
 	import {mapMutations, mapState} from 'vuex'
 	import topicList from "../../components/news/topic-list.vue";
 	import time from '../../common/time.js'
-	import {saveUserAccess,getUserInfo,getTopicListByUid,getTopicTitleByUid} from '@/api/user-space.js'
+	import {saveUserAccess,get_user_info,getTopicListByUid,getTopicTitleByUid} from '@/api/user-space.js'
 	import {
 		picUrl
 	} from "@/api/common.js";
@@ -84,6 +82,7 @@
 		onLoad(data) {
 			this.info.id = data.uid
 			this.initData(data.uid)
+			console.log("onLoad")
 			// if(data.uid!=this.userInfo.id){
 			// 	saveUserAccess({
 			// 		fromId:this.userInfo.id?this.userInfo.id:(+new Date+"").slice(5),
@@ -97,6 +96,7 @@
 		},
 		onShow() {
 		    if (this.ifOnShow == true) {
+			console.log("onShow")
 			this.initData(this.info.id)
 		      window.location.reload();//返回当前页面强制书哈辛
 		    } 
@@ -111,18 +111,23 @@
 				ifOnShow: false,//首先设置ifOnShow不然会一直循环刷新
 				show:false,
 				info:{
-					currentId: -1,
+					currentId: -1,		//app使用者的id
+					id:0,				//主页对应用户的id
 					bgimg:1,
 					userpic:"",
 					username:"",
 					email:"",
-					institution:"",
-					sex:0,
-					age:0,
+					user_type:-1,
+					verified_type:-1,
+					truename:"",
+					gender:"",
+					professor:"",
+					domains:"",
+					business_type:"",
+					place:"",
+					regisnumber:"",
+					legalperson:"",
 					isguanzhu:0,
-					id:0,
-					job:"",
-					path:"",
 				},
 				topicList:[],
 				titleList:[],
@@ -133,7 +138,6 @@
 				],
 				tabIndex:0,
 				tabBars:[
-					{ name:"论文解读",id:"lunwenjiedu" },
 					{ name:"主页",id:"zhuye" },
 				],
 				tablist:[ {},
@@ -161,22 +165,44 @@
 		},
 		methods: {
 			async initData(id){
-				let data = await getUserInfo({"user_id":id});
+				let data = await get_user_info({"id":id});
 				let topicList = await getTopicListByUid(id);
 				this.topicList = topicList
-
+				// console.log(data)
 				if("id" in data){
 					this.spacedata[0].num = data.total_like>=1000?(data.total_like/1000)+"k":data.total_like
-					this.spacedata[1].num = data.total_follow
+					this.spacedata[1].num = data.total_fan
 					this.spacedata[2].num = data.total_fan
 					let currentId = this.userInfo.id
-					this.info.currentId = currentId;
-					this.info.userpic = picUrl+data.userpic;
-					this.info.username = data.username;
+					this.info.currentId = currentId
+					this.info.id = data.id
+					this.info.userpic = picUrl+data.userpic
+					this.info.username = data.username
 					this.info.email = data.email
-					this.info.institution=data.institution
-					this.info.isguanzhu = data.is_following;
-					this.info.id = data.id;
+					this.info.user_type = data.user_type
+					if (this.info.user_type == 0) {
+						this.tabBars.push({ name:"论文解读",id:"lunwenjiedu" })
+					}
+					this.initmeta(this.info.user_type, data.meta)
+					this.info.isguanzhu = data.is_following
+				}
+			},
+			initmeta(type, meta) {
+				let domain_str = ""
+				if(type == 0) {
+					for (let i = 0; i < meta['domains'].length; i++) {
+						domain_str = domain_str + meta['domains'][i] + " "
+					}
+					this.info.truename = meta['name']
+					this.info.gender = meta['gender']
+					this.info.professor = meta['professor']
+					this.info.domains = domain_str
+				} else if (type == 2) {
+					this.info.truename = meta['name']
+					this.info.business_type = meta['business_type']
+					this.info.place = meta['place']
+					this.info.regisnumber = meta['regisnumber']
+					this.info.legalperson = meta['legalperson']
 				}
 			},
 			userActive(){
@@ -186,7 +212,7 @@
 				let data = await getUserInfo({"user_id":this.info.id});			
 				if("id" in data){
 					this.spacedata[0].num = data.total_like>=1000?(data.total_like/1000)+"k":data.total_like
-					this.spacedata[1].num = data.total_follow
+					this.spacedata[1].num = data.total_fan
 					this.spacedata[2].num = data.total_fan
 					let currentId = this.userInfo.id
 					this.info.currentId = currentId;
