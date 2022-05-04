@@ -1,10 +1,9 @@
 """User Management APIs
 """
 
-from this import d
 from django.http import HttpRequest
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
-from backend.core.models import resolution
+from core.models import resolution
 
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
@@ -21,7 +20,7 @@ import json
 
 @response_wrapper
 @jwt_auth()
-@require_GET
+@require_POST
 def recommend(request: HttpRequest):
     """set_verified
 
@@ -38,15 +37,16 @@ def recommend(request: HttpRequest):
     demand_id = data.get('demand_id')
     demand = Demand.objects.get(id=demand_id)
     user = User.objects.filter(user_type=0).first()
+    verified_user = user.verified_info.first()
     resolutions = []
     data_list = []
     for i in range(3):
-        resolution = resolution(demand=demand, user=user, meta=verify_user.meta)
+        resolution = resolution(demand=demand, user=user, meta=verified_user and verified_user.meta)
         resolution.save()
         resolutions.append(resolution)
         data = {
             'id': resolution.id,
-            'meta': json.loads(verify_user.meta),
+            'meta': json.loads(verified_user.meta),
         }
         data_list.append(data)
     re_data = {'data_list': data_list}
@@ -135,10 +135,21 @@ def get_company_resolutions(request: HttpRequest):
     ret_resolutions = []
     for resolution in resolutions:
         if resolution.state != 0:
-            ret_resolutions.append(resolution) 
+            ret_resolutions.append(resolution)
     ret_data = {'resolution_list': [resolution2json(resolution) for resolution in ret_resolutions]}
     return success_api_response(ret_data)
 
+@response_wrapper
+@jwt_auth()
+@require_http_methods('GET')
+def get_all_orders(request: HttpRequest):
+    resolutions = Resolution.objects.all()
+    ret_resolutions = []
+    for resolution in resolutions:
+        if resolution.state != 0:
+            ret_resolutions.append(resolution)
+    ret_data = {'resolution_list': [resolution2json(resolution) for resolution in ret_resolutions]}
+    return success_api_response(ret_data)
 
 @jwt_auth()
 @require_POST
@@ -152,7 +163,7 @@ def update_resolution_state(request: HttpRequest):
     [route]: /api/resolution/update-resolution-state
 
     parms:
-        - id 
+        - id
         - state
     """
     data: dict = parse_data(request)
@@ -183,9 +194,9 @@ def create_order(request: HttpRequest):
     [route]: /api/resolution/create-order
 
     parms:
-        - id 
-        - time 
-        - price 
+        - id
+        - time
+        - price
     """
     data: dict = parse_data(request)
     if not data:

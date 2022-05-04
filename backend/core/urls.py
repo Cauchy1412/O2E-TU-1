@@ -11,7 +11,7 @@ from core.api.profile import get_profile
 from core.api.search import search_user_list,search_user_full_list
 from core.api.sign_up import change_password, change_email, CREATE_USER_API, FORGET_PASSWORD_API
 from core.api.comment import create_comment, delete_comment, get_comment, get_comment_list
-from core.api.demand import create_demand,  get_demand_list, get_demand
+from core.api.demand import create_demand,  get_demand_list, get_demand, get_all_demands
 
 from core.api.user import follow, unfollow, list_favorite_recent, change_organization
 
@@ -20,7 +20,7 @@ from core.api.follower import list_followers, list_full_followers
 from core.api.user_icon import USER_ICON_API,read_img,read_default_img
 from core.api.notification import (NOTIFICATION_API, NOTIFICATION_SET_API)
 from core.api.image import (IMAGE_API, IMAGE_SET_API)
-from core.api.resolve import recommend, get_resolution, get_scholar_resolutions, get_company_resolutions, update_resolution_state, create_order
+from core.api.resolve import recommend, get_resolution, get_scholar_resolutions, get_company_resolutions, update_resolution_state, create_order, get_all_orders
 
 from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
   collectInterpretation, uncollectInterpretation, likeInterpretation, searchInterpretation, \
@@ -28,6 +28,7 @@ from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
       getAllInterpretation, queryVisitorNumber, queryKeywordTops, queryTagRatio
 
 from core.api.user import get_all_user_info,delete_user,change_user_info,get_user_info
+from core.api.verify import set_failed, set_verified
 
 urlpatterns = [
 
@@ -49,6 +50,8 @@ urlpatterns = [
     path('demand/create', create_demand),
     path('demand', get_demand_list),
     path('demand/<int:id>', get_demand),
+    path('demand/all', get_all_demands),
+
 
     # comment apis
     path('comment/create', create_comment),
@@ -134,5 +137,12 @@ urlpatterns = [
     path('resolution/get-scholar-resolutions', get_scholar_resolutions),
     path('resolution/get-company-resolutions', get_company_resolutions),
     path('resolution/update-resolution-state', update_resolution_state),
+    path('resolution/create-order', create_order),
+    path('resolution/all', get_all_orders),
+
+
+    # verify
+    path('verify/set-verified', set_verified),
+    path('verify/set-failed', set_failed),
 ]
 

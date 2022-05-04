@@ -33,6 +33,8 @@
 </template>
 
 <script>
+	import { api } from '@/api';
+	
 	export default {
 		onLoad(data) {
 			this.expertinfo = data
@@ -42,7 +44,7 @@
 			return {
 				demandId: '',
 				expertinfo: {
-					id: '',
+					id: 22,
 					img: '',
 					name: '',
 					sex: '',
@@ -56,13 +58,27 @@
 			back() {
 				uni.navigateBack()
 			},
-			chat() {
+			async chat() {
+				const uid = this.$store.state.userInfo.id;
+				const eid = this.expertinfo.id;
+				const demand_id = this.demandId;
+				const res = await api.post('chat/create', {
+					chatroom_name: "聊天",  // TODO
+					from_user_id: uid,
+					to_user_id: eid,
+					demand_id
+				});
 				uni.navigateTo({
+<<<<<<< HEAD
 					url: '../user-chat/user-chat?demandId=' + this.demandId + '&expertId=' + this.expertinfo.id 
 				})
 			},
 			createOrder() {
 				
+=======
+					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
+				});
+>>>>>>> 6a2c73ded47de9cd3280a9a9000fc144a6169ee0
 			}
 		}
 	}

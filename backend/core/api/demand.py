@@ -1,5 +1,5 @@
 from django.http import HttpRequest
-from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -43,12 +43,14 @@ def create_demand(request: HttpRequest):
 
 
 def demand2json(demand: Demand) -> dict:
+    verified_user = demand.user.verified_info.first()
     data = {
         'id' : demand.id,
         'user': {
             'id': demand.user.id,
             'username': demand.user.username,
         },
+        'company_meta' : verified_user.meta,
         'created_at': demand.created_at,
         'description': demand.description,
         'title': demand.title,
@@ -104,3 +106,11 @@ def get_demand_list(request: HttpRequest):
     demands = user.sended_demands.all()
     re_data = {'demand_list': [demand2json(demand) for demand in demands]}
     return success_api_response(re_data)
+
+@response_wrapper
+@jwt_auth()
+@require_http_methods('GET')
+def get_all_demands(request: HttpRequest):
+    demands = Demand.objects.all()
+    data = {'demand_list': [demand2json(demand) for demand in demands]}
+    return success_api_response(data)
