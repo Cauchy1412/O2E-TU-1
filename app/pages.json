@@ -392,6 +392,24 @@
 				}
 			}
 
+		},
+		{
+			"path": "pages/Order/OrderManagement",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		
+		},
+		{
+			"path": "pages/Order/OrderDetail",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		
 		}, {
 			"path": "pages/experts/experts",
 			"style": {
