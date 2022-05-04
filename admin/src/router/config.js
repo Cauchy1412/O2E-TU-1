@@ -82,22 +82,6 @@ const options = {
                             name: '注册审核',
                             component: () => import('@/pages/form/advance/RegisterForm'),
                         },
-                        {
-                            path: 'basic',
-                            name: '步骤表',
-                            component: () => import('@/pages/form/advance/AdvancedForm'),
-                        },
-                        {
-                            path: 'standard',
-                            name: '标准列表',
-                            component: () => import('@/pages/list/StandardList'),
-                        },
-                        {
-                            path: 'query',
-                            name: '查询列表',
-                            component: () => import('@/pages/list/QueryList'),
-                        },
-                        
                         // {
                         //     path: 'new',
                         //     name: '新增用户',
@@ -209,7 +193,7 @@ const options = {
                     ]
                 },
                 {
-                    path: 'demand',
+                    path: 'resolve',
                     name: '对接管理',
                     meta: {
                         icon: 'profile'
@@ -217,9 +201,14 @@ const options = {
                     component: PageView,
                     children: [
                         {
-                            path: 'list',
+                            path: 'demand',
                             name: '需求列表',
                             component: () => import('@/pages/list/demand/DemandList'),
+                        },
+                        {
+                            path: 'resolution',
+                            name: '订单列表',
+                            component: () => import('@/pages/form/resolution/ResolutionForm'),
                         },
                     ]
                 },

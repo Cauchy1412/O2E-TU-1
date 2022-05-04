@@ -1,10 +1,6 @@
 <template>
   <div>
-    <a-card
-      style="margin-top: 24px"
-      :bordered="false"
-      title="标准列表"
-    >
+    <a-card :bordered="false">
       <a-list
           size="large"
           :pagination="pagination"
@@ -14,34 +10,54 @@
             <a slot="title" >{{item.title}}</a>
             <a slot="description"
                class="textbreak"
-               href="javascript:void(0)">
+               href="javascript:void(0)"
+               @click="handleClick">
               {{item.description|ellipsis}}</a>
           </a-list-item-meta>
+          <a-Modal v-model="showDetail" title="" @ok="handleOk" width="750px">
+            <a-card :bordered="false" dis-hover>
+              <div slot="title">
+                发布用户:
+                <a href="javascript:0">{{item.username}}</a>
+              </div>
+              <p slot="extra"> 该需求发布于: {{item.created_at}}</p>
+              <a-Row> 标题: {{item.title}}</a-Row>
+              <br />
+              <br />
+              <br />
+              <a-Row> 需求描述: {{item.description}}</a-Row>
+              <br />
+              <a-Row> 研发周期: {{item.period}}</a-Row>
+              <a-Row> 研发经费: {{item.fund}}</a-Row>
+              <a-Row> 研发地点: {{item.place}}</a-Row>
+            </a-card>
+          </a-Modal>
           <div class="list-content">
             <div class="list-content-item">
+              <span>发布用户</span>
+              <p>{{item.username}}</p>
+            </div>
+            <div class="list-content-item">
               <span>创建时间</span>
-              <p>2018-07-26 22:44</p>
+              <p>{{item.created_at}}</p>
             </div>
             <div class="list-content-item">
               <span>研发周期</span>
-              <p>暂定</p>
+              <p>{{item.period}}</p>
             </div>
             <div class="list-content-item">
               <span>研发经费</span>
-              <p>暂定</p>
+              <p>{{item.fund}}</p>
             </div>
             <div class="list-content-item">
               <span>研发地点</span>
-              <p>暂定</p>
+              <p>{{item.place}}</p>
             </div>
-          </div>
-          <div slot="actions">
-            <a>查看详情</a>
           </div>
           <div slot="actions">
             <a-dropdown>
               <a-menu slot="overlay">
-                <a-menu-item><a>编辑</a></a-menu-item>
+                <a-menu-item @click="handleClick"><a>查看详情</a></a-menu-item>
                 <a-menu-item><a>删除</a></a-menu-item>
               </a-menu>
               <a>更多<a-icon type="down"/></a>
@@ -57,23 +73,17 @@
 
 
 <script>
+import {get_demand_all} from "../../../services/demand";
 
-const listData = [{
-                    title: "随便写写",
-                    description: "那是一种内在的东西， 他们到达不了，也无法触及的.那是一种内在的东西， 他们到达不了，也无法触及的."
-                  },
-                  {
-                    title: "随便写写",
-                    description: "那是一种内在的东西， 他们到达不了，也无法触及的"
-                  }];
+const listData = [];
 
 export default {
   name: "DemandList",
   filters: {
     ellipsis (value) {
       if (!value) return ''
-      if (value.length > 30) {
-        return value.slice(0,30) + '...'
+      if (value.length > 25) {
+        return value.slice(0,25) + '...'
       }
       return value
     }
@@ -81,12 +91,55 @@ export default {
   data() {
     return {
       listData,
+      showDetail:false,
       pagination: {
         onChange: (page) => {
           console.log(page);
         },
         pageSize: 10,
       }
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init:async function() {
+      this.getDemand()
+    },
+    getDemand() {
+      get_demand_all()
+          .then((res) => {
+            console.log(res);
+            for(let i = 0; i < res.data.demand_list.length; i++) {
+              listData.push({
+                key: res.data.demand_list[i].id,
+                username: res.data.demand_list[i].user['username'],
+                title: res.data.demand_list[i].title,
+                description: res.data.demand_list[i].description,
+                created_at:this.dateTrans(res.data.demand_list[i].created_at),
+                fund:res.data.demand_list[i]['meta'].fund?res.data.demand_list[i]['meta'].fund:"暂定",
+                period:res.data.demand_list[i]['meta'].period?res.data.demand_list[i]['meta'].period:"暂定",
+                place:res.data.demand_list[i]['meta'].place?res.data.demand_list[i]['meta'].place:"暂定",
+              })
+            }
+            console.log(listData)
+          })
+          .catch((error) => {
+            console.log(error)
+          });
+    },
+    dateTrans(date) {
+      let dateTime = new Date(new Date(date).getTime() + 8 * 3600 * 1000)
+      dateTime = dateTime.toJSON()
+      dateTime = dateTime.substring(0,19).replace('T', ' ')
+      return dateTime
+    },
+    handleClick() {
+      this.showDetail = true;
+    },
+    handleOk() {
+      this.showDetail = false;
     }
   }
 }
@@ -101,6 +154,7 @@ export default {
 .list-content-item{
   color: @text-color-second;
   display: inline-block;
+  min-width: 70px;
   vertical-align: middle;
   font-size: 14px;
   margin-left: 40px;
