@@ -55,9 +55,9 @@ const columns = [
   },
   {
     title: "企业名",
-    dataIndex: "business",
+    dataIndex: "company",
     width: "18%",
-    scopedSlots: { customRender: "business" },
+    scopedSlots: { customRender: "company" },
   },
   {
     title: "专家名",
@@ -114,25 +114,34 @@ export default {
       this.getResolution();
     },
     getResolution() {
+      this.loading = true
+      data.length = 0       // 两个语句避免数据重复写
       get_resolution_all()
         .then((res) => {
           console.log(res)
-          for (let i = 0; i < res.ret_data.length; i++) {
+          for (let i = 0; i < res.data.resolution_list.length; i++) {
             data.push({
-              key:res.data[i].id,
-              company:res.data[i].company_meta['name'],
-              expert:res.data[i].scholar_meta['name'],
-              time:res.data[i].time,
-              created_at:res.data[i].created_at,
-              title: res.data[i].title,
-              state: this.status(res.data[i].state),
-              price: res.data[i].price,
+              key:res.data.resolution_list[i].id,
+              company:JSON.parse(res.data.resolution_list[i].company_meta)['name'],
+              expert:JSON.parse(res.data.resolution_list[i].scholar_meta)['name'],
+              time:res.data.resolution_list[i].time,
+              created_at:this.dateTrans(res.data.resolution_list[i].created_at),
+              title: res.data.resolution_list[i].title,
+              state: this.status(res.data.resolution_list[i].state),
+              price: res.data.resolution_list[i].price + "元",
             })
           }
+          this.loading = false
         })
         .catch((error) => {
           console.log(error)
         })
+    },
+    dateTrans(date) {
+      let dateTime = new Date(new Date(date).getTime() + 8 * 3600 * 1000)
+      dateTime = dateTime.toJSON()
+      dateTime = dateTime.substring(0,19).replace('T', ' ')
+      return dateTime
     },
     status(state) {
       switch (state) {
