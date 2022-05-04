@@ -128,7 +128,7 @@
 			openDetail(o) {
 				this.$store.state.demand_detail = o;
 				uni.navigateTo({
-					url: '../needs/needs?did=' + o.id,
+					url: '../pages/needs/needs?did=' + o.id,
 				});
 			},
 			async signIn(){

@@ -16,7 +16,7 @@
 		<view class="expert-info">
 			<view class="expert-info-item">
 				<view>{{ expertinfo.name}} </view>
-				<image :src="expertinfo.img" mode="aspectFit"></image>
+				<image :src="expertinfo.img" mode="aspectFit" v-if='expertinfo.img'></image>
 				<view>性别: {{expertinfo.sex}}</view>
 				<view>职称: {{expertinfo.title}}</view>
 				<view>研究领域: {{expertinfo.field}}</view>
@@ -40,6 +40,7 @@
 	export default {
 		onLoad(data) {
 			this.expertinfo = data
+			this.resolusionId = data.rid
 			this.demandId = data.demandId
 		},
 		data() {
@@ -77,7 +78,7 @@
 			},
 			createOrder() {
 				uni.navigateTo({
-					url: '../create-order/create-order?resolusionId=' + this.resolusionId 
+					url: '../create-order/create-order?rid=' + this.resolusionId 
 				})
 			}
 		}

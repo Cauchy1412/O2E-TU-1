@@ -70,18 +70,21 @@
 			goDetail(item) {
 				// FIXME: urls have length limits, use Vuex store to share lengthy objects or leave the detail page call backend
 				uni.navigateTo({
-					url: '/pages/expert-info/expert-info?id=' + item.id + '&demandId=' + this.demandId + '&img=' +
-						item.img + '&name=' + item.name + '&sex=' + item.sex + '&title=' + item.title + '&field=' +
-						item.field + '&info=' + item.info + '&resolutioId=' + item.resolutionId
+					url: '/pages/expert-info/expert-info?id=' + item.id + '&demandId=' + this.demandId + '&rid=' + item.resolusionId
+						+ '&img=' + item.img + '&name=' + item.name + '&sex=' + item.sex + '&title=' + item.title + '&field=' +
+						item.field + '&info=' + item.info
 				})
 			},
 			async requestData() {
 				// TODO: backend is not implemented
-				return;
-				const res = await api.get('resovle/recommend?id=' + this.demandId);
-				this.expertsList = res.datalist.map(o => ({
-					// TODO: backend is not implemented
-				}))
+				const res = await api.post('resolution/recommand', {
+					demand_id: this.demandId
+				});
+				this.expertsList = res.data_list.map(o => ({
+					resolusionId: o.id,
+					id: o.uid,
+					...o.meta
+				}));
 			}
 		}
 	}

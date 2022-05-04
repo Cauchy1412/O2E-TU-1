@@ -18,18 +18,16 @@
 				<view>需求题目：{{ demandinfo.title}} </view>
 				<view>企业名称：{{ demandinfo.comName}} </view>
 				<view>需求内容：{{ demandinfo.content}} </view>
+				<view>研发地点：{{ demandinfo.place}} </view>
 			</view>
 		</view>
 		<view class="example">
-			<uni-forms :modelValue="formData">
+			<uni-forms>
 				<uni-forms-item label='研发经费'>
-					<uni-easyinput v-model="demandinfo.fund" placeholder='必填' />
+					<uni-easyinput v-model="form_price" placeholder='必填' />
 				</uni-forms-item>
 				<uni-forms-item label='研发周期'>
-					<uni-easyinput v-model="demandinfo.period" placeholder='必填' />
-				</uni-forms-item>
-				<uni-forms-item label='研发地点'>
-					<uni-easyinput v-model="demandinfo.place" placeholder='可选' />
+					<uni-easyinput v-model="form_time" placeholder='必填' />
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -37,9 +35,15 @@
 </template>
 
 <script>
+
+import { api } from '@/api';
+	
+	
 	export default {
 		onLoad(data) {
-			this.resolusionId = data.resolutionId
+			this.resolusionId = data.rid
+			this.form_price = this.demandinfo.fund
+			this.form_time = this.demandinfo.period
 		},
 		computed: {
 			demandinfo() {
@@ -69,6 +73,8 @@
 		data() {
 			return {
 				resolusionId: 111,
+				form_price: '',
+				form_time: '',
 			}
 		},
 		methods: {
@@ -77,8 +83,8 @@
 			},
 			async confirm() {
 				const id = this.resolusionId
-				const time = this.demandinfo.period.trim()
-				const price = this.demandinfo.fund.trim()
+				const time = this.form_time.trim()
+				const price = this.form_price.trim()
 
 				if (!time) {
 					return this.toast("请填写研发周期");
@@ -86,14 +92,14 @@
 				if (!price) {
 					return this.toast("请填写研发经费");
 				}
-
+				console.log('coo', id);
 				const resp = await api.post('resolution/create-order', {
 					id,
 					time,
 					price
 				});
 
-				if (!resp) {
+				if (resp.msg) {
 					uni.navigateBack({
 						url: '/',
 						complete() {
@@ -106,8 +112,8 @@
 							}, 100);
 						}
 					});
-				}
-				this.toast('订单发起失败');
+				} else
+					this.toast('订单发起失败');
 			}
 		}
 	}
