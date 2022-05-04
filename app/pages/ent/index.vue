@@ -128,11 +128,11 @@
 			openDetail(o) {
 				this.$store.state.demand_detail = o;
 				uni.navigateTo({
-					url: '../pages/needs/needs?did=' + o.id,
+					url: '/pages/needs/needs?did=' + o.id,
 				});
 			},
 			async signIn(){
-				this.$http.href("../../pages/check-in/check-in")
+				this.$http.href("/pages/check-in/check-in")
 			},
 			onFabClick() {
 				this.navigateToPage('demand/create');

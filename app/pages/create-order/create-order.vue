@@ -92,7 +92,7 @@ import { api } from '@/api';
 				if (!price) {
 					return this.toast("请填写研发经费");
 				}
-				console.log('coo', id);
+				
 				const resp = await api.post('resolution/create-order', {
 					id,
 					time,
