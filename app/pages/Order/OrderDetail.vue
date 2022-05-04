@@ -42,7 +42,7 @@
 			</uni-forms>
 		</view>
 		<view v-if="userInfo.user_type">
-			<view class="order-info-detail-receive" v-on:click="addOrder()">
+			<view class="order-info-detail-receive" v-on:click="Accept()">
 				接受
 			</view>
 			<view class="order-info-detail-refuse" v-on:click="Refuse()">
