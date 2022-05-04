@@ -3,7 +3,7 @@
 		<view class="father-box">
 			<view class="demand-row">
 				<view>
-					{{demand.title}}
+					{{title}}
 				</view>
 				<view style='color: #6c6c6c'>
 					{{formatDate(demand.created_at)}}
@@ -20,7 +20,19 @@
 			demand: {
 				title: String,
 				description: String,
-				created_at: Date
+				created_at: String | Date
+			},
+			show_company: Boolean
+		},
+		computed: {
+			title() {
+				let res = this.demand.title;
+				if (this.show_company) {
+					const ent = this.demand.company_meta?.name;
+					if (ent)
+						res += ' (' + ent + ')';
+				}
+				return res;
 			}
 		},
 		methods: {

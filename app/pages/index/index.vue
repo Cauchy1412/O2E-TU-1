@@ -31,19 +31,20 @@
 							<load-more :loadtext="items.loadtext"></load-more>
 						</template>
 
-						<!-- <template v-if="items.list.length>0&& tabIndex == 1">
-							<block v-for="(item,index1) in items.list" :key="index1">
-								<index-list
-								@likeOrTread="likeOrTread" @opendDetail="opendDetail" @share="share" :item="item" :userInfo="userInfo"
-								 :index="index1"></index-list>
-							</block>
-							<load-more :loadtext="items.loadtext"></load-more>
-						</template> -->
 						<template v-if="items.list.length>0 && tabIndex == 1">
 							<view class="topic-list">
 								<block v-for="(list,index1) in items.list" :key="index1">
 									<card @opendDetail="opendDetail" :cardinfo="list" :index="index1"></card>
 								</block>
+							</view>
+						</template>
+						
+						<template v-if="items.list.length>0 && tabIndex == 2">
+							<view class="topic-list">
+								<view v-for="(list,index1) in items.list" :key="index1" @tap='() => openDemandDetail(list)'>
+									<!--card @opendDetail="list.title" :cardinfo="list" :index="index1"></card-->
+									<demand-row :demand="list" :show_company="true"></demand-row>
+								</view>
 							</view>
 						</template>
 
@@ -105,9 +106,10 @@
 	import myNavBar from "../../components/common/my-nav-bar.vue";
 	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 	import card from '../../components/list-card/list-card-1.vue'
+	import demandRow from '@/components/demand-row.vue';
 	import {
 		getTopicList,
-		getRecommendList
+		getRecommendList, api
 	} from '@/api/index.js'
 	import {
 		giveLike
@@ -125,12 +127,13 @@
 			noThing,
 			uniCalendar,
 			myNavBar,
-			card
+			card,
+			demandRow
 		},
 		data() {
 			return {
 				swiperheight: 500,
-				tabIndex: 1,
+				tabIndex: 2,
 				start:0,
 				remain:3,
 				end: 5,
@@ -176,7 +179,12 @@
 					{
 						name: "热榜",
 						id: "hanfu",
-						page: 1
+						page: 2
+					},
+					{
+						name: "需求广场",
+						id: "demands",
+						page: 3
 					},
 				],
 				newslist: [{
@@ -187,6 +195,11 @@
 					{
 						loadtext: "没有更多数据了",
 						id: "hotList",
+						list: []
+					},
+					{
+						loadtext: "没有更多数据了",
+						id: "demandlist",
 						list: []
 					},
 				],
@@ -204,7 +217,13 @@
 			this.requestData()
 		},
 		onShow() {
-			// this.requestData()
+			this.requestData()
+		},
+		onTabItemTap() {
+			this.requestData()
+		},
+		mounted() {
+			this.requestData();
 		},
 		computed: {
 			...mapState(['userInfo']),
@@ -227,20 +246,22 @@
 				let type = this.tabBars[this.tabIndex].id;
 				let items;
 				try {
-					if(this.tabIndex===1){
+					if(this.tabIndex==1){
 						items = await getTopicList()
-					}else{
+					}else if (this.tabIndex == 0){
 						items = await getRecommendList()
+					} else {
+						const resp = await api.get('demand/all');
+						items = resp.demand_list;
 					}
-					console.log(items)
 				} catch (e) {
-					console.log(e)
+					items = [];
 					return
 				}
 
 				if (items && items.length === 0) {
-					this.tabBars[this.tabIndex].page = page
-					this.newslist[this.tabIndex].loadtext = "没有更多数据了";
+					/*this.tabBars[this.tabIndex].page = page
+					this.newslist[this.tabIndex].loadtext = "没有更多数据了";*/
 					return
 				}
 				// this.tabBars[this.tabIndex].page = page
@@ -255,14 +276,12 @@
 				}else{
 					this.newslist[this.tabIndex].loadtext = "上拉加载更多";
 				}
-                console.log('upd', this.newslist)
 			},
 			publish() {
 				// 打开发布页面
 				this.$http.href("../add-input/add-input")
 			},
 			searchInfo() {
-				console.log("searchInfo")
 				// uni.navigateTo({
 				// 	url: '../search/search',
 				// });
@@ -321,6 +340,7 @@
 			},
 			// 滑动事件
 			tabChange(e) {
+				console.log('tabchange', e);
 				this.tabIndex = e.detail.current;
 				this.requestData(this.tabBars[this.tabIndex].page, this.tabBars[this.tabIndex].id)
 			},
@@ -338,19 +358,19 @@
 					url: '../../pages/detail/detail?id=' + item.id,
 				});
 			},
-			change(e) {
-				console.log(e);
-			},
-			confirm(e) {
-				console.log(e);
-			},
 			initNavigation(e) {
 				this.opcity = e.opcity;
 				this.top = e.top;
 			},
-			async signIn(){
+			signIn() {
 				this.$http.href("../../pages/check-in/check-in")
-			}
+			},
+			openDemandDetail(o) {
+				this.$store.state.demand_detail = o;
+				uni.navigateTo({
+					url: '/pages/needs/needs?did=' + o.id,
+				});
+			},
 		},
 
 	}

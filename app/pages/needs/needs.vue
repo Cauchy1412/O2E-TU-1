@@ -8,7 +8,10 @@
 				<view class="tui-search-box">
 					<view class="tui-search-text">需求详情</view>
 				</view>
-				<view class="tui-notice-box" @tap="toExperts">
+				<view class="tui-notice-box" @tap="openEntChat" v-if='isUserExpert'>
+					<text class="tui-add-text">企业</text>
+				</view>
+				<view class="tui-notice-box" @tap="toExperts" v-else>
 					<text class="tui-add-text">专家</text>
 				</view>
 			</view>
@@ -30,6 +33,9 @@
 </template>
 
 <script>
+	
+import { api } from '@/api';
+
 	export default {
 		// onLoad(data) {
 		//  this.id = data.id
@@ -42,18 +48,24 @@
 		// },
 		computed: {
 			demandinfo() {
-				const o = this.$store.state.demand_detail;
+				const o = this.rawDemand;
 				console.log('detail title', o.title);
 				const meta = o.meta || {};
 				return {
 					id: o.id,
 					title: o.title,
-					comName: '张三有限公司', // TODO
+					comName: o.company_meta?.name, // '张三有限公司'
 					fund: meta.fund || '',
 					period: meta.period || '',
 					place: meta.place || '',
 					content: o.description,
 				}
+			},
+			rawDemand() {
+				return this.$store.state.demand_detail;
+			},
+			isUserExpert() {
+				return this.$store.state.userInfo.user_type == 0;
 			}
 		},
 		methods: {
@@ -65,6 +77,20 @@
 				uni.navigateTo({
 					url: '../experts/experts?id=' + id
 				})
+			},
+			async openEntChat() {
+				const uid = this.$store.state.userInfo.id;
+				const eid = this.rawDemand.user.id;
+				const demand_id = this.rawDemand.id;
+				const res = await api.post('chat/create', {
+					chatroom_name: "聊天", // TODO
+					from_user_id: uid,
+					to_user_id: eid,
+					demand_id
+				});
+				uni.navigateTo({
+					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
+				});
 			}
 		}
 	}
