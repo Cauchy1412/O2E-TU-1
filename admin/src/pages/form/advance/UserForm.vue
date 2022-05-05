@@ -125,10 +125,10 @@ export default {
         .then((res) => {
           console.log(res);
           for (let i = 0; i < res.data.length; i++) {
-            if(res.data[i].usertype==0){
-              this.type="个人"
-            }else if(res.data[i].usertype==1){
-              this.type="学校"
+            if(res.data[i].user_type==0){
+              this.type="专家"
+            }else if(res.data[i].user_type==2){
+              this.type="企业"
             }else{
               this.type="公司"
             }
