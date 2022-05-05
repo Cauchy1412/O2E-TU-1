@@ -17,9 +17,9 @@
 			<view class="expert-info-item">
 				<view>{{ expertinfo.name}} </view>
 				<image :src="expertinfo.img" mode="aspectFit" v-if='expertinfo.img'></image>
-				<view>性别: {{expertinfo.sex}}</view>
-				<view>职称: {{expertinfo.title}}</view>
-				<view>研究领域: {{expertinfo.field}}</view>
+				<view>性别: {{expertinfo.sex || expertinfo.gender}}</view>
+				<view>职称: {{expertinfo.title || expertinfo.professor}}</view>
+				<view>研究领域: {{domain}}</view>
 			</view>
 			<view class="expert-info-detail">
 				<view>简介： </view>
@@ -39,7 +39,6 @@
 
 	export default {
 		onLoad(data) {
-			this.expertinfo = data
 			this.resolusionId = data.rid
 			this.demandId = data.demandId
 		},
@@ -47,15 +46,17 @@
 			return {
 				demandId: '',
 				resolusionId: 111,
-				expertinfo: {
-					id: 22,
-					img: '',
-					name: '',
-					sex: '',
-					title: '',
-					field: '',
-					info: ''
-				}
+			}
+		},
+		computed: {
+			expertinfo() {
+				return this.$store.state.expert_detail;
+			},
+			domain() {
+				if (this.expertinfo.field)
+					return this.expertinfo.field;
+				if (this.expertinfo.domains)
+					return this.expertinfo.domains.join('，');
 			}
 		},
 		methods: {
