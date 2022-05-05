@@ -28,6 +28,7 @@ const store = new Vuex.Store({
 		selTitle: {},
 		category: {},
 		demand_detail: null,
+		expert_detail: null,
 		socket: undefined,
 		$is_open_socket: false
 	},
