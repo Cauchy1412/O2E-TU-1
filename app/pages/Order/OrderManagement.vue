@@ -10,7 +10,7 @@
 						<view class="tui-search-text">订单管理</view>
 					</view>
 					<view class="tui-notice-box">
-						<text class="tui-add-text">管理</text>
+						<text class="tui-add-text" v-on:click="goBack()">返回</text>
 					</view>
 				</view>
 			</tui-navigation-bar>
@@ -62,6 +62,11 @@
 			}
 		},
 		methods:{
+			goBack:function() {
+				uni.navigateBack({
+					
+				})
+			},
 			goDetail:function(stringofid) {
 				uni.navigateTo({
 					url:'./OrderDetail?id='+stringofid
