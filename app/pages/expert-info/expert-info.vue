@@ -57,6 +57,7 @@
 					return this.expertinfo.field;
 				if (this.expertinfo.domains)
 					return this.expertinfo.domains.join('，');
+				return '';
 			}
 		},
 		methods: {
