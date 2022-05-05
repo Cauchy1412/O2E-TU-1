@@ -38,16 +38,19 @@ def recommend(request: HttpRequest):
     demand_id = data.get('demand_id')
     demand = Demand.objects.get(id=demand_id)
 
-    user = User.objects.filter(user_type=0).first()
-    verified_user = user.verified_info.first()
-    resolutions = []
+    users = User.objects.filter(user_type=0, verified_info__isnull=False)
+    if users.exists():
+        users = users[:3]
+    else:
+        users = User.objects.filter(user_type=0)[:3]
+
     data_list = []
-    for i in range(3):
+    for user in users:
+        verified_user = user.verified_info.first()
         resolution = Resolution.objects.filter(demand=demand, user=user).first()
         if not resolution:
             resolution = Resolution(demand=demand, user=user) # , meta=verified_user and verified_user.meta)
             resolution.save()
-        resolutions.append(resolution)
         data = {
             'id': resolution.id,
             'uid': user.id,
@@ -71,8 +74,8 @@ def resolution2json(resolution: Resolution) -> dict:
     verified_scholar = resolution.user.verified_info.first()
     data = {
         'id' : resolution.id,
-        'company_meta' : verified_user.meta,
-        'scholar_meta' : verified_scholar.meta,
+        'company_meta' : json.loads(verified_user.meta) if verified_user else None,
+        'scholar_meta' : json.loads(verified_scholar.meta) if verified_scholar else None,
         'time' : resolution.time,
         'created_at': resolution.created_at,
         'title': demand.title,
