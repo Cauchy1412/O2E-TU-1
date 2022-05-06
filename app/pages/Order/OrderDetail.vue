@@ -27,14 +27,14 @@
 				<uni-forms-item label='发布公司'>
 					{{data.company_meta.name}}
 				</uni-forms-item>
-				<uni-forms-item label='订单价格'>
+				<uni-forms-item label='需求经费'>
 					{{Data.Price}}
 				</uni-forms-item>
-				<uni-forms-item label='订单时间'>
+				<uni-forms-item label='需求周期'>
 					{{Data.Lasttime}}
 				</uni-forms-item>
-				<uni-forms-item label='订单状态'>
-					{{Data.state}}
+				<uni-forms-item label='发起时间'>
+					{{formatDate(data.created_at)}}
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -74,6 +74,7 @@
 			}
 		},
 		onLoad: function(option){
+			this.order_id = option.id;
 			this.Data.order_id = option.id
 			let orderdata = this.getData(option.id)
 		},
@@ -96,7 +97,6 @@
 			},
 			async getData(stringofid) {
 				let result = await api.get('resolution/'+stringofid)
-				console.log('result ' + JSON.stringify(result));
 				const orderdata = this.data = result;
 				this.Data.user_state = orderdata.state
 				this.Data.title = orderdata.title
@@ -105,12 +105,12 @@
 				return result
 			},
 			async Complete() {
-				if (this.state==1) {
-					change_state=2
+				//if (this.state==1) {
+					const change_state=3
 					const resp = await api.post('resolution/update-resolution-state', {
-						id:order_id,state:change_state
+						id:this.order_id,state:change_state
 					});
-					if (!resp) {
+					if (resp.msg) {
 						uni.navigateBack({
 							complete() {
 								setTimeout(() => {
@@ -124,15 +124,15 @@
 						});
 					}
 					this.toast('完成失败');
-				}
+				//}
 			},
 			async Accept (){
-				if (this.state==1) {
-					change_state=2
+				//if (this.state==1) {
+					const change_state=2
 					const resp = await api.post('resolution/update-resolution-state', {
-						id:order_id,state:change_state
+						id:this.order_id,state:change_state
 					});
-					if (!resp) {
+					if (resp.msg) {
 						uni.navigateBack({
 							complete() {
 								setTimeout(() => {
@@ -146,15 +146,15 @@
 						});
 					}
 					this.toast('接受失败');
-				}
+				//}
 			},
 			async Refuse(){
-				if (this.state==1) {
-					change_state=4
+				//if (this.state==1) {
+					const change_state=4
 					const resp = await api.post('resolution/update-resolution-state', {
-						id:order_id,state:change_state
+						id:this.order_id,state:change_state
 					});
-					if (!resp) {
+					if (resp.msg) {
 						uni.navigateBack({
 							complete() {
 								setTimeout(() => {
@@ -168,7 +168,7 @@
 						});
 					}
 					this.toast('拒绝失败');
-				}
+				//}
 			},
 			goBack() {
 				uni.navigateBack();
