@@ -122,8 +122,8 @@ export default {
           for (let i = 0; i < res.data.resolution_list.length; i++) {
             data.push({
               key:res.data.resolution_list[i].id,
-              company:JSON.parse(res.data.resolution_list[i].company_meta)['name'],
-              expert:JSON.parse(res.data.resolution_list[i].scholar_meta)['name'],
+              company:res.data.resolution_list[i].company_meta['name'],
+              expert:res.data.resolution_list[i].scholar_meta['name'],
               time:res.data.resolution_list[i].time,
               created_at:this.dateTrans(res.data.resolution_list[i].created_at),
               title: res.data.resolution_list[i].title,
