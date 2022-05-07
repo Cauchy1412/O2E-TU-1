@@ -38,7 +38,7 @@
 				</uni-forms-item>
 			</uni-forms>
 		</view>
-		<view v-if="userInfo.user_type">
+		<view v-if="!userInfo.user_type">
 			<view class="order-info-detail-receive" v-on:click="Accept()">
 				接受
 			</view>

@@ -108,7 +108,7 @@
 		box-sizing: border-box;
 	}
 
-	.box {
+	/* .box {
 		margin: 20upx 0;
 		width: 100%;
 		position: fixed;
@@ -117,7 +117,7 @@
 		.margin-bottom-xl {
 			margin-bottom: 20rpx;
 		}
-	}
+	} */
 
 	.tui-content-box {
 		width: 100%;
