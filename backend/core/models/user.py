@@ -46,7 +46,8 @@ class User(AbstractUser):
     institution = models.CharField(max_length=20,blank=True,null=True)
     icon = models.ImageField(upload_to= "images/%Y%m/%d/icons",
                              default= 'images/default_user_icon.jpg')
-
+    photo = models.ImageField(upload_to= "images/%Y%m/%d/icons",
+                             default= 'images/default_user_icon.jpg')
     biogrpahy = models.CharField(max_length=50,null=True)
 
     user_type = models.IntegerField(choices=USER_TYPE_CHOICES,default= 0)
@@ -71,6 +72,9 @@ class User(AbstractUser):
 
     def get_icon(self):
         return str(self.icon)
+
+    def get_photo(self):
+        return str(self.photo)
 
     def simple_to_dict(self):
         return {

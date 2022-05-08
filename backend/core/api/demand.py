@@ -55,6 +55,7 @@ def demand2json(demand: Demand) -> dict:
         'description': demand.description,
         'title': demand.title,
         'meta': json.loads(demand.meta),
+        'state': demand.state,
     }
 
     try:
@@ -114,3 +115,88 @@ def get_all_demands(request: HttpRequest):
     demands = Demand.objects.all()
     data = {'demand_list': [demand2json(demand) for demand in demands]}
     return success_api_response(data)
+
+@jwt_auth()
+@require_POST
+@response_wrapper
+def update_demand_state(request: HttpRequest):
+    """
+    update demand state
+
+    [method]: POST
+
+    [route]: /api/demand/update-demand-state
+
+    parms:
+        - id
+        - state
+    """
+    data: dict = parse_data(request)
+    if not data:
+        print("print: not data")
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
+    id = data.get('id')
+    state = data.get('state')
+    try:
+        demand = Demand.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Knowledge ID.")
+    demand.state = state
+    demand.save()
+    return success_api_response({'msg': 'Resolution state is updated'})
+
+@jwt_auth()
+@require_POST
+@response_wrapper
+def update_demand_info(request: HttpRequest):
+    """
+    update demand info
+
+    [method]: POST
+
+    [route]: /api/demand/update-demand-info
+
+    parms:
+        - id
+        - state
+    """
+    data: dict = parse_data(request)
+    if not data:
+        print("print: not data")
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
+    description = data.get('description')
+    title = data.get('title')
+    meta = data.get('meta')
+    id = data.get('id')
+    try:
+        demand = Demand.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Knowledge ID.")
+    demand.description = description
+    demand.title = title
+    demand.meta = json.dumps(meta)
+    demand.save()
+    return success_api_response({'msg': 'Resolution state is updated'})
+
+@jwt_auth()
+@require_POST
+@response_wrapper
+def delete_demand(request: HttpRequest):
+    data: dict = parse_data(request)
+    if not data:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
+    id = data.get('id')
+    try:
+        demand = Demand.objects.get(id=id)
+        resolutions = demand.resolutions.all()
+        for resolution in resolutions:
+            resolution.delete()
+        chatrooms = demand.demand_rooms.all()
+        for chatroom in chatrooms:
+            chatroom.delete()
+        demand.delete()
+
+    except ObjectDoesNotExist:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Chatroom ID.")
+    return success_api_response({})
+

@@ -189,6 +189,7 @@ def update_resolution_state(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Knowledge ID.")
     if state == 2:
         resolution.set_Accepted()
+        resolution.demand.state = 1
     resolution.state = state
     resolution.save()
     return success_api_response({'msg': 'Resolution state is updated'})

@@ -22,6 +22,20 @@ def get_user_icon(request: HttpRequest):
         "icon": str(p.get_icon()),
     })
 
+@jwt_auth()
+@response_wrapper
+@require_http_methods('GET')
+def get_user_photo(request: HttpRequest):
+    """
+    get user icon
+    :param request:
+    :return:
+    """
+    p = request.user
+    return success_api_response({
+        "photo": str(p.get_photo()),
+    })
+
 
 
 # @jwt_auth()
@@ -38,6 +52,33 @@ def change_user_icon(request):
     user_id = request.POST.get("user")
     user = User.objects.filter(id=user_id).first()
     user.icon = img
+    user.save()
+
+    # icon = request.FILES.get("icon", None)
+    # if icon is None:
+    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "user icon has not provided.")
+    # p = request.user
+    # p.icon = icon
+    # try:
+    #     p.save()
+    # except Exception:
+    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "set user icon error.")
+    return HttpResponse(str(user.icon))
+
+# @jwt_auth()
+# @response_wrapper
+# @require_http_methods('POST')
+def change_user_photo(request):
+    """
+    change user icon
+    :param request:
+        FILES: icon: new user icon
+    :return:
+    """
+    img = request.FILES.get('files')
+    user_id = request.POST.get("user")
+    user = User.objects.filter(id=user_id).first()
+    user.photo = img
     user.save()
 
     # icon = request.FILES.get("icon", None)
@@ -74,4 +115,9 @@ def read_default_img(request:HttpRequest):
 USER_ICON_API = wrapped_api({
     "GET": get_user_icon,
     "POST": change_user_icon,
+})
+
+USER_PHOTO_API = wrapped_api({
+    "GET": get_user_photo,
+    "POST": change_user_photo,
 })

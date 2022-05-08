@@ -191,3 +191,15 @@ def get_user_info(request: HttpRequest):
     user_id = data.get('id')
     user = User.objects.get(id = user_id)
     return success_api_response(getUserInfo(user))
+
+@response_wrapper
+@jwt_auth()
+@require_http_methods('POST')
+def update_user_info(request: HttpRequest):
+    data: dict = parse_data(request)
+    meta = data.get('meta')
+    user: User = request.user
+    verified_user = user.verified_info.first()
+    verified_user.meta = json.loads(meta)
+    verified_user.save()
+    return success_api_response({"result": "Ok, the user info has been changed."})

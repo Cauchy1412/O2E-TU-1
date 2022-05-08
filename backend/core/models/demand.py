@@ -1,7 +1,11 @@
 from django.db import models
 from .user import User
 
-
+DEMAND_STATES = (
+    (0, 'Undone'),
+    (1, 'Doing'),
+    (2, 'Done'),
+)
 
 class Demand(models.Model):
     """comment
@@ -18,4 +22,5 @@ class Demand(models.Model):
     description = models.CharField(max_length=500)
     title = models.CharField(max_length=100)
     meta = models.CharField(max_length=200)
+    state = models.IntegerField(choices=DEMAND_STATES, default = 0)
 

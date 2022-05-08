@@ -2,6 +2,7 @@
 define the url routes of core api
 """
 from django.urls import path
+from backend.core.api.user_icon import USER_PHOTO_API
 from core.api.auth import obtain_jwt_token, refresh_jwt_token
 from core.api.chat import get_chat_list, delete_chat, message_read, create_chat, get_chat, push_message
 from core.api.friend import list_friends, list_full_friends
@@ -11,9 +12,9 @@ from core.api.profile import get_profile
 from core.api.search import search_user_list,search_user_full_list
 from core.api.sign_up import change_password, change_email, CREATE_USER_API, FORGET_PASSWORD_API
 from core.api.comment import create_comment, delete_comment, get_comment, get_comment_list
-from core.api.demand import create_demand,  get_demand_list, get_demand, get_all_demands
+from core.api.demand import create_demand,  get_demand_list, get_demand, get_all_demands, update_demand_state, update_demand_info, delete_demand
 
-from core.api.user import follow, unfollow, list_favorite_recent, change_organization
+from core.api.user import follow, unfollow, list_favorite_recent, change_organization, update_user_info
 
 from core.api.fan import list_fans, list_full_fans
 from core.api.follower import list_followers, list_full_followers
@@ -41,16 +42,21 @@ urlpatterns = [
     path('user/forget-password', FORGET_PASSWORD_API),
     path('user/profile', get_profile),
     path('user/icon', USER_ICON_API),
+    path('user/photo', USER_PHOTO_API),
     path('user/all',get_all_user_info),
     path('user/delete',delete_user),
     path('user/changeinfo',change_user_info),
     path('user/get-user-info',get_user_info),
+    path('user/update-user-info',update_user_info),
     
     # demand apis
     path('demand/create', create_demand),
     path('demand', get_demand_list),
     path('demand/<int:id>', get_demand),
     path('demand/all', get_all_demands),
+    path('demand/update-demand-state', update_demand_state),
+    path('demand/update-demand-info', update_demand_info),
+    path('demand/delete', delete_demand),
 
 
     # comment apis
