@@ -3,14 +3,14 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box">
+					<view class="tui-avatar-box" @tap="goBack">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
 						<view class="tui-search-text">订单详情</view>
 					</view>
-					<view class="tui-notice-box" v-on:click="addOrder()">
-						<text class="tui-add-text">返回</text>
+					<view class="tui-avatar-box" @tap="goBack">
+						<tui-icon name="back" color="#ffffff" :size="64"></tui-icon>
 					</view>
 				</view>
 			</tui-navigation-bar>
@@ -24,24 +24,21 @@
 		</view>
 		<view class="example">
 			<uni-forms :modelValue="formData">
-				<uni-forms-item label='订单编号'>
-					{{Data.order_id}}
-				</uni-forms-item>
 				<uni-forms-item label='发布公司'>
-					{{Data.Name}}
+					{{data.company_meta.name}}
 				</uni-forms-item>
-				<uni-forms-item label='订单价格'>
+				<uni-forms-item label='需求经费'>
 					{{Data.Price}}
 				</uni-forms-item>
-				<uni-forms-item label='订单时间'>
+				<uni-forms-item label='需求周期'>
 					{{Data.Lasttime}}
 				</uni-forms-item>
-				<uni-forms-item label='订单状态'>
-					{{Data.state}}
+				<uni-forms-item label='发起时间'>
+					{{formatDate(data.created_at)}}
 				</uni-forms-item>
 			</uni-forms>
 		</view>
-		<view v-if="userInfo.user_type">
+		<view v-if="!userInfo.user_type">
 			<view class="order-info-detail-receive" v-on:click="Accept()">
 				接受
 			</view>
@@ -72,16 +69,14 @@
 					Lasttime:'',
 					state:'',
 					Name:''
-				}
+				},
+				data: null
 			}
 		},
 		onLoad: function(option){
+			this.order_id = option.id;
 			this.Data.order_id = option.id
-			let orderdata = this.getData()
-			this.Data.user_state = orderdata.state
-			this.Data.title = orderdata.title
-			this.Data.Price = orderdata.price
-			this.Data.Lasttime = orderdata.time
+			let orderdata = this.getData(option.id)
 		},
 		computed: {
 			...mapState(['userInfo'])
@@ -95,22 +90,27 @@
 				const rest = await api.post('resolution/create-order',{
 					id, time, price})
 			},
-			back:function(){
+			back() {
 				uni.navigateTo({
 					url:'./OrderManagement'
 				})
 			},
 			async getData(stringofid) {
 				let result = await api.get('resolution/'+stringofid)
+				const orderdata = this.data = result;
+				this.Data.user_state = orderdata.state
+				this.Data.title = orderdata.title
+				this.Data.Price = orderdata.price
+				this.Data.Lasttime = orderdata.time
 				return result
 			},
 			async Complete() {
-				if (this.state==1) {
-					change_state=2
+				//if (this.state==1) {
+					const change_state=3
 					const resp = await api.post('resolution/update-resolution-state', {
-						id:order_id,state:change_state
+						id:this.order_id,state:change_state
 					});
-					if (!resp) {
+					if (resp.msg) {
 						uni.navigateBack({
 							complete() {
 								setTimeout(() => {
@@ -124,15 +124,15 @@
 						});
 					}
 					this.toast('完成失败');
-				}
+				//}
 			},
 			async Accept (){
-				if (this.state==1) {
-					change_state=2
+				//if (this.state==1) {
+					const change_state=2
 					const resp = await api.post('resolution/update-resolution-state', {
-						id:order_id,state:change_state
+						id:this.order_id,state:change_state
 					});
-					if (!resp) {
+					if (resp.msg) {
 						uni.navigateBack({
 							complete() {
 								setTimeout(() => {
@@ -146,15 +146,15 @@
 						});
 					}
 					this.toast('接受失败');
-				}
+				//}
 			},
 			async Refuse(){
-				if (this.state==1) {
-					change_state=4
+				//if (this.state==1) {
+					const change_state=4
 					const resp = await api.post('resolution/update-resolution-state', {
-						id:order_id,state:change_state
+						id:this.order_id,state:change_state
 					});
-					if (!resp) {
+					if (resp.msg) {
 						uni.navigateBack({
 							complete() {
 								setTimeout(() => {
@@ -168,7 +168,10 @@
 						});
 					}
 					this.toast('拒绝失败');
-				}
+				//}
+			},
+			goBack() {
+				uni.navigateBack();
 			}
 		}
 	}

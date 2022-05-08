@@ -13,6 +13,10 @@
 		</template>
 		<!-- 数据 -->
 		<home-data @goToSpace="goToSpace"  :homedata="homedata"></home-data>
+		<view style="position: relative;left:100;top:100">
+		<view class="user-set-userinfo-list" v-on:click="goOrder()">
+				订单管理
+		</view>
 <!-- 		广告位 -->
 <!-- 		<view class="home-adv u-f-ajc animated fadeIn fast">
 			<image src="../../static/demo/demo20.jpg"  class="guanggao" lazy-load></image>
@@ -139,6 +143,11 @@
 
 		},
 		methods: {
+			goOrder:function() {
+				uni.navigateTo({
+					url:'../Order/OrderManagement'
+				})
+			},
 			openLogin() {
 				uni.navigateTo({
 					url: '../login/login'
@@ -184,6 +193,11 @@
 </script>
 
 <style>
+	@import "../../common/form.css";
+	.user-set-userinfo-list{
+		padding: 40upx;
+		border-bottom: 1upx solid #F4F4F4;
+	}
 	.home-list {
 		padding: 20upx;
 	}
@@ -198,5 +212,14 @@
 	}
 	.guanggao{
 		width: 100%;
+	}
+	.tui-page-title {
+		width: 100%;
+		font-size: 48rpx;
+		font-weight: bold;
+		color: $uni-text-color;
+		line-height: 42rpx;
+		padding: 40rpx;
+		box-sizing: border-box;
 	}
 </style>

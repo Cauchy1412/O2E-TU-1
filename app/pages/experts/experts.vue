@@ -16,9 +16,9 @@
 			<view class="demand-info">
 				<view class="demand-info-item">
 					<view class="text-cut"> {{item.name}}</view>
-					<view>性别: {{item.sex}}</view>
-					<view>职称: {{item.title}}</view>
-					<view>研究领域: {{item.field}}</view>
+					<view>性别: {{item.sex || item.gender}}</view> 
+					<view>职称: {{item.title || item.professor}}</view>
+					<view>研究领域: {{toDomain(item)}}</view>
 				</view>
 			</view>
 		</uni-card>
@@ -39,7 +39,7 @@
 		data() {
 			return {
 				demandId: 111,
-				expertsList: [{
+				expertsList: [/*{
 						resolusionId: 111,
 						id: 111,
 						img: 'https://img-blog.csdnimg.cn/2020062923175961.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NnMTI5MDU0MDM2,size_16,color_FFFFFF,t_70',
@@ -59,7 +59,7 @@
 						field: '人工智能，无人驾驶',
 						info: '我领导着一个由专业计算机科学家组成的团队，他们的唯一目标是通过人工智能技术显著地帮助社会，并一直在寻找具有重大影响的项目。我们致力于机器人、自动驾驶汽车、自动化家庭、医疗保健、无人机和其他一些应用。我们目前专注于三个领域:用于医疗保健的人工智能、用于人类预测的人工智能和智能家居。'
 					},
-				],
+				*/],
 
 			}
 		},
@@ -69,11 +69,10 @@
 			},
 			goDetail(item) {
 				// FIXME: urls have length limits, use Vuex store to share lengthy objects or leave the detail page call backend
+				this.$store.state.expert_detail = item;
 				uni.navigateTo({
 					url: '/pages/expert-info/expert-info?id=' + item.id + '&demandId=' + this.demandId + '&rid=' + item.resolusionId
-						+ '&img=' + item.img + '&name=' + item.name + '&sex=' + item.sex + '&title=' + item.title + '&field=' +
-						item.field + '&info=' + item.info
-				})
+				});
 			},
 			async requestData() {
 				// TODO: backend is not implemented
@@ -85,6 +84,13 @@
 					id: o.uid,
 					...o.meta
 				}));
+			},
+			toDomain(o) {
+				if (o.field)
+					return o.field;
+				if (o.domains)
+					return o.domains.join('，');
+				return ''
 			}
 		}
 	}
@@ -102,7 +108,7 @@
 		box-sizing: border-box;
 	}
 
-	.box {
+	/* .box {
 		margin: 20upx 0;
 		width: 100%;
 		position: fixed;
@@ -111,7 +117,7 @@
 		.margin-bottom-xl {
 			margin-bottom: 20rpx;
 		}
-	}
+	} */
 
 	.tui-content-box {
 		width: 100%;

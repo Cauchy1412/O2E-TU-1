@@ -5,31 +5,31 @@
           size="large"
           :pagination="pagination"
           :data-source="listData">
-        <a-list-item slot="renderItem" key="item.title" slot-scope="item">
+        <a-list-item slot="renderItem" key="item.title" slot-scope="item,index">
           <a-list-item-meta>
             <a slot="title" >{{item.title}}</a>
             <a slot="description"
                class="textbreak"
                href="javascript:void(0)"
-               @click="handleClick">
+               @click="handleClick(index)">
               {{item.description|ellipsis}}</a>
           </a-list-item-meta>
-          <a-Modal v-model="showDetail" title="" @ok="handleOk" width="750px">
+          <a-Modal v-model="showDetail" title="" @ok="handleOk" width="750px" v-bind="showData">
             <a-card :bordered="false" dis-hover>
               <div slot="title">
                 发布用户:
-                <a href="javascript:0">{{item.username}}</a>
+                <a href="javascript:0">{{showData.username}}</a>
               </div>
-              <p slot="extra"> 该需求发布于: {{item.created_at}}</p>
-              <a-Row> 标题: {{item.title}}</a-Row>
+              <p slot="extra"> 该需求发布于: {{showData.created_at}}</p>
+              <a-Row> 标题: {{showData.title}}</a-Row>
               <br />
               <br />
               <br />
-              <a-Row> 需求描述: {{item.description}}</a-Row>
+              <a-Row> 需求描述: {{showData.description}}</a-Row>
               <br />
-              <a-Row> 研发周期: {{item.period}}</a-Row>
-              <a-Row> 研发经费: {{item.fund}}</a-Row>
-              <a-Row> 研发地点: {{item.place}}</a-Row>
+              <a-Row> 研发周期: {{showData.period}}</a-Row>
+              <a-Row> 研发经费: {{showData.fund}}</a-Row>
+              <a-Row> 研发地点: {{showData.place}}</a-Row>
             </a-card>
           </a-Modal>
           <div class="list-content">
@@ -57,7 +57,7 @@
           <div slot="actions">
             <a-dropdown>
               <a-menu slot="overlay">
-                <a-menu-item @click="handleClick"><a>查看详情</a></a-menu-item>
+                <a-menu-item @click="handleClick(index)"><a>查看详情</a></a-menu-item>
                 <a-menu-item><a>删除</a></a-menu-item>
               </a-menu>
               <a>更多<a-icon type="down"/></a>
@@ -91,6 +91,7 @@ export default {
   data() {
     return {
       listData,
+      showData: {},
       showDetail:false,
       pagination: {
         onChange: (page) => {
@@ -108,6 +109,8 @@ export default {
       this.getDemand()
     },
     getDemand() {
+      this.loading = true;
+      listData.length=0;
       get_demand_all()
           .then((res) => {
             console.log(res);
@@ -124,6 +127,7 @@ export default {
               })
             }
             console.log(listData)
+            this.loading = false
           })
           .catch((error) => {
             console.log(error)
@@ -135,7 +139,8 @@ export default {
       dateTime = dateTime.substring(0,19).replace('T', ' ')
       return dateTime
     },
-    handleClick() {
+    handleClick(index) {
+      this.showData = listData[index]
       this.showDetail = true;
     },
     handleOk() {

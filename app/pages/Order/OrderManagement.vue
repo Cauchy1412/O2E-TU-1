@@ -3,14 +3,14 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box">
+					<view class="tui-avatar-box" @tap="goBack">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
 						<view class="tui-search-text">订单管理</view>
 					</view>
-					<view class="tui-notice-box">
-						<text class="tui-add-text">管理</text>
+					<view class="tui-avatar-box" @tap="goBack">
+						<tui-icon name="back" color="#ffffff" :size="64"></tui-icon>
 					</view>
 				</view>
 			</tui-navigation-bar>
@@ -21,7 +21,7 @@
 					订单要求:{{item.title}}
 				</view>
 				<view>
-					发布日期:{{item.created_at}}
+					发布日期:{{formatDate(item.created_at)}}
 				</view>
 				<view>
 					订单状态:{{calculateState(item.state)}}
@@ -43,25 +43,16 @@
 				Data : []
 			}
 		},
-		onLoad:function() {
-			this.Data = this.getData()
+		onLoad() {
+			this.getData();
 		},
 		computed:{
 			...mapState(['userInfo']),
-			calculateState: function(stringofstate) {
-				if (stringofstate == '1')
-					return '待接受'
-				else
-					if (stringofstate == '2')
-						return '进行中'
-					else
-						if (stringofstate == '3')
-							return '已完成'
-						else
-							return '已被拒绝'
-			}
 		},
 		methods:{
+			goBack:function() {
+				uni.navigateBack()
+			},
 			goDetail:function(stringofid) {
 				uni.navigateTo({
 					url:'./OrderDetail?id='+stringofid
@@ -75,8 +66,21 @@
 				else {
 					result = await api.get('resolution/get-scholar-resolutions')
 				}
+				this.Data = result.resolution_list;
 				return result
 			},
+			calculateState: function(stringofstate) {
+				if (stringofstate == '1')
+					return '待接受'
+				else
+					if (stringofstate == '2')
+						return '进行中'
+					else
+						if (stringofstate == '3')
+							return '已完成'
+						else
+							return '已被拒绝'
+			}
 		}
 	}
 </script>
