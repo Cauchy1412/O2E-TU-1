@@ -15,22 +15,12 @@
 				</view>
 			</tui-navigation-bar>
 		</view>
-		<view v-for="(item,index) in Data">
-			<view class="demand-info-item">
-				<view>
-					订单要求:{{item.title}}
-				</view>
-				<view>
-					发布日期:{{formatDate(item.created_at)}}
-				</view>
-				<view>
-					订单状态:{{calculateState(item.state)}}
-				</view>
-			</view>
-			<view class="order-info-detail" v-on:click="goDetail(item.id)">
-				详情
-			</view>
-		</view>
+		
+		<uni-list>
+			<template v-for="(item,index) in Data">
+				<uni-list-item :title='getTitle(item)' :note='getNote(item)' @click="goDetail(item.id)"></uni-list-item>
+			</template>
+		</uni-list>
 	</view>
 </template>
 
@@ -69,17 +59,12 @@
 				this.Data = result.resolution_list;
 				return result
 			},
-			calculateState: function(stringofstate) {
-				if (stringofstate == '1')
-					return '待接受'
-				else
-					if (stringofstate == '2')
-						return '进行中'
-					else
-						if (stringofstate == '3')
-							return '已完成'
-						else
-							return '已被拒绝'
+			getTitle(o) {
+				return o.title + ' - ' + o.scholar_meta.name;
+			},
+			getNote(o) {
+				const s = ['???', '待接受', '进行中', '已完成', '已拒绝'];
+				return this.formatDate(o.created_at) + ' - ' + s[Number(o.state)];
 			}
 		}
 	}
@@ -87,14 +72,7 @@
 
 <style>
 	page {
-		background-color: #fff;
-
-	}
-
-	.container {
-		padding: 0upx 0 120upx 0;
-		box-sizing: border-box;
-		position: relative;
+		background-color: #f8f8f8;
 	}
 	
 	.header {
