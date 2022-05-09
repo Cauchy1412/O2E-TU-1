@@ -19,24 +19,27 @@
 		<uni-list>
 			<template v-for="(item,index) in Data">
 				<view class = 'select-topic-class'>
-					订单标题:{{item.title}}
+					订单信息:{{item.title+'-'+item.scholar_meta.name}}
 				</view>
-				<view class="demand-info-item">
-					<view>
-						发布日期:{{formatDate(item.created_at)}}
+				<view class="demand-info-item"  v-on:click="goDetail(item.id)">
+					<view class=''>
+						----公司名称{{item.company_meta.name}}
 					</view>
 					<view>
-						费用:{{item.price}}
+						----订单价格{{item.price}}
 					</view>
 				</view>
 				<view class="order-info-detail2">
-					订单状态:{{getNote(item)}}
-				</view>
-				<view class="order-info-detail" v-on:click="goDetail(item.id)">
-					详情
+					{{getNote(item)}}
 				</view>
 			</template>
 		</uni-list>
+<!-- 		<uni-list>
+					<template v-for="(item,index) in Data">
+						<uni-list-item :title='getTitle(item)'  @click="goDetail(item.id)"></uni-list-item>
+						<uni-section style:title='getNote(item)'></uni-section>
+					</template>
+		</uni-list> -->
 	</view>
 </template>
 
@@ -78,7 +81,7 @@
 				return result
 			},
 			getTitle(o) {
-				return o.title + ' - ' + o.scholar_meta.name;
+				return o.title + ' - ' + o.scholar_meta.name + ' - ';
 			},
 			getNote(o) {
 				const s = ['???', '待接受', '进行中', '已完成', '已拒绝'];
@@ -197,6 +200,7 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	
 	
 	.select-title {
 		color: #000000;
