@@ -15,49 +15,41 @@
 				</view>
 			</tui-navigation-bar>
 		</view>
-		<view class="select-topic-class">
-			<view class="select-title" style='width: 100%'>
-				<text>
-					订单标题：{{Data.title}}
-				</text>
-			</view>
-		</view>
-		<uni-list>
-			<uni-section :title="'发布公司' + ' ' + data.company_meta.name" ></uni-section>
-			<uni-section :title="'需求经费' + ' ' + Data.Price" ></uni-section>
-			<uni-section :title="'需求周期' + ' ' + Data.Lasttime" ></uni-section>
-			<uni-section :title="'发起时间' + ' ' + formatDate(data.created_at)" ></uni-section>
-		</uni-list>
-		<view class="select-topic-class">
-			<view class="select-title" style='width: 100%'>
-				<text>
-					专家信息：{{data.scholar_meta.name}}
-				</text>
-			</view>
-		</view>
-		<uni-list>
-			<uni-section :title="'性别' + ' ' + data.scholar_meta.gender" ></uni-section>
-			<uni-section :title="'职位' + ' ' + data.scholar_meta.professor" ></uni-section>
-			<uni-section :title="'擅长领域' + ' ' + getDomain(data.scholar_meta.domains)" ></uni-section>
-		</uni-list>
+		<uni-section title="订单标题":note="Data.title" type="line">
+			<uni-list>
+				<uni-list-item title="发布公司":note="data.company_meta.name"></uni-list-item>
+				<uni-list-item title="需求经费":note="Data.Price"></uni-list-item>
+				<uni-list-item title="需求周期":note="Data.Lasttime"></uni-list-item>
+				<uni-list-item title="发起时间":note="formatDate(data.created_at)" ></uni-list-item>
+				<uni-list-item v-if="!userInfo.user_type" title="联系企业" clickable @click="goToChat()"></uni-list-item>
+			</uni-list>
+		</uni-section>
+		<uni-section title="专家信息":note="data.scholar_meta.name" type="line">
+			<uni-list>
+				<uni-list-item title="性别":note="data.scholar_meta.gender" ></uni-list-item>
+				<uni-list-item title="职位":note="data.scholar_meta.professor" ></uni-list-item>
+				<uni-list-item title="擅长领域":note="getDomain(data.scholar_meta.domains)" ></uni-list-item>
+				<uni-list-item v-if="userInfo.user_type" title="联系专家" clickable @click="goToChat()"></uni-list-item>
+			</uni-list>
+		</uni-section>
 		<view v-if="!userInfo.user_type">
-			<view class="order-info-detail-receive" v-on:click="Accept()">
+			<button class="buttonx" type="primary" v-on:click="Accept()">
 				接受
-			</view>
-			<view class="order-info-detail-refuse" v-on:click="Refuse()">
+			</button>
+			<button class="buttonx" type="warn" v-on:click="Refuse()">
 				拒绝
-			</view>
+			</button>
 		</view>
 		<view v-else="userInfo.user_type">
 			<view v-if="AnalyzeState()">
-				<view class="order-info-detail-Complete" v-on:click="Complete()">
+				<button class="buttonx" type="warn" v-on:click="Complete()">
 					完成订单
-				</view>
+				</button>
 			</view>
 			<view v-else="AnalyzeState()">
-				<view class="order-info-detail-Complete" v-on:click="Cancel()">
+				<button class="buttonx" type="warn" v-on:click="Cancel()">
 					取消订单
-				</view>
+				</button>
 			</view>
 		</view>
 		</view>
@@ -91,14 +83,19 @@
 			...mapState(['userInfo'])
 		},
 		methods: {
+			goToChat() {
+				uni.switchTab({
+					url:"../paper/paper"
+				})
+			},
 			goback() {
 				uni.navigateTo({
 					url:'./OrderManagement'
 				})
 			},
-			getDomain() {
-				let x = this.data.scholar_meta.domains
-				return x
+			getDomain(o) {
+				let x = o
+				return x.toString()
 			},
 			AnalyzeState() {
 				if (this.data.state == 1) {
@@ -430,5 +427,10 @@
 		font-size: 40upx;
 		margin-top: 25rpx;
 		margin-left: 20rpx;
+		}
+	.buttonx {
+		margin-bottom: 25rpx;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
 		}
 </style>
