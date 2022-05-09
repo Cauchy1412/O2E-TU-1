@@ -29,7 +29,7 @@
 				<view>{{ demandinfo.content}} </view>
 			</view>
 		</view>
-		<uni-fab horizontal="right" @fabClick='onEdit' icon='compose'>
+		<uni-fab horizontal="right" @fabClick='onEdit' icon='compose' v-if='rawDemand.user.id == getCurrentUser().id'>
 		</uni-fab>
 	</view>
 </template>

@@ -11,3 +11,7 @@ Vue.prototype.navigateToPage = path => {
 Vue.prototype.isEnterprise = function () {
 	return this.$store.state.userInfo.user_type;
 }
+
+Vue.prototype.getCurrentUser = function() {
+	return this.$store.state.userInfo;
+}
