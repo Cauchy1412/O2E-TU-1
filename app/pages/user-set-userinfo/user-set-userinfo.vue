@@ -14,7 +14,7 @@
 			<view class="user-set-userinfo-list u-f-ac u-f-jsb" v-if="!userInfo.user_type">
 				<view>真实姓名</view>
 				<view class="u-f-ac">
-					<input type="text" v-model="username"/>
+					<input type="text" v-bind="username"/>
 					<view class="icon iconfont icon-bianji1"></view>
 				</view>
 			</view>
