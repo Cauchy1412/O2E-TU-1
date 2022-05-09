@@ -3,29 +3,32 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
 						<view class="tui-search-text">订单管理</view>
 					</view>
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#ffffff" :size="64"></tui-icon>
 					</view>
 				</view>
 			</tui-navigation-bar>
 		</view>
 		<view v-for="(item,index) in Data">
+			<view class = 'select-topic-class'>
+				订单标题:{{item.title}}
+			</view>
 			<view class="demand-info-item">
-				<view>
-					订单要求:{{item.title}}
-				</view>
 				<view>
 					发布日期:{{formatDate(item.created_at)}}
 				</view>
 				<view>
-					订单状态:{{calculateState(item.state)}}
+					费用:{{item.price}}
 				</view>
+			</view>
+			<view class="order-info-detail2">
+				订单状态:{{calculateState(item.state)}}
 			</view>
 			<view class="order-info-detail" v-on:click="goDetail(item.id)">
 				详情
@@ -51,7 +54,9 @@
 		},
 		methods:{
 			goBack:function() {
-				uni.navigateBack()
+				uni.switchTab({
+					url:'../home/home',
+				})
 			},
 			goDetail:function(stringofid) {
 				uni.navigateTo({
@@ -192,12 +197,11 @@
 	
 	.select-topic-class {
 		height: 72upx;
-		margin: 20upx 20upx;
 		border-radius: 10upx;
 		background-color: #f1f1f1;
 		padding: 0 24upx;
 		box-sizing:border-box;
-		color: #bfbfbf;
+		color: #5C8DFF;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -291,6 +295,11 @@
 	}
 	.order-info-detail {
 		color: #0A98D5;
+		font-size: 20upx;
+		padding: 15upx 0;
+	}
+	.order-info-detail2 {
+		color: #CD1225;
 		font-size: 20upx;
 		padding: 15upx 0;
 	}
