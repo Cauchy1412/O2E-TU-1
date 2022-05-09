@@ -22,30 +22,12 @@
 				</text>
 			</view>
 		</view>
-		<view class="example">
-			<uni-forms :modelValue="formData">
-				<uni-forms-item label='发布公司'>
-					<view style="color: #007AFF;">
-					{{data.company_meta.name}}
-					</view>
-				</uni-forms-item>
-				<uni-forms-item label='需求经费'>
-					<view style="color: #007AFF;">
-					{{Data.Price}}
-					</view>
-				</uni-forms-item>
-				<uni-forms-item label='需求周期'>
-					<view style="color: #007AFF;">
-					{{Data.Price}}
-					</view>
-				</uni-forms-item>
-				<uni-forms-item label='发起时间'>
-					<view style="color: #007AFF;">
-					{{formatDate(data.created_at)}}
-					</view>
-				</uni-forms-item>
-			</uni-forms>
-		</view>
+		<uni-list>
+			<uni-section :title="'发布公司' + ' ' + data.company_meta.name" color="#007AFF"></uni-section>
+			<uni-section :title="'需求经费' + ' ' + Data.Price" color="#007AFF"></uni-section>
+			<uni-section :title="'需求周期' + ' ' + Data.Lasttime" color="#007AFF"></uni-section>
+			<uni-section :title="'发起时间' + ' ' + formatDate(data.created_at)" color="#007AFF"></uni-section>
+		</uni-list>
 		<view class="select-topic-class">
 			<view class="select-title" style='width: 100%'>
 				<text>
@@ -53,23 +35,11 @@
 				</text>
 			</view>
 		</view>
-		<view class="example">
-			<uni-forms-item label='性别'>
-				<view style="color: #C80808;">
-				{{data.scholar_meta.gender}}
-				</view>
-			</uni-forms-item>
-			<uni-forms-item label='职位'>
-				<view style="color: #C80808;">
-				{{data.scholar_meta.professor}}
-				</view>
-			</uni-forms-item>
-			<uni-forms-item label='擅长领域'>
-				<view style="color: #C80808;" v-for="domain in data.scholar_meta.domains">
-					{{domain}}
-				</view>
-			</uni-forms-item>
-		</view>
+		<uni-list>
+			<uni-section :title="'性别' + ' ' + data.scholar_meta.gender" color="#C80808"></uni-section>
+			<uni-section :title="'职位' + ' ' + data.scholar_meta.professor" color="#C80808"></uni-section>
+			<uni-section :title="'擅长领域' + ' ' + getDomain(data.scholar_meta.domains)" color="#007AFF"></uni-section>
+		</uni-list>
 		<view v-if="!userInfo.user_type">
 			<view class="order-info-detail-receive" v-on:click="Accept()">
 				接受
@@ -79,11 +49,18 @@
 			</view>
 		</view>
 		<view v-else="userInfo.user_type">
-			<view class="order-info-detail-Complete" v-on:click="Complete()">
-				完成订单
+			<view v-if="AnalyzeState()">
+				<view class="order-info-detail-Complete" v-on:click="Complete()">
+					完成订单
+				</view>
+			</view>
+			<view v-else="AnalyzeState()">
+				<view class="order-info-detail-Complete" v-on:click="Cancel()">
+					取消订单
+				</view>
 			</view>
 		</view>
-	</view>
+		</view>
 </template>
 
 <script>
@@ -119,6 +96,18 @@
 					url:'./OrderManagement'
 				})
 			},
+			getDomain() {
+				let x = this.data.scholar_meta.domains
+				return x
+			},
+			AnalyzeState() {
+				if (this.data.state == 1) {
+					return false
+				}
+				else {
+					return true
+				}
+			},
 			async getData(stringofid) {
 				let result = await api.get('resolution/'+stringofid)
 				const orderdata = this.data = result;
@@ -148,6 +137,28 @@
 						});
 					}
 					this.toast('完成失败');
+				//}
+			},
+			async Cancel() {
+				//if (this.state==1) {
+					const change_state=0
+					const resp = await api.post('resolution/update-resolution-state', {
+						id:this.order_id,state:change_state
+					});
+					if (resp.msg) {
+						uni.navigateBack({
+							complete() {
+								setTimeout(() => {
+									uni.showToast({
+										title: '订单取消',
+										icon: "success",
+										duration: 1000
+									});
+								}, 100);
+							}
+						});
+					}
+					this.toast('取消失败');
 				//}
 			},
 			async Accept (){
