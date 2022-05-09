@@ -23,10 +23,10 @@
 			</view>
 		</view>
 		<uni-list>
-			<uni-section :title="'发布公司' + ' ' + data.company_meta.name" color="#007AFF"></uni-section>
-			<uni-section :title="'需求经费' + ' ' + Data.Price" color="#007AFF"></uni-section>
-			<uni-section :title="'需求周期' + ' ' + Data.Lasttime" color="#007AFF"></uni-section>
-			<uni-section :title="'发起时间' + ' ' + formatDate(data.created_at)" color="#007AFF"></uni-section>
+			<uni-section :title="'发布公司' + ' ' + data.company_meta.name" ></uni-section>
+			<uni-section :title="'需求经费' + ' ' + Data.Price" ></uni-section>
+			<uni-section :title="'需求周期' + ' ' + Data.Lasttime" ></uni-section>
+			<uni-section :title="'发起时间' + ' ' + formatDate(data.created_at)" ></uni-section>
 		</uni-list>
 		<view class="select-topic-class">
 			<view class="select-title" style='width: 100%'>
@@ -36,9 +36,9 @@
 			</view>
 		</view>
 		<uni-list>
-			<uni-section :title="'性别' + ' ' + data.scholar_meta.gender" color="#C80808"></uni-section>
-			<uni-section :title="'职位' + ' ' + data.scholar_meta.professor" color="#C80808"></uni-section>
-			<uni-section :title="'擅长领域' + ' ' + getDomain(data.scholar_meta.domains)" color="#C80808"></uni-section>
+			<uni-section :title="'性别' + ' ' + data.scholar_meta.gender" ></uni-section>
+			<uni-section :title="'职位' + ' ' + data.scholar_meta.professor" ></uni-section>
+			<uni-section :title="'擅长领域' + ' ' + getDomain(data.scholar_meta.domains)" ></uni-section>
 		</uni-list>
 		<view v-if="!userInfo.user_type">
 			<view class="order-info-detail-receive" v-on:click="Accept()">
