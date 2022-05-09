@@ -2,7 +2,7 @@
 define the url routes of core api
 """
 from django.urls import path
-from backend.core.api.user_icon import USER_PHOTO_API
+from core.api.user_icon import USER_PHOTO_API
 from core.api.auth import obtain_jwt_token, refresh_jwt_token
 from core.api.chat import get_chat_list, delete_chat, message_read, create_chat, get_chat, push_message
 from core.api.friend import list_friends, list_full_friends
