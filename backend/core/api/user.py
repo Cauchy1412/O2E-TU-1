@@ -11,6 +11,8 @@ from core.models.interpretation import Interpretation
 from .auth import getUserInfo
 # follow apis
 
+import json
+
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -51,13 +53,13 @@ def unfollow(request: HttpRequest, pid: int):
         return failed_api_response({"code":0})
 
 
-""" 
+"""
     get favorite list
     :param request:
         num_per_page: num_per_page
     :param pindex: which page
     return:
-        lists of follower recent 
+        lists of follower recent
 """
 @response_wrapper
 @jwt_auth()
@@ -140,7 +142,7 @@ def get_all_user_info(request: HttpRequest):
     data = list()
     for user in models:
         if user.is_superuser != 1:
-            data.append(getUserInfo(user))    
+            data.append(getUserInfo(user))
     return success_api_response(data)
 
 
