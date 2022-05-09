@@ -3,34 +3,43 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
 						<view class="tui-search-text">订单管理</view>
 					</view>
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#ffffff" :size="64"></tui-icon>
 					</view>
 				</view>
 			</tui-navigation-bar>
 		</view>
-		<view v-for="(item,index) in Data">
-			<view class="demand-info-item">
-				<view>
-					订单要求:{{item.title}}
+
+		<uni-list>
+			<template v-for="(item,index) in Data">
+				<view class = 'select-topic-class'>
+					订单信息:{{item.title+'-'+item.scholar_meta.name}}
 				</view>
-				<view>
-					发布日期:{{formatDate(item.created_at)}}
+				<view class="demand-info-item"  v-on:click="goDetail(item.id)">
+					<view class=''>
+						----公司名称{{item.company_meta.name}}
+					</view>
+					<view>
+						----订单价格{{item.price}}
+					</view>
 				</view>
-				<view>
-					订单状态:{{calculateState(item.state)}}
+				<view class="order-info-detail2">
+					{{getNote(item)}}
 				</view>
-			</view>
-			<view class="order-info-detail" v-on:click="goDetail(item.id)">
-				详情
-			</view>
-		</view>
+			</template>
+		</uni-list>
+<!-- 		<uni-list>
+					<template v-for="(item,index) in Data">
+						<uni-list-item :title='getTitle(item)'  @click="goDetail(item.id)"></uni-list-item>
+						<uni-section style:title='getNote(item)'></uni-section>
+					</template>
+		</uni-list> -->
 	</view>
 </template>
 
@@ -51,7 +60,9 @@
 		},
 		methods:{
 			goBack:function() {
-				uni.navigateBack()
+				uni.switchTab({
+					url:'../home/home',
+				})
 			},
 			goDetail:function(stringofid) {
 				uni.navigateTo({
@@ -69,17 +80,12 @@
 				this.Data = result.resolution_list;
 				return result
 			},
-			calculateState: function(stringofstate) {
-				if (stringofstate == '1')
-					return '待接受'
-				else
-					if (stringofstate == '2')
-						return '进行中'
-					else
-						if (stringofstate == '3')
-							return '已完成'
-						else
-							return '已被拒绝'
+			getTitle(o) {
+				return o.title + ' - ' + o.scholar_meta.name + ' - ';
+			},
+			getNote(o) {
+				const s = ['???', '待接受', '进行中', '已完成', '已拒绝'];
+				return this.formatDate(o.created_at) + ' - ' + s[Number(o.state)];
 			}
 		}
 	}
@@ -87,14 +93,7 @@
 
 <style>
 	page {
-		background-color: #fff;
-
-	}
-
-	.container {
-		padding: 0upx 0 120upx 0;
-		box-sizing: border-box;
-		position: relative;
+		background-color: #f8f8f8;
 	}
 	
 	.header {
@@ -192,16 +191,16 @@
 	
 	.select-topic-class {
 		height: 72upx;
-		margin: 20upx 20upx;
 		border-radius: 10upx;
 		background-color: #f1f1f1;
 		padding: 0 24upx;
 		box-sizing:border-box;
-		color: #bfbfbf;
+		color: #5C8DFF;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
+	
 	
 	.select-title {
 		color: #000000;
@@ -291,6 +290,11 @@
 	}
 	.order-info-detail {
 		color: #0A98D5;
+		font-size: 20upx;
+		padding: 15upx 0;
+	}
+	.order-info-detail2 {
+		color: #CD1225;
 		font-size: 20upx;
 		padding: 15upx 0;
 	}

@@ -3,7 +3,7 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goback()">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
@@ -18,25 +18,57 @@
 		<view class="select-topic-class">
 			<view class="select-title" style='width: 100%'>
 				<text>
-					{{Data.title}}
+					订单标题：{{Data.title}}
 				</text>
 			</view>
 		</view>
 		<view class="example">
 			<uni-forms :modelValue="formData">
 				<uni-forms-item label='发布公司'>
+					<view style="color: #007AFF;">
 					{{data.company_meta.name}}
+					</view>
 				</uni-forms-item>
 				<uni-forms-item label='需求经费'>
+					<view style="color: #007AFF;">
 					{{Data.Price}}
+					</view>
 				</uni-forms-item>
 				<uni-forms-item label='需求周期'>
-					{{Data.Lasttime}}
+					<view style="color: #007AFF;">
+					{{Data.Price}}
+					</view>
 				</uni-forms-item>
 				<uni-forms-item label='发起时间'>
+					<view style="color: #007AFF;">
 					{{formatDate(data.created_at)}}
+					</view>
 				</uni-forms-item>
 			</uni-forms>
+		</view>
+		<view class="select-topic-class">
+			<view class="select-title" style='width: 100%'>
+				<text>
+					专家信息：{{data.scholar_meta.name}}
+				</text>
+			</view>
+		</view>
+		<view class="example">
+			<uni-forms-item label='性别'>
+				<view style="color: #C80808;">
+				{{data.scholar_meta.gender}}
+				</view>
+			</uni-forms-item>
+			<uni-forms-item label='职位'>
+				<view style="color: #C80808;">
+				{{data.scholar_meta.professor}}
+				</view>
+			</uni-forms-item>
+			<uni-forms-item label='擅长领域'>
+				<view style="color: #C80808;" v-for="domain in data.scholar_meta.domains">
+					{{domain}}
+				</view>
+			</uni-forms-item>
 		</view>
 		<view v-if="!userInfo.user_type">
 			<view class="order-info-detail-receive" v-on:click="Accept()">
@@ -82,15 +114,7 @@
 			...mapState(['userInfo'])
 		},
 		methods: {
-			async addOrder() {
-				console.log('aaa')
-				const id = 3
-				const price = 3
-				const time = 3
-				const rest = await api.post('resolution/create-order',{
-					id, time, price})
-			},
-			back() {
+			goback() {
 				uni.navigateTo({
 					url:'./OrderManagement'
 				})
@@ -170,9 +194,6 @@
 					this.toast('拒绝失败');
 				//}
 			},
-			goBack() {
-				uni.navigateBack();
-			}
 		}
 	}
 </script>

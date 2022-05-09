@@ -17,6 +17,12 @@
 		<view class="user-set-userinfo-list" v-on:click="goOrder()">
 				订单管理
 		</view>
+		<view class="user-set-userinfo-list" v-on:click="goOrder()">
+				订单查询
+		</view>
+		<view class="user-set-userinfo-list" v-on:click="goOrder()">
+				订单沟通
+		</view>
 <!-- 		广告位 -->
 <!-- 		<view class="home-adv u-f-ajc animated fadeIn fast">
 			<image src="../../static/demo/demo20.jpg"  class="guanggao" lazy-load></image>

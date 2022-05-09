@@ -307,7 +307,8 @@ def getUserInfo(user):
         'is_following': user.user_set.filter(id=user.id).exists(),
         'is_followed': user.followers.filter(id=user.id).exists(),
         'verified_type' : verified_user and verified_user.verified_type,
-        'meta': verified_user and json.loads(verified_user.meta)
+        'meta': verified_user and json.loads(verified_user.meta),
+        "photo": str(user.get_photo())
     }
     return userInfo
 
