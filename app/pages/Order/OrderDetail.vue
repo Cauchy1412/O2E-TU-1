@@ -38,7 +38,7 @@
 		<uni-list>
 			<uni-section :title="'性别' + ' ' + data.scholar_meta.gender" color="#C80808"></uni-section>
 			<uni-section :title="'职位' + ' ' + data.scholar_meta.professor" color="#C80808"></uni-section>
-			<uni-section :title="'擅长领域' + ' ' + getDomain(data.scholar_meta.domains)" color="#007AFF"></uni-section>
+			<uni-section :title="'擅长领域' + ' ' + getDomain(data.scholar_meta.domains)" color="#C80808"></uni-section>
 		</uni-list>
 		<view v-if="!userInfo.user_type">
 			<view class="order-info-detail-receive" v-on:click="Accept()">
