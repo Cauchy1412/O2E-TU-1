@@ -29,6 +29,8 @@
 				<view>{{ demandinfo.content}} </view>
 			</view>
 		</view>
+		<uni-fab horizontal="right" @fabClick='onEdit' icon='compose'>
+		</uni-fab>
 	</view>
 </template>
 
@@ -49,7 +51,6 @@ import { api } from '@/api';
 		computed: {
 			demandinfo() {
 				const o = this.rawDemand;
-				console.log('detail title', o.title);
 				const meta = o.meta || {};
 				return {
 					id: o.id,
@@ -90,6 +91,11 @@ import { api } from '@/api';
 				});
 				uni.navigateTo({
 					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
+				});
+			},
+			onEdit() {
+				uni.navigateTo({
+					url: '/pages/demand/create?edit=1'
 				});
 			}
 		}
@@ -162,12 +168,11 @@ import { api } from '@/api';
 
 	.demand-info-item>view {
 		color: #AAAAAA;
-		font-size: 16upx;
+		font-size: 28upx;
 	}
 
 	.demand-info-item>view:first-child {
 		color: #333333;
-		font-size: 20upx;
 		padding: 15upx 0;
 	}
 </style>

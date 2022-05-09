@@ -33,7 +33,7 @@
 		  'uni-fab__circle--rightTop': rightTop,
 		  'uni-fab__content--other-platform': !isAndroidNvue
 		}" class="uni-fab__circle uni-fab__plus" :style="{ 'background-color': styles.buttonColor }" @click="_onClick">
-			<uni-icons class="fab-circle-icon" type="plusempty" :color="styles.iconColor" size="32"
+			<uni-icons class="fab-circle-icon" :type="icon" :color="styles.iconColor" :size="iconSize"
 				:class="{'uni-fab__plus--active': isShow && content.length > 0}"></uni-icons>
 			<!-- <view class="fab-circle-v"  :class="{'uni-fab__plus--active': isShow && content.length > 0}"></view>
 			<view class="fab-circle-h" :class="{'uni-fab__plus--active': isShow  && content.length > 0}"></view> -->
@@ -101,6 +101,14 @@
 			popMenu: {
 				type: Boolean,
 				default: true
+			},
+			icon: {
+			    type: String,
+			    default: 'plusempty'
+			},
+			iconSize: {
+				type: Number,
+				default: 32
 			}
 		},
 		data() {

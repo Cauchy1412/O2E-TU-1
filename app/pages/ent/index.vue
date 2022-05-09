@@ -91,6 +91,9 @@
 			});
 			this.requestData();
 		},
+		onShow() {
+			this.requestData();
+		},
 		computed: {
 			...mapState(['userInfo']),
 		},
