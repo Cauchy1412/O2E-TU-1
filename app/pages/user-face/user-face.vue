@@ -288,7 +288,8 @@
 							let ans=uni.uploadFile({
 									url: baseUrl + 'user/icon',
 									header: {  
-									        'Content-Type': "multipart/form-data",
+										// H5模拟器调试、微信小程序调试不需要header；uni-app需要header
+									    //'Content-Type': "multipart/form-data",
 									},
 									filePath:tempFacePath,
 									name:'files',
@@ -301,17 +302,17 @@
 									        	this.setUserInfo(userInfo);
 									        }
 											uni.showToast({
-																		icon:'none',
-																		title:'提交成功',
-																		success: (res) => { 
-																			setTimeout(() => { 
-																				uni.navigateBack({ 
-																					delta: 1
-																				})
-																			}, 2000)
-																		}
-																	})
-											
+												icon:'none',
+												title:'提交成功',
+												success: (res) => { 
+													setTimeout(() => { 
+														uni.navigateBack({ 
+															delta: 1
+														})
+													}, 2000)
+												}
+											})
+							
 								}
 							})
 						}

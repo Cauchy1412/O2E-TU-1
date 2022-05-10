@@ -452,7 +452,16 @@
             "path" : "pages/user-set-brief/user-set-brief",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "编辑简介",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/user-set-domains/user-set-domains",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "编辑研究领域",
                 "enablePullDownRefresh": false
             }
             

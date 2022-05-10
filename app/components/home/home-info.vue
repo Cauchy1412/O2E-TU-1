@@ -17,7 +17,7 @@
 		methods:{
 			ToUserSpace(){
 				uni.navigateTo({
-					url: '../../pages/user-set-userinfo/user-set-userinfo',
+					url: '../../pages/user-set-userinfo/user-set-info',
 				});
 			}
 		}
