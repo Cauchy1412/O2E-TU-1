@@ -30,6 +30,9 @@
 		computed: {
 			...mapState(['userInfo'])
 		},
+		mounted() {
+			this.brief = this.userInfo.meta['info']
+		},
 		methods: {
 			...mapMutations(['setUserInfo']),
 			decrease(e) {
@@ -53,7 +56,7 @@
 						complete() {
 							setTimeout(() => {
 								uni.showToast({
-									title: '发布成功',
+									title: '修改成功',
 									icon: "success",
 									duration: 1000
 								});
