@@ -3,7 +3,7 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goback()">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
@@ -15,43 +15,44 @@
 				</view>
 			</tui-navigation-bar>
 		</view>
-		<view class="select-topic-class">
-			<view class="select-title" style='width: 100%'>
-				<text>
-					{{Data.title}}
-				</text>
-			</view>
-		</view>
-		<view class="example">
-			<uni-forms :modelValue="formData">
-				<uni-forms-item label='发布公司'>
-					{{data.company_meta.name}}
-				</uni-forms-item>
-				<uni-forms-item label='需求经费'>
-					{{Data.Price}}
-				</uni-forms-item>
-				<uni-forms-item label='需求周期'>
-					{{Data.Lasttime}}
-				</uni-forms-item>
-				<uni-forms-item label='发起时间'>
-					{{formatDate(data.created_at)}}
-				</uni-forms-item>
-			</uni-forms>
-		</view>
+		<uni-section title="订单标题":note="Data.title" type="line">
+			<uni-list>
+				<uni-list-item title="发布公司":note="data.company_meta.name"></uni-list-item>
+				<uni-list-item title="需求经费":note="Data.Price"></uni-list-item>
+				<uni-list-item title="需求周期":note="Data.Lasttime"></uni-list-item>
+				<uni-list-item title="发起时间":note="formatDate(data.created_at)" ></uni-list-item>
+				<uni-list-item v-if="!userInfo.user_type" title="联系企业" clickable @click="goToChat()"></uni-list-item>
+			</uni-list>
+		</uni-section>
+		<uni-section title="专家信息":note="data.scholar_meta.name" type="line">
+			<uni-list>
+				<uni-list-item title="性别":note="data.scholar_meta.gender" ></uni-list-item>
+				<uni-list-item title="职位":note="data.scholar_meta.professor" ></uni-list-item>
+				<uni-list-item title="擅长领域":note="getDomain(data.scholar_meta.domains)" ></uni-list-item>
+				<uni-list-item v-if="userInfo.user_type" title="联系专家" clickable @click="goToChat()"></uni-list-item>
+			</uni-list>
+		</uni-section>
 		<view v-if="!userInfo.user_type">
-			<view class="order-info-detail-receive" v-on:click="Accept()">
+			<button class="buttonx" type="primary" v-on:click="Accept()">
 				接受
-			</view>
-			<view class="order-info-detail-refuse" v-on:click="Refuse()">
+			</button>
+			<button class="buttonx" type="warn" v-on:click="Refuse()">
 				拒绝
-			</view>
+			</button>
 		</view>
 		<view v-else="userInfo.user_type">
-			<view class="order-info-detail-Complete" v-on:click="Complete()">
-				完成订单
+			<view v-if="AnalyzeState()">
+				<button class="buttonx" type="warn" v-on:click="Complete()">
+					完成订单
+				</button>
+			</view>
+			<view v-else="AnalyzeState()">
+				<button class="buttonx" type="warn" v-on:click="Cancel()">
+					取消订单
+				</button>
 			</view>
 		</view>
-	</view>
+		</view>
 </template>
 
 <script>
@@ -82,18 +83,27 @@
 			...mapState(['userInfo'])
 		},
 		methods: {
-			async addOrder() {
-				console.log('aaa')
-				const id = 3
-				const price = 3
-				const time = 3
-				const rest = await api.post('resolution/create-order',{
-					id, time, price})
+			goToChat() {
+				uni.switchTab({
+					url:"../paper/paper"
+				})
 			},
-			back() {
+			goback() {
 				uni.navigateTo({
 					url:'./OrderManagement'
 				})
+			},
+			getDomain(o) {
+				let x = o
+				return x.toString()
+			},
+			AnalyzeState() {
+				if (this.data.state == 1) {
+					return false
+				}
+				else {
+					return true
+				}
 			},
 			async getData(stringofid) {
 				let result = await api.get('resolution/'+stringofid)
@@ -124,6 +134,28 @@
 						});
 					}
 					this.toast('完成失败');
+				//}
+			},
+			async Cancel() {
+				//if (this.state==1) {
+					const change_state=0
+					const resp = await api.post('resolution/update-resolution-state', {
+						id:this.order_id,state:change_state
+					});
+					if (resp.msg) {
+						uni.navigateBack({
+							complete() {
+								setTimeout(() => {
+									uni.showToast({
+										title: '订单取消',
+										icon: "success",
+										duration: 1000
+									});
+								}, 100);
+							}
+						});
+					}
+					this.toast('取消失败');
 				//}
 			},
 			async Accept (){
@@ -170,9 +202,6 @@
 					this.toast('拒绝失败');
 				//}
 			},
-			goBack() {
-				uni.navigateBack();
-			}
 		}
 	}
 </script>
@@ -398,5 +427,10 @@
 		font-size: 40upx;
 		margin-top: 25rpx;
 		margin-left: 20rpx;
+		}
+	.buttonx {
+		margin-bottom: 25rpx;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
 		}
 </style>

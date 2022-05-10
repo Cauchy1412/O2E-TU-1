@@ -3,33 +3,34 @@
 		<view class="container">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
 						<view class="tui-search-text">订单管理</view>
 					</view>
-					<view class="tui-avatar-box" @tap="goBack">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#ffffff" :size="64"></tui-icon>
 					</view>
 				</view>
 			</tui-navigation-bar>
 		</view>
-		<view v-for="(item,index) in Data">
-			<view class="demand-info-item">
-				<view>
-					订单要求:{{item.title}}
-				</view>
-				<view>
-					发布日期:{{formatDate(item.created_at)}}
-				</view>
-				<view>
-					订单状态:{{calculateState(item.state)}}
-				</view>
-			</view>
-			<view class="order-info-detail" v-on:click="goDetail(item.id)">
-				详情
-			</view>
+
+		<template v-if='sects.length'>
+			<uni-section v-for='s in sects' :title='s.name' type="line">
+				<uni-list>
+					<uni-list-item
+						v-for="o in s.items"
+						:title='getTitle(o)'
+						:note='formatDate(o.created_at)'
+						:rightText='getStatus(o)'
+						@click="goDetail(o.id)"
+					></uni-list-item>
+				</uni-list>
+			</uni-section>
+		</template>
+		<view v-else>
+			<no-thing></no-thing>
 		</view>
 	</view>
 </template>
@@ -37,10 +38,15 @@
 <script>
 	import {mapState, mapMutations} from 'vuex'
 	import {api} from '@/api'
+	import noThing from "@/components/common/no-thing";
+	
 	export default {
+		components: {
+			noThing
+		},
 		data() {
 			return {
-				Data : []
+				data: []
 			}
 		},
 		onLoad() {
@@ -48,10 +54,24 @@
 		},
 		computed:{
 			...mapState(['userInfo']),
+			sects() {
+				const r = ['???', '待接受', '进行中', '已完成', '已拒绝'].map(s => ({
+					name: s,
+					items: [],
+				}));
+				for (const o of this.data) {
+					const s = r[Number(o.state)];
+					if (s)
+						s.items.push(o);
+				}
+				return r.filter(s => s.items.length);
+ 			}
 		},
 		methods:{
 			goBack:function() {
-				uni.navigateBack()
+				uni.switchTab({
+					url:'../home/home',
+				})
 			},
 			goDetail:function(stringofid) {
 				uni.navigateTo({
@@ -60,26 +80,24 @@
 			},
 			async getData() {
 				let result
-				if (this.userInfo.user_type) {
+				if (this.isEnterprise()) {
 					result = await api.get('resolution/get-company-resolutions')
 				}
 				else {
 					result = await api.get('resolution/get-scholar-resolutions')
 				}
-				this.Data = result.resolution_list;
+				this.data = result.resolution_list;
 				return result
 			},
-			calculateState: function(stringofstate) {
-				if (stringofstate == '1')
-					return '待接受'
-				else
-					if (stringofstate == '2')
-						return '进行中'
-					else
-						if (stringofstate == '3')
-							return '已完成'
-						else
-							return '已被拒绝'
+			getTitle(o) {
+				const name = this.isEnterprise() ? o.scholar_meta?.name : o.company_meta?.name;
+				if (name)
+					return o.title + ' - ' + name;
+				return o.title;
+			},
+			getStatus(o) {
+				const s = ['???', '待接受', '进行中', '已完成', '已拒绝'];
+				return s[Number(o.state)];
 			}
 		}
 	}
@@ -87,14 +105,7 @@
 
 <style>
 	page {
-		background-color: #fff;
-
-	}
-
-	.container {
-		padding: 0upx 0 120upx 0;
-		box-sizing: border-box;
-		position: relative;
+		background-color: #f8f8f8;
 	}
 	
 	.header {
@@ -192,16 +203,16 @@
 	
 	.select-topic-class {
 		height: 72upx;
-		margin: 20upx 20upx;
 		border-radius: 10upx;
 		background-color: #f1f1f1;
 		padding: 0 24upx;
 		box-sizing:border-box;
-		color: #bfbfbf;
+		color: #5C8DFF;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
+	
 	
 	.select-title {
 		color: #000000;
@@ -291,6 +302,11 @@
 	}
 	.order-info-detail {
 		color: #0A98D5;
+		font-size: 20upx;
+		padding: 15upx 0;
+	}
+	.order-info-detail2 {
+		color: #CD1225;
 		font-size: 20upx;
 		padding: 15upx 0;
 	}
