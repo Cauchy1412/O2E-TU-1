@@ -7,10 +7,14 @@
 					<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 				</view>
 				<view class="tui-search-box">
-					<view class="tui-search-text">发布需求</view>
+					<view class="tui-search-text">
+						{{isEditing ? '编辑需求' : '发布需求'}}
+					</view>
 				</view>
 				<view class="tui-notice-box" @tap="submit">
-					<text class="tui-add-text">发布</text>
+					<text class="tui-add-text">
+						{{isEditing ? '保存' : '发布'}}
+					</text>
 				</view>
 			</view>
 		</tui-navigation-bar>
@@ -53,6 +57,8 @@
 				</uni-forms-item>
 			</uni-forms>
 		</view>
+		
+		<button type='warn' style='margin: 15upx;' @click="onDelete" v-if='isEditing'>删除需求</button>
 	</view>
 </template>
 
@@ -79,7 +85,15 @@
 				opcity: 0,
 				scrollTop: 0.5,
 				placeholder: 'sssxxx',
-				titleClass:''
+				titleClass:'',
+				isEditing: false
+			}
+		},
+		onLoad(p) {
+			if ((this.isEditing = p.edit)) {
+				const o = this.$store.state.demand_detail;
+				this.demandData = o;
+				this.formData = o.meta;
 			}
 		},
 		computed:{
@@ -118,6 +132,32 @@
 					});
 				}
 				this.toast('发布失败');
+			},
+			onDelete() {
+				const id = this.demandData.id;
+				uni.showModal({
+					title: '警告',
+					content: '要删除该需求吗？',
+					async success(res) {
+						if (res.confirm) {
+							await api.post('demand/delete', {
+								id
+							});
+							uni.navigateTo({
+								url: '/pages/ent/index',
+								complete() {
+									setTimeout(() => {
+										uni.showToast({
+											title: '已删除',
+											icon: "success",
+											duration: 1000
+										});
+									}, 100);
+								}
+							})
+						}
+					}
+				});
 			}
 		}
 	}

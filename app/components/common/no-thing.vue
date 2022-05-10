@@ -16,7 +16,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		top: 0;
+		top: 80upx;
 		left: 0;
 		right: 0;
 		bottom: 0;

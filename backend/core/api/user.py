@@ -8,8 +8,12 @@ from core.api.auth import jwt_auth
 from core.models.notification import (Notification, USER_FOLLOW)
 from core.models.user import User
 from core.models.interpretation import Interpretation
+from core.models.verify_user import VerifyUser
 from .auth import getUserInfo
+import json
 # follow apis
+
+import json
 
 @response_wrapper
 @jwt_auth()
@@ -51,13 +55,13 @@ def unfollow(request: HttpRequest, pid: int):
         return failed_api_response({"code":0})
 
 
-""" 
+"""
     get favorite list
     :param request:
         num_per_page: num_per_page
     :param pindex: which page
     return:
-        lists of follower recent 
+        lists of follower recent
 """
 @response_wrapper
 @jwt_auth()
@@ -140,7 +144,7 @@ def get_all_user_info(request: HttpRequest):
     data = list()
     for user in models:
         if user.is_superuser != 1:
-            data.append(getUserInfo(user))    
+            data.append(getUserInfo(user))
     return success_api_response(data)
 
 
@@ -200,6 +204,10 @@ def update_user_info(request: HttpRequest):
     meta = data.get('meta')
     user: User = request.user
     verified_user = user.verified_info.first()
-    verified_user.meta = json.loads(meta)
-    verified_user.save()
+    if verified_user:
+        verified_user.meta = json.dumps(meta)
+        verified_user.save()
+    else:
+        verify_user = VerifyUser(user=user, meta=json.dumps(meta))
+        verify_user.save()    
     return success_api_response({"result": "Ok, the user info has been changed."})

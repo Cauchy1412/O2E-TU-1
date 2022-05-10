@@ -7,3 +7,11 @@ Vue.prototype.formatDate = date => {
 Vue.prototype.navigateToPage = path => {
 	uni.navigateTo({url: '/pages/' + path});
 }
+
+Vue.prototype.isEnterprise = function () {
+	return this.$store.state.userInfo.user_type;
+}
+
+Vue.prototype.getCurrentUser = function() {
+	return this.$store.state.userInfo;
+}

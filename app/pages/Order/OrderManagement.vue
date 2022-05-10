@@ -16,40 +16,37 @@
 			</tui-navigation-bar>
 		</view>
 
-		<uni-list>
-			<template v-for="(item,index) in Data">
-				<view class = 'select-topic-class'>
-					订单信息:{{item.title+'-'+item.scholar_meta.name}}
-				</view>
-				<view class="demand-info-item"  v-on:click="goDetail(item.id)">
-					<view class=''>
-						----公司名称{{item.company_meta.name}}
-					</view>
-					<view>
-						----订单价格{{item.price}}
-					</view>
-				</view>
-				<view class="order-info-detail2">
-					{{getNote(item)}}
-				</view>
-			</template>
-		</uni-list>
-<!-- 		<uni-list>
-					<template v-for="(item,index) in Data">
-						<uni-list-item :title='getTitle(item)'  @click="goDetail(item.id)"></uni-list-item>
-						<uni-section style:title='getNote(item)'></uni-section>
-					</template>
-		</uni-list> -->
+		<template v-if='sects.length'>
+			<uni-section v-for='s in sects' :title='s.name' type="line">
+				<uni-list>
+					<uni-list-item
+						v-for="o in s.items"
+						:title='getTitle(o)'
+						:note='formatDate(o.created_at)'
+						:rightText='getStatus(o)'
+						@click="goDetail(o.id)"
+					></uni-list-item>
+				</uni-list>
+			</uni-section>
+		</template>
+		<view v-else>
+			<no-thing></no-thing>
+		</view>
 	</view>
 </template>
 
 <script>
 	import {mapState, mapMutations} from 'vuex'
 	import {api} from '@/api'
+	import noThing from "@/components/common/no-thing";
+	
 	export default {
+		components: {
+			noThing
+		},
 		data() {
 			return {
-				Data : []
+				data: []
 			}
 		},
 		onLoad() {
@@ -57,6 +54,18 @@
 		},
 		computed:{
 			...mapState(['userInfo']),
+			sects() {
+				const r = ['???', '待接受', '进行中', '已完成', '已拒绝'].map(s => ({
+					name: s,
+					items: [],
+				}));
+				for (const o of this.data) {
+					const s = r[Number(o.state)];
+					if (s)
+						s.items.push(o);
+				}
+				return r.filter(s => s.items.length);
+ 			}
 		},
 		methods:{
 			goBack:function() {
@@ -71,21 +80,24 @@
 			},
 			async getData() {
 				let result
-				if (this.userInfo.user_type) {
+				if (this.isEnterprise()) {
 					result = await api.get('resolution/get-company-resolutions')
 				}
 				else {
 					result = await api.get('resolution/get-scholar-resolutions')
 				}
-				this.Data = result.resolution_list;
+				this.data = result.resolution_list;
 				return result
 			},
 			getTitle(o) {
-				return o.title + ' - ' + o.scholar_meta.name + ' - ';
+				const name = this.isEnterprise() ? o.scholar_meta?.name : o.company_meta?.name;
+				if (name)
+					return o.title + ' - ' + name;
+				return o.title;
 			},
-			getNote(o) {
+			getStatus(o) {
 				const s = ['???', '待接受', '进行中', '已完成', '已拒绝'];
-				return this.formatDate(o.created_at) + ' - ' + s[Number(o.state)];
+				return s[Number(o.state)];
 			}
 		}
 	}
