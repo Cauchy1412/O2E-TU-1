@@ -8,7 +8,9 @@ from core.api.auth import jwt_auth
 from core.models.notification import (Notification, USER_FOLLOW)
 from core.models.user import User
 from core.models.interpretation import Interpretation
+from core.models.verify_user import VerifyUser
 from .auth import getUserInfo
+import json
 # follow apis
 
 @response_wrapper
@@ -200,6 +202,10 @@ def update_user_info(request: HttpRequest):
     meta = data.get('meta')
     user: User = request.user
     verified_user = user.verified_info.first()
-    verified_user.meta = json.loads(meta)
-    verified_user.save()
+    if verified_user:
+        verified_user.meta = json.dumps(meta)
+        verified_user.save()
+    else:
+        verify_user = VerifyUser(user=user, meta=json.dumps(meta))
+        verify_user.save()    
     return success_api_response({"result": "Ok, the user info has been changed."})
