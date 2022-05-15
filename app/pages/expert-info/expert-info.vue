@@ -21,13 +21,48 @@
 				<view>职称: {{expertinfo.title || expertinfo.professor}}</view>
 				<view>研究领域: {{domain}}</view>
 			</view>
-			<view class="expert-info-detail">
-				<view>简介： </view>
-				<view>{{ expertinfo.info}} </view>
-			</view>
 		</view>
-		<view class="subBtnBox" @tap="createOrder">
-			<view class="subBtn">发起订单 </view>
+		<swiper-tab-head :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap">
+		</swiper-tab-head>
+		<view class="uni-tab-bar">
+			<swiper class="swiper-box" :style="{height:swiperheight+'px'}"
+			 :current="tabIndex" >
+				<swiper-item v-for="(items,index) in newslist" :key="index">
+					<scroll-view
+					 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
+					 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh" >
+						<template v-if="tabIndex == 0">
+							<view class="expert-info" v-if="expertinfo.info">
+								<view class="expert-info-detail">
+									<view>{{ expertinfo.info}} </view>
+								</view>
+							</view>
+							<view v-else>
+								<no-thing></no-thing>
+							</view>
+							<view class="subBtnBox" @tap="createOrder">
+								<view class="subBtn">发起订单 </view>
+							</view>
+						</template>
+		
+						<template v-if="tabIndex == 1">
+							<view v-if="expertinfo.commentlist == null || expertinfo.commentlist.length==0">
+								<no-thing></no-thing>
+							</view>
+							<view v-else>
+								<uni-card :is-shadow="false" v-for="(item,index1) in expertinfo.commentlist" :key="index1">
+									<view class="demand-info">
+										<view class="demand-info-item">
+											<view>{{item.content}}</view> 
+											<view>来自企业: {{item.from}}</view>
+										</view>
+									</view>
+								</uni-card>
+							</view>
+						</template>
+					</scroll-view>
+				</swiper-item>
+			</swiper>
 		</view>
 	</view>
 </template>
@@ -36,8 +71,13 @@
 	import {
 		api
 	} from '@/api';
-
+	import swiperTabHead from "../../components/index/swiper-tab-head.vue";
+	import noThing from "../../components/common/no-thing.vue";
 	export default {
+		components: {
+			swiperTabHead,
+			noThing,
+		},
 		onLoad(data) {
 			this.resolusionId = data.rid
 			this.demandId = data.demandId
@@ -46,6 +86,32 @@
 			return {
 				demandId: '',
 				resolusionId: 111,
+				tabIndex: 0,
+				size: 400,
+				swiperheight: 500,
+				refreshing: false,
+				tabBars: [{
+						name: "简介",
+						id: "info",
+						page: 1
+					},
+					{
+						name: "评论",
+						id: "comment",
+						page: 2
+					},
+				],
+				newslist: [{
+						loadtext: "没有更多数据了",
+						id: "Info",
+						list: []
+					},
+					{
+						loadtext: "没有更多数据了",
+						id: "commentlist",
+						list: []
+					},
+				],
 			}
 		},
 		computed: {
@@ -59,10 +125,23 @@
 					return this.expertinfo.domains.join('，');
 				return '';
 			}
+			
 		},
 		methods: {
+			async onrefresh() {
+				if (this.refreshing) return;
+				this.refreshing = true;
+				await this.requestData()
+				setTimeout(() => {
+					this.refreshing = false;
+					uni.showToast({title:'已更新',duration:500})
+				}, 200)
+			},
 			back() {
 				uni.navigateBack()
+			},
+			tabtap(index) {
+				this.tabIndex = index;
 			},
 			async chat() {
 				const uid = this.$store.state.userInfo.id;
@@ -80,7 +159,7 @@
 			},
 			createOrder() {
 				uni.navigateTo({
-					url: '../create-order/create-order?rid=' + this.resolusionId 
+					url: '../create-order/create-order?rid=' + this.resolusionId
 				})
 			}
 		}
@@ -168,13 +247,8 @@
 		border-bottom: 1upx solid #EEEEEE;
 	}
 
-	.expert-info-detail>view {
-		color: #AAAAAA;
-		font-size: 16upx;
-	}
-
 	.expert-info-detail>view:first-child {
-		color: #333333;
+		color: #AAAAAA;
 		font-size: 20upx;
 		padding: 15upx 0;
 	}
@@ -196,5 +270,25 @@
 		font-weight: 600;
 		color: #000000;
 		margin: 46rpx auto;
+	}
+	
+	.demand-info {
+		padding: 0 30upx;
+	}
+	
+	.demand-info-item {
+		padding: 20upx 0;
+		border-bottom: 1upx solid #EEEEEE;
+	}
+	
+	.demand-info-item>view {
+		color: #AAAAAA;
+		font-size: 16upx;
+	}
+	
+	.demand-info-item>view:first-child {
+		color: #333333;
+		font-size: 20upx;
+		padding: 15upx 0;
 	}
 </style>
