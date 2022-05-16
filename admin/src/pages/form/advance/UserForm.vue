@@ -2,7 +2,7 @@
   <a-card :bordered="false">
     <a-table :data-source="data" :columns="columns">
       <template
-        v-for="col in ['name', 'ins', 'email', 'type']"
+        v-for="col in ['name', 'truename', 'email', 'type', 'verified_type']"
         :slot="col"
         slot-scope="text, record"
       >
@@ -33,7 +33,7 @@
           </span>
           <span v-else>
             <a :disabled="editingKey !== ''" @click="() => edit(record.key)"
-              >Edit</a
+              >编辑</a
             >
           </span>
         </div>
@@ -42,7 +42,7 @@
           title="Sure to delete?"
           @confirm="() => onDelete(record.key)"
         >
-          <a href="javascript:0;">Delete</a>
+          <a href="javascript:0;">删除</a>
         </a-popconfirm>
       </template>
     </a-table>
@@ -61,10 +61,10 @@ const columns = [
     scopedSlots: { customRender: "name" },
   },
   {
-    title: "所属机构",
-    dataIndex: "ins",
+    title: "真实姓名/企业名",
+    dataIndex: "truename",
     width: "25%",
-    scopedSlots: { customRender: "ins" },
+    scopedSlots: { customRender: "truename" },
   },
   {
     title: "邮箱",
@@ -77,6 +77,40 @@ const columns = [
     dataIndex: "type",
     width: "15%",
     scopedSlots: { customRender: "type" },
+    filters: [
+      {
+        text: '专家',
+        value: '专家',
+      },
+      {
+        text: '企业',
+        value: '企业',
+      },
+    ],
+    filterMultiple: false,
+    onFilter: (value, record) => record.type.indexOf(value) === 0,
+  },
+  {
+    title: "认证状态",
+    dataIndex: "verified_type",
+    width: "10%",
+    scopedSlots: { customRender: "verified_type" },
+    filters: [
+      {
+        text: '未认证',
+        value: '未认证',
+      },
+      {
+        text: '已通过',
+        value: '已通过',
+      },
+      {
+        text: '未通过',
+        value: '未通过',
+      },
+    ],
+    filterMultiple: false,
+    onFilter: (value, record) => record.verified_type.indexOf(value) === 0,
   },
   {
     title: "操作",
@@ -87,7 +121,6 @@ const columns = [
 
 const data = [];
 
-
 export default {
   name: "UserForm",
   i18n: require("./i18n-user"),
@@ -95,10 +128,12 @@ export default {
     this.cacheData = data.map((item) => ({ ...item }));
     return {
       type:"",
+      verified_type:"",
       type1:0,
       data,
       columns,
       editingKey: "",
+      curindex:0,
     };
   },
   // computed: {
@@ -125,17 +160,14 @@ export default {
         .then((res) => {
           console.log(res);
           for (let i = 0; i < res.data.length; i++) {
-            if(res.data[i].user_type==0){
-              this.type="专家"
-            }else if(res.data[i].user_type==2){
-              this.type="企业"
-            }else{
-              this.type="公司"
-            }
+            this.type = (res.data[i].user_type==0)?"专家":(res.data[i].user_type==2)?"企业":"无"
+            this.verified_type = (res.data[i].verified_type==1)?"已通过":
+                                 (res.data[i].verified_type==2)?"未通过":"未认证"
             data.push({
               key: res.data[i].id,
               name: res.data[i].username,
-              ins: res.data[i].institution,
+              truename: (res.data[i].meta)?res.data[i].meta['name']:"无",  //本地数据库的坏数据可能没有meta
+              verified_type: this.verified_type,
               type: this.type,
               email: res.data[i].email,
             });
@@ -162,7 +194,7 @@ export default {
         id:target.key,
         name: target.name,
         usertype: this.type1,
-        institution:target.ins,
+        //institution:target.ins,
         mail: target.email,
       };
       UserDel(params)
@@ -210,7 +242,7 @@ export default {
         id:target.key,
         name: target.name,
         usertype: this.type1,
-        institution:target.ins,
+        //institution:target.ins,
         mail: target.email,
       };
       UserModify(params)
@@ -247,11 +279,32 @@ export default {
         this.data = newData;
       }
     },
+    switchtab(index) {
+      this.curindex = index
+    },
   },
 };
 </script>
 
 <style scoped>
+.tab {
+  display: flex;
+  position: relative;
+  top: 1px;
+}
+.tab li {
+  list-style: none;
+  margin-right: 10px;
+  padding: 0 20px;
+  line-height: 35px;
+  border: 1px solid #AAA;
+  background: #EEE;
+  cursor: pointer;
+}
+.tab li.active {
+  background: #FFF;
+  border-bottom-color: #FFF;
+}
 .highlight {
   background-color: rgb(255, 192, 105);
   padding: 0px;
