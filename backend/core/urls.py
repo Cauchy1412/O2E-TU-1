@@ -13,6 +13,7 @@ from core.api.search import search_user_list,search_user_full_list
 from core.api.sign_up import change_password, change_email, CREATE_USER_API, FORGET_PASSWORD_API
 from core.api.comment import create_comment, delete_comment, get_comment, get_comment_list
 from core.api.demand import create_demand,  get_demand_list, get_demand, get_all_demands, update_demand_state, update_demand_info, delete_demand
+from core.api.evaluate import create_evaluation, get_evaluation
 
 from core.api.user import follow, unfollow, list_favorite_recent, change_organization, update_user_info
 
@@ -57,6 +58,10 @@ urlpatterns = [
     path('demand/update-demand-state', update_demand_state),
     path('demand/update-demand-info', update_demand_info),
     path('demand/delete', delete_demand),
+
+    # demand apis
+    path('evaluation/create', create_evaluation),
+    path('evaluation/scholar', get_evaluation),
 
 
     # comment apis
