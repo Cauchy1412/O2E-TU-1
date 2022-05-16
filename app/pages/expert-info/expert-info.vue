@@ -114,9 +114,6 @@
 		data() {
 			return {
 				nvueWidth: 730,
-				type: 'center',
-				msgType: 'success',
-				messageText: '这是一条成功提示',
 				value: '',
 				demandId: '',
 				resolusionId: 111,
