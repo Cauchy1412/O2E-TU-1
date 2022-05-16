@@ -46,11 +46,11 @@
 						<template v-if="tabIndex == 1">
 							<view>
 								<view class="uni-comment u-comment">
-									<block v-for="(item,index1) in expertinfo.commentlist" :key="index1">
+									<block v-for="(item,index1) in commentlist" :key="index1">
 										<view class="uni-comment-list">
-											<!-- <view class="uni-comment-face">
+											<view class="uni-comment-face">
 												<image :src="item.userpic" mode="widthFix"></image>
-											</view> -->
+											</view>
 											<view class="uni-comment-body">
 												<view class="uni-comment-top">
 													<text>{{item.username}}</text>
@@ -61,19 +61,19 @@
 													<text style="word-break:break-all;">{{item.text}}</text>
 												</view>
 												<view class="uni-comment-date">
-													<view>{{time}}</view>
+													<view>{{item.time}}</view>
 												</view>
-											</view>
+											</view>c
 										</view>
 									</block>
-									<template v-if="expertinfo.commentlist == null || expertinfo.commentlist.length==0">
+									<template v-if="commentlist.length==0">
 										<view>还没有评论,快来说两句~</view>
 									</template>
-								</view>						
+								</view>
 								<view class="example" @click="inputDialogToggle">
-									<uni-forms >
+									<uni-forms>
 										<uni-forms-item>
-											<uni-easyinput  placeholder='发一条友善的评论' />
+											<uni-easyinput placeholder='发一条友善的评论' />
 										</uni-forms-item>
 									</uni-forms>
 								</view>
@@ -85,8 +85,8 @@
 		</view>
 		<view>
 			<uni-popup ref="inputDialog" type="dialog">
-				<uni-popup-dialog ref="inputClose"  mode="input" title="发布评论" value="请输入您的评论!"
-					placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
+				<uni-popup-dialog ref="inputClose" mode="input" title="发布评论"  placeholder="请输入您的评论"
+					@confirm="dialogInputConfirm"></uni-popup-dialog>
 			</uni-popup>
 		</view>
 	</view>
@@ -98,7 +98,6 @@
 	} from '@/api';
 	import swiperTabHead from "../../components/index/swiper-tab-head.vue";
 	import noThing from "../../components/common/no-thing.vue";
-	import time from "../../common/time.js";
 	import {
 		mapState
 	} from "vuex";
@@ -110,6 +109,9 @@
 		onLoad(data) {
 			this.resolusionId = data.rid
 			this.demandId = data.demandId
+		},
+		mounted() {
+			this.requestData()
 		},
 		data() {
 			return {
@@ -132,6 +134,19 @@
 						name: "评论",
 						id: "comment",
 						page: 2
+					},
+				],
+				commentlist: [{
+						userpic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ffb9431a4c99691e54952d85ed034faf9a6b7e4f22d45-xy5FHF_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655296189&t=51f365b240480a09755c39369d6d04c8",
+						text: "nb",
+						username: "111",
+						time: "2022/05/15"
+					},
+					{
+						userpic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ffb9431a4c99691e54952d85ed034faf9a6b7e4f22d45-xy5FHF_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655296189&t=51f365b240480a09755c39369d6d04c8",
+						text: "super nb",
+						username: "112",
+						time: "2022/05/14"
 					},
 				],
 				newslist: [{
@@ -159,12 +174,21 @@
 				return '';
 			},
 			...mapState(['userInfo']),
-			time() {
-				let date = new Date(this.item.created_at).getTime()
-				return time.gettime.gettime(date);
-			}
 		},
 		methods: {
+			async requestData() {
+				const res = await api.post('evaluation/scholar', {
+					id: this.expertinfo.id
+				});
+				if (!res) {
+					this.commentlist = res.evalutaion_list.map(o => ({
+						time: o.created_at,
+						text: o.description,
+						userpic: o.icon,
+						username: o.meta.username
+					}));
+				}
+			},
 			inputDialogToggle() {
 				this.$refs.inputDialog.open()
 			},
@@ -186,16 +210,26 @@
 			tabtap(index) {
 				this.tabIndex = index;
 			},
-			dialogInputConfirm(val) {
-				uni.showLoading({
-					title: '3秒后会关闭'
-				})			
-				setTimeout(() => {
-					uni.hideLoading()
-					console.log(val)
-					this.value = val
-					this.$refs.inputDialog.close()
-				}, 3000)
+			async dialogInputConfirm(val) {
+				const id = this.expertinfo.id;
+				const resp = await api.post('evaluation/create', {
+					val,
+					id
+				});
+				if (!resp) {
+					setTimeout(() => {
+						uni.showToast({
+							title: '发布成功',
+							icon: "success",
+							duration: 1000
+						});
+						this.$refs.inputDialog.close()
+					}, 100)
+					this.requestData();
+				}
+				else {
+					this.toast('发布失败');
+				}				
 			},
 			async chat() {
 				const uid = this.$store.state.userInfo.id;
@@ -320,7 +354,7 @@
 	.subBtnBox {
 		width: 100%;
 		position: fixed;
-		bottom: 0;
+		bottom: 100upx;
 	}
 
 	.subBtn {
@@ -367,7 +401,7 @@
 
 	.example {
 		width: 100%;
-		bottom: 0;
+		bottom: 100upx;
 		position: fixed;
 		background-color: #fff;
 	}
