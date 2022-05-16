@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ocm3hk5u#1nwc^s6itps#+pt@t40sc7^alua!x!9rgn)kimgwy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*', ]
 FIXTURE_DIRS = [BASE_DIR + '/core/tests/fixtures']

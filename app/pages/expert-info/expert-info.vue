@@ -21,13 +21,73 @@
 				<view>职称: {{expertinfo.title || expertinfo.professor}}</view>
 				<view>研究领域: {{domain}}</view>
 			</view>
-			<view class="expert-info-detail">
-				<view>简介： </view>
-				<view>{{ expertinfo.info}} </view>
-			</view>
 		</view>
-		<view class="subBtnBox" @tap="createOrder">
-			<view class="subBtn">发起订单 </view>
+		<swiper-tab-head :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap">
+		</swiper-tab-head>
+		<view class="uni-tab-bar">
+			<swiper class="swiper-box" :style="{height:swiperheight+'px'}" :current="tabIndex">
+				<swiper-item v-for="(items,index) in newslist" :key="index">
+					<scroll-view scroll-y class="list" refresher-enabled :refresher-triggered="refreshing"
+						refresher-background="#fafafa" enable-back-to-top :refresher-threshold="100"
+						@refresherrefresh="onrefresh">
+						<template v-if="tabIndex == 0">
+							<view class="expert-info" v-if="expertinfo.info">
+								<view class="expert-info-detail">
+									<view>{{ expertinfo.info}} </view>
+								</view>
+							</view>
+							<view v-else>
+								<no-thing></no-thing>
+							</view>
+							<view class="subBtnBox" @tap="createOrder">
+								<view class="subBtn">发起订单 </view>
+							</view>
+						</template>
+						<template v-if="tabIndex == 1">
+							<view>
+								<view class="uni-comment u-comment">
+									<block v-for="(item,index1) in commentlist" :key="index1">
+										<view class="uni-comment-list">
+											<view class="uni-comment-face">
+												<image :src="item.userpic" mode="widthFix"></image>
+											</view>
+											<view class="uni-comment-body">
+												<view class="uni-comment-top">
+													<text>{{item.username}}</text>
+													<text v-if="userInfo.id==item.user_id"
+														@tap="deleteCom(item)">删除</text>
+												</view>
+												<view class="uni-comment-content">
+													<text style="word-break:break-all;">{{item.text}}</text>
+												</view>
+												<view class="uni-comment-date">
+													<view>{{item.time}}</view>
+												</view>
+											</view>c
+										</view>
+									</block>
+									<template v-if="commentlist.length==0">
+										<view>还没有评论,快来说两句~</view>
+									</template>
+								</view>
+								<view class="example" @click="inputDialogToggle">
+									<uni-forms>
+										<uni-forms-item>
+											<uni-easyinput placeholder='发一条友善的评论' />
+										</uni-forms-item>
+									</uni-forms>
+								</view>
+							</view>
+						</template>
+					</scroll-view>
+				</swiper-item>
+			</swiper>
+		</view>
+		<view>
+			<uni-popup ref="inputDialog" type="dialog">
+				<uni-popup-dialog ref="inputClose" mode="input" title="发布评论"  placeholder="请输入您的评论"
+					@confirm="dialogInputConfirm"></uni-popup-dialog>
+			</uni-popup>
 		</view>
 	</view>
 </template>
@@ -36,16 +96,70 @@
 	import {
 		api
 	} from '@/api';
-
+	import swiperTabHead from "../../components/index/swiper-tab-head.vue";
+	import noThing from "../../components/common/no-thing.vue";
+	import {
+		mapState
+	} from "vuex";
 	export default {
+		components: {
+			swiperTabHead,
+			noThing,
+		},
 		onLoad(data) {
 			this.resolusionId = data.rid
 			this.demandId = data.demandId
 		},
+		mounted() {
+			this.requestData()
+		},
 		data() {
 			return {
+				nvueWidth: 730,
+				value: '',
 				demandId: '',
 				resolusionId: 111,
+				input: '',
+				tabIndex: 0,
+				size: 400,
+				isize: 48,
+				swiperheight: 500,
+				refreshing: false,
+				tabBars: [{
+						name: "简介",
+						id: "info",
+						page: 1
+					},
+					{
+						name: "评论",
+						id: "comment",
+						page: 2
+					},
+				],
+				commentlist: [{
+						userpic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ffb9431a4c99691e54952d85ed034faf9a6b7e4f22d45-xy5FHF_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655296189&t=51f365b240480a09755c39369d6d04c8",
+						text: "nb",
+						username: "111",
+						time: "2022/05/15"
+					},
+					{
+						userpic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ffb9431a4c99691e54952d85ed034faf9a6b7e4f22d45-xy5FHF_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655296189&t=51f365b240480a09755c39369d6d04c8",
+						text: "super nb",
+						username: "112",
+						time: "2022/05/14"
+					},
+				],
+				newslist: [{
+						loadtext: "没有更多数据了",
+						id: "Info",
+						list: []
+					},
+					{
+						loadtext: "没有更多数据了",
+						id: "commentlist",
+						list: []
+					},
+				],
 			}
 		},
 		computed: {
@@ -58,11 +172,64 @@
 				if (this.expertinfo.domains)
 					return this.expertinfo.domains.join('，');
 				return '';
-			}
+			},
+			...mapState(['userInfo']),
 		},
 		methods: {
+			async requestData() {
+				const res = await api.post('evaluation/scholar', {
+					id: this.expertinfo.id
+				});
+				if (!res) {
+					this.commentlist = res.evalutaion_list.map(o => ({
+						time: o.created_at,
+						text: o.description,
+						userpic: o.icon,
+						username: o.meta.username
+					}));
+				}
+			},
+			inputDialogToggle() {
+				this.$refs.inputDialog.open()
+			},
+			async onrefresh() {
+				if (this.refreshing) return;
+				this.refreshing = true;
+				await this.requestData()
+				setTimeout(() => {
+					this.refreshing = false;
+					uni.showToast({
+						title: '已更新',
+						duration: 500
+					})
+				}, 200)
+			},
 			back() {
 				uni.navigateBack()
+			},
+			tabtap(index) {
+				this.tabIndex = index;
+			},
+			async dialogInputConfirm(val) {
+				const id = this.expertinfo.id;
+				const resp = await api.post('evaluation/create', {
+					val,
+					id
+				});
+				if (!resp) {
+					setTimeout(() => {
+						uni.showToast({
+							title: '发布成功',
+							icon: "success",
+							duration: 1000
+						});
+						this.$refs.inputDialog.close()
+					}, 100)
+					this.requestData();
+				}
+				else {
+					this.toast('发布失败');
+				}				
 			},
 			async chat() {
 				const uid = this.$store.state.userInfo.id;
@@ -80,7 +247,7 @@
 			},
 			createOrder() {
 				uni.navigateTo({
-					url: '../create-order/create-order?rid=' + this.resolusionId 
+					url: '../create-order/create-order?rid=' + this.resolusionId
 				})
 			}
 		}
@@ -92,6 +259,16 @@
 		padding: 0upx 0 120upx 0;
 		box-sizing: border-box;
 		position: relative;
+	}
+
+	.demo-uni-row {
+		margin-bottom: 10px;
+		display: block;
+	}
+
+	.demo-uni-col {
+		height: 36px;
+		border-radius: 5px;
 	}
 
 	.header {
@@ -168,13 +345,8 @@
 		border-bottom: 1upx solid #EEEEEE;
 	}
 
-	.expert-info-detail>view {
-		color: #AAAAAA;
-		font-size: 16upx;
-	}
-
 	.expert-info-detail>view:first-child {
-		color: #333333;
+		color: #AAAAAA;
 		font-size: 20upx;
 		padding: 15upx 0;
 	}
@@ -182,7 +354,7 @@
 	.subBtnBox {
 		width: 100%;
 		position: fixed;
-		bottom: 0;
+		bottom: 100upx;
 	}
 
 	.subBtn {
@@ -196,5 +368,41 @@
 		font-weight: 600;
 		color: #000000;
 		margin: 46rpx auto;
+	}
+
+	.u-comment-list-child {
+		padding: 20upx;
+		background: #F4F4F4;
+		border-bottom: 1upx solid #EEEEEE;
+		box-sizing: border-box;
+		margin: 0;
+		margin-left: 70upx;
+		width: auto;
+	}
+
+	.uni-comment-face image {
+		width: 70upx;
+		height: 70upx !important;
+	}
+
+	.uni-comment-top {
+		display: flex;
+	}
+
+	.u-comment {
+		padding: 0 20upx;
+	}
+
+	.u-comment-title {
+		padding: 20upx;
+		font-size: 30upx;
+		font-weight: bold;
+	}
+
+	.example {
+		width: 100%;
+		bottom: 100upx;
+		position: fixed;
+		background-color: #fff;
 	}
 </style>
