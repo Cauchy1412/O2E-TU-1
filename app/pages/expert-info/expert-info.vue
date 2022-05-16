@@ -25,12 +25,11 @@
 		<swiper-tab-head :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap">
 		</swiper-tab-head>
 		<view class="uni-tab-bar">
-			<swiper class="swiper-box" :style="{height:swiperheight+'px'}"
-			 :current="tabIndex" >
+			<swiper class="swiper-box" :style="{height:swiperheight+'px'}" :current="tabIndex">
 				<swiper-item v-for="(items,index) in newslist" :key="index">
-					<scroll-view
-					 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
-					 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh" >
+					<scroll-view scroll-y class="list" refresher-enabled :refresher-triggered="refreshing"
+						refresher-background="#fafafa" enable-back-to-top :refresher-threshold="100"
+						@refresherrefresh="onrefresh">
 						<template v-if="tabIndex == 0">
 							<view class="expert-info" v-if="expertinfo.info">
 								<view class="expert-info-detail">
@@ -44,25 +43,51 @@
 								<view class="subBtn">发起订单 </view>
 							</view>
 						</template>
-		
 						<template v-if="tabIndex == 1">
-							<view v-if="expertinfo.commentlist == null || expertinfo.commentlist.length==0">
-								<no-thing></no-thing>
-							</view>
-							<view v-else>
-								<uni-card :is-shadow="false" v-for="(item,index1) in expertinfo.commentlist" :key="index1">
-									<view class="demand-info">
-										<view class="demand-info-item">
-											<view>{{item.content}}</view> 
-											<view>来自企业: {{item.from}}</view>
+							<view>
+								<view class="uni-comment u-comment">
+									<block v-for="(item,index1) in expertinfo.commentlist" :key="index1">
+										<view class="uni-comment-list">
+											<!-- <view class="uni-comment-face">
+												<image :src="item.userpic" mode="widthFix"></image>
+											</view> -->
+											<view class="uni-comment-body">
+												<view class="uni-comment-top">
+													<text>{{item.username}}</text>
+													<text v-if="userInfo.id==item.user_id"
+														@tap="deleteCom(item)">删除</text>
+												</view>
+												<view class="uni-comment-content">
+													<text style="word-break:break-all;">{{item.text}}</text>
+												</view>
+												<view class="uni-comment-date">
+													<view>{{time}}</view>
+												</view>
+											</view>
 										</view>
-									</view>
-								</uni-card>
+									</block>
+									<template v-if="expertinfo.commentlist == null || expertinfo.commentlist.length==0">
+										<view>还没有评论,快来说两句~</view>
+									</template>
+								</view>						
+								<view class="example" @click="inputDialogToggle">
+									<uni-forms >
+										<uni-forms-item>
+											<uni-easyinput  placeholder='发一条友善的评论' />
+										</uni-forms-item>
+									</uni-forms>
+								</view>
 							</view>
 						</template>
 					</scroll-view>
 				</swiper-item>
 			</swiper>
+		</view>
+		<view>
+			<uni-popup ref="inputDialog" type="dialog">
+				<uni-popup-dialog ref="inputClose"  mode="input" title="发布评论" value="请输入您的评论!"
+					placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
+			</uni-popup>
 		</view>
 	</view>
 </template>
@@ -73,6 +98,10 @@
 	} from '@/api';
 	import swiperTabHead from "../../components/index/swiper-tab-head.vue";
 	import noThing from "../../components/common/no-thing.vue";
+	import time from "../../common/time.js";
+	import {
+		mapState
+	} from "vuex";
 	export default {
 		components: {
 			swiperTabHead,
@@ -84,10 +113,17 @@
 		},
 		data() {
 			return {
+				nvueWidth: 730,
+				type: 'center',
+				msgType: 'success',
+				messageText: '这是一条成功提示',
+				value: '',
 				demandId: '',
 				resolusionId: 111,
+				input: '',
 				tabIndex: 0,
 				size: 400,
+				isize: 48,
 				swiperheight: 500,
 				refreshing: false,
 				tabBars: [{
@@ -124,17 +160,27 @@
 				if (this.expertinfo.domains)
 					return this.expertinfo.domains.join('，');
 				return '';
+			},
+			...mapState(['userInfo']),
+			time() {
+				let date = new Date(this.item.created_at).getTime()
+				return time.gettime.gettime(date);
 			}
-			
 		},
 		methods: {
+			inputDialogToggle() {
+				this.$refs.inputDialog.open()
+			},
 			async onrefresh() {
 				if (this.refreshing) return;
 				this.refreshing = true;
 				await this.requestData()
 				setTimeout(() => {
 					this.refreshing = false;
-					uni.showToast({title:'已更新',duration:500})
+					uni.showToast({
+						title: '已更新',
+						duration: 500
+					})
 				}, 200)
 			},
 			back() {
@@ -142,6 +188,17 @@
 			},
 			tabtap(index) {
 				this.tabIndex = index;
+			},
+			dialogInputConfirm(val) {
+				uni.showLoading({
+					title: '3秒后会关闭'
+				})			
+				setTimeout(() => {
+					uni.hideLoading()
+					console.log(val)
+					this.value = val
+					this.$refs.inputDialog.close()
+				}, 3000)
 			},
 			async chat() {
 				const uid = this.$store.state.userInfo.id;
@@ -171,6 +228,16 @@
 		padding: 0upx 0 120upx 0;
 		box-sizing: border-box;
 		position: relative;
+	}
+
+	.demo-uni-row {
+		margin-bottom: 10px;
+		display: block;
+	}
+
+	.demo-uni-col {
+		height: 36px;
+		border-radius: 5px;
 	}
 
 	.header {
@@ -271,24 +338,40 @@
 		color: #000000;
 		margin: 46rpx auto;
 	}
-	
-	.demand-info {
-		padding: 0 30upx;
-	}
-	
-	.demand-info-item {
-		padding: 20upx 0;
+
+	.u-comment-list-child {
+		padding: 20upx;
+		background: #F4F4F4;
 		border-bottom: 1upx solid #EEEEEE;
+		box-sizing: border-box;
+		margin: 0;
+		margin-left: 70upx;
+		width: auto;
 	}
-	
-	.demand-info-item>view {
-		color: #AAAAAA;
-		font-size: 16upx;
+
+	.uni-comment-face image {
+		width: 70upx;
+		height: 70upx !important;
 	}
-	
-	.demand-info-item>view:first-child {
-		color: #333333;
-		font-size: 20upx;
-		padding: 15upx 0;
+
+	.uni-comment-top {
+		display: flex;
+	}
+
+	.u-comment {
+		padding: 0 20upx;
+	}
+
+	.u-comment-title {
+		padding: 20upx;
+		font-size: 30upx;
+		font-weight: bold;
+	}
+
+	.example {
+		width: 100%;
+		bottom: 0;
+		position: fixed;
+		background-color: #fff;
 	}
 </style>
