@@ -11,6 +11,8 @@ from core.models import Demand, User
 from core import logger
 
 import json
+from googletrans import Translator
+
 
 @jwt_auth()
 @require_POST
@@ -29,15 +31,21 @@ def create_demand(request: HttpRequest):
         - description: string
         - meta: string
 		- user: int
+        - keywords: string
     """
     data: dict = parse_data(request)
     user: User = request.user
-
     title = data['title']
     description = data['description']
     meta = json.dumps(data['meta'])
-
-    demand = Demand(user=user, description=description, title=title, meta=meta)
+    keywords = data['keywords']
+    translator = Translator(service_urls=[
+      'translate.google.cn',])# 如果可以上外网，还可添加 'translate.google.com' 等
+    translated_keywords = []
+    for word in keywords:
+        translated_keywords.append(translator.translate(word, src='zh-cn', dest='en').text)
+    keywords = ": ".join(translated_keywords)
+    demand = Demand(user=user, description=description, title=title, meta=meta, keywords = keywords)
     demand.save()
     return success_api_response(None)
 

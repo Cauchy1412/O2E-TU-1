@@ -14,9 +14,24 @@ from core.models.user import User, ConfirmString
 from core import logger
 from core.models import verify_user, User, Demand
 from core.models.resolution import Resolution
+from core.models.verify_user import VerifyUser
 from django.core.exceptions import ObjectDoesNotExist
-
+import ContrastiveSciBERT
+import milvus
 import json
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from transformers import AutoTokenizer, AutoModel
+import requests
+
+model =  ContrastiveSciBERT.ContrastiveSciBERT(100, 1)
+model.load_state_dict(torch.load('/root/data/resultModel.pt'))
+myMilvus = milvus.Milvus()
+searchPaperUrl = 'http://zhitulist.com/zhitu-data-service/search/paper?id='
+searchScholarUrl = 'http://zhitulist.com/zhitu-data-service/search/scholar?id='
+score = [7, 3, 1]
+
 
 @response_wrapper
 @jwt_auth()
@@ -37,6 +52,69 @@ def recommend(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
     demand_id = data.get('demand_id')
     demand = Demand.objects.get(id=demand_id)
+    keywords = demand.keywords
+    keyword = model.get_embeds(keywords)
+    keyword = keyword / keyword.norm(dim=1, keepdim=True)
+    ids = myMilvus.milvus_search("O2E", keyword, 10)
+    paperIds = []
+    scholarIds ={}
+    for id in ids[0]:
+        res = myMilvus.paper_get_by_id("O2E", id)
+        paperIds.append(res[0]['paper_id'])
+    for paperId in paperIds:
+        response = requests.get(searchPaperUrl + str(paperId))
+        result = response.json()
+        # print(result['data']['scholars'][0:3])
+        for i, scholar in enumerate(result['data']['scholars'][0:3]):
+            if scholar['scholarId'] not in scholarIds:
+                scholarIds[scholar['scholarId']] = score[i]*result['data']['ncitation']
+            else:
+                scholarIds[scholar['scholarId']] += score[i]*result['data']['ncitation']
+    f = zip(scholarIds.values(), scholarIds.keys())
+    f = sorted(f, reverse=True)
+    data_list = []
+    for scholar in f[0:3]:
+        id = scholar[1]
+        user = User.objects.get(id=id)
+        if not user:
+            response = requests.get(searchScholarUrl + str(id))
+            result = response.json()
+            username = str(id)
+            password = str(id)
+            email = str(id)+'@O2E.com'
+            user_type = 0
+            meta = {
+                'name': result['data']['scholarName'],
+                'title': result['data']['fieldSecond'][0] + '之父',
+                'sex': result['data']['gender'] if result['data']['gender'] else '男',
+                'field': ",".join(result['data']['fieldSecond']),
+                'info': ",".join(result['data']['fieldThird'])
+            }
+            new_user = User.objects.create_user(
+                username=username, password=password, email=email, is_confirmed=True, user_type=user_type)
+            new_user.save()
+            verify_user = VerifyUser(user=new_user, meta=meta)
+            verified_user.set_verified()
+            verify_user.save()
+            user = new_user
+        verified_user = user.verified_info.first()
+        resolution = Resolution.objects.filter(demand=demand, user=user).first()
+        if not resolution:
+            resolution = Resolution(demand=demand, user=user) # , meta=verified_user and verified_user.meta)
+            resolution.save()
+        data = {
+            'id': resolution.id,
+            'uid': user.id,
+            'meta': json.loads(verified_user.meta) if verified_user else {
+                'name': 'Sebastian Thrun',
+                'title': '谷歌无人车之父',
+                'sex': '男',
+                'field': '人工智能，无人驾驶',
+                'info': '我是计算机科学教授，领导着自主视觉小组(AVG)。我的小组是Tübingen大学和位于德国网络谷中心Tübingen的智能系统MPI的一部分。我是Tübingen大学计算机科学系的副系主任，是卓越集群“ML in science”和CRC“Robust Vision”的PI。我也是ELLIS的研究员、董事会成员和ELLIS博士项目的协调员。我的研究小组正在开发用于计算机视觉、自然语言和机器人的机器学习模型，应用于自动驾驶、VR/AR和科学文献分析。'
+            }
+        }
+        data_list.append(data)
+
 
     users = User.objects.filter(user_type=0, verified_info__isnull=False)
     if users.exists():

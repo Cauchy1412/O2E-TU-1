@@ -23,4 +23,5 @@ class Demand(models.Model):
     title = models.CharField(max_length=100)
     meta = models.CharField(max_length=200)
     state = models.IntegerField(choices=DEMAND_STATES, default = 0)
+    keywords = models.CharField(max_length=200)
 
