@@ -10,6 +10,7 @@ class Milvus:
     def __init__(self):
         self._HOST = '114.116.221.131'
         self._PORT = '19530'
+        self.get_milvus_connection()
         self.collection = self.get_milvus_collection('O2E')
         self.collection.load()
 

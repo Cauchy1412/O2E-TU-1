@@ -16,8 +16,8 @@ from core.models import verify_user, User, Demand
 from core.models.resolution import Resolution
 from core.models.verify_user import VerifyUser
 from django.core.exceptions import ObjectDoesNotExist
-import ContrastiveSciBERT
-import milvus
+from core.api.ContrastiveSciBERT import ContrastiveSciBERT
+from core.api.milvus import Milvus
 import json
 import torch
 import torch.nn as nn
@@ -25,9 +25,9 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 import requests
 
-model =  ContrastiveSciBERT.ContrastiveSciBERT(100, 1)
-model.load_state_dict(torch.load('/root/data/resultModel.pt'))
-myMilvus = milvus.Milvus()
+model =  ContrastiveSciBERT(100, 1)
+model.load_state_dict(torch.load('/home/xyf/Documents/homework/SoftwareEngineering/recommend/resultModel.pt',map_location='cpu'))
+myMilvus = Milvus()
 searchPaperUrl = 'http://zhitulist.com/zhitu-data-service/search/paper?id='
 searchScholarUrl = 'http://zhitulist.com/zhitu-data-service/search/scholar?id='
 score = [7, 3, 1]
