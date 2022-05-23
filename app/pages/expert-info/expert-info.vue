@@ -48,14 +48,15 @@
 								<view class="uni-comment u-comment">
 									<block v-for="(item,index1) in commentlist" :key="index1">
 										<view class="uni-comment-list">
-											<view class="uni-comment-face">
+											<view class="uni-comment-face" v-if='item.userpic == ""'>
 												<image :src="item.userpic" mode="widthFix"></image>
+											</view>
+											<view class="uni-comment-face" v-else>
+												<image :src="src" mode="widthFix"></image>
 											</view>
 											<view class="uni-comment-body">
 												<view class="uni-comment-top">
 													<text>{{item.username}}</text>
-													<text v-if="userInfo.id==item.user_id"
-														@tap="deleteCom(item)">删除</text>
 												</view>
 												<view class="uni-comment-content">
 													<text style="word-break:break-all;">{{item.text}}</text>
@@ -63,7 +64,7 @@
 												<view class="uni-comment-date">
 													<view>{{item.time}}</view>
 												</view>
-											</view>c
+											</view>
 										</view>
 									</block>
 									<template v-if="commentlist.length==0">
@@ -117,6 +118,7 @@
 			return {
 				nvueWidth: 730,
 				value: '',
+				src: '../../static/images/avatar/Default_Avatar.jpg',
 				demandId: '',
 				resolusionId: 111,
 				input: '',
@@ -136,19 +138,7 @@
 						page: 2
 					},
 				],
-				commentlist: [{
-						userpic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ffb9431a4c99691e54952d85ed034faf9a6b7e4f22d45-xy5FHF_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655296189&t=51f365b240480a09755c39369d6d04c8",
-						text: "nb",
-						username: "111",
-						time: "2022/05/15"
-					},
-					{
-						userpic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ffb9431a4c99691e54952d85ed034faf9a6b7e4f22d45-xy5FHF_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655296189&t=51f365b240480a09755c39369d6d04c8",
-						text: "super nb",
-						username: "112",
-						time: "2022/05/14"
-					},
-				],
+				commentlist: [],
 				newslist: [{
 						loadtext: "没有更多数据了",
 						id: "Info",
@@ -180,13 +170,15 @@
 				const res = await api.post('evaluation/scholar', {
 					id: this.expertinfo.id
 				});
-				if (!res) {
-					this.commentlist = res.evalutaion_list.map(o => ({
-						time: o.created_at,
-						text: o.description,
-						userpic: o.icon,
-						username: o.meta.username
-					}));
+				this.commentlist = res.evaluation_list.map(o => ({
+					time: o.created_at,
+					text: o.description,
+					userpic: o.icon,
+					username: o.company_meta.name
+				}));
+				for (let item of this.commentlist) {
+					const l = item.time.split("T");
+					item.time = l[0];
 				}
 			},
 			inputDialogToggle() {
@@ -213,7 +205,7 @@
 			async dialogInputConfirm(val) {
 				const id = this.expertinfo.id;
 				const resp = await api.post('evaluation/create', {
-					val,
+					description: val,
 					id
 				});
 				if (!resp) {
