@@ -33,7 +33,7 @@ def create_evaluation(request: HttpRequest):
     scholar = User.objects.get(id=id)
     Company: User = request.user
     description = data['description']
-    evaluation = Evaluation(scholar=scholar, company=Company, description=description)
+    evaluation = Evaluation(scholar=scholar, company=Company, content=description)
     evaluation.save()
     return success_api_response(None)
 
@@ -43,7 +43,7 @@ def evaluation2json(evaluation: Evaluation) -> dict:
     data = {
         'company_meta' : json.loads(verified_user.meta) if verified_user else None,
         'created_at': evaluation.created_at,
-        'description': evaluation.description,
+        'description': evaluation.content,
         "icon": str(user.get_icon())
     }
     return data
