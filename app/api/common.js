@@ -1,7 +1,7 @@
 import axios from '@/config/requestConfig.js';
 
-//const API_HOST = '114.116.221.131:10516';
-const API_HOST = 'localhost:8000';
+const API_HOST = '114.116.221.131';
+//const API_HOST = 'localhost:8000';
 
 // export const baseUrl=process.env.NODE_ENV === 'development'?"http://localhost:8000/api/":"http://api.hfb.xquery.cn/api/";
 // export const socketBaseUrl=process.env.NODE_ENV === 'development'?"ws://localhost:8000/api/":"ws://api.hfb.xquery.cn/api/";
