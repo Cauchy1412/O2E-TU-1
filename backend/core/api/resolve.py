@@ -24,6 +24,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 import requests
+from math import log10
 
 model =  ContrastiveSciBERT(100, 1)
 model.load_state_dict(torch.load('/home/xyf/Documents/homework/SoftwareEngineering/recommend/resultModel.pt',map_location='cpu'))
@@ -67,9 +68,9 @@ def recommend(request: HttpRequest):
         # print(result['data']['scholars'][0:3])
         for i, scholar in enumerate(result['data']['scholars'][0:3]):
             if scholar['scholarId'] not in scholarIds:
-                scholarIds[scholar['scholarId']] = score[i]*result['data']['ncitation']
+                scholarIds[scholar['scholarId']] = score[i]*(log10(result['data']['ncitation']+1))
             else:
-                scholarIds[scholar['scholarId']] += score[i]*result['data']['ncitation']
+                scholarIds[scholar['scholarId']] += score[i]*(log10(result['data']['ncitation']+1))
     f = zip(scholarIds.values(), scholarIds.keys())
     f = sorted(f, reverse=True)
     data_list = []
