@@ -4,7 +4,8 @@
 			"style": {
 				"app-plus": {
 					"titleNView": false
-				}
+				},
+				"disableScroll": true
 			}
 		},
 		{
@@ -15,7 +16,8 @@
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", //关闭反弹效果
 					"titleNView": false //禁用原生导航栏
-				}
+				},
+				"disableScroll": true
 			}
 		},
 		{
@@ -374,7 +376,8 @@
 					"scrollIndicator": "none",
 					"bounce": "none",
 					"titleNView": false
-				}
+				},
+				"disableScroll": true
 			}
 		},
 		{

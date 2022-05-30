@@ -41,7 +41,7 @@ module.exports = {
         changeOrigin: true,
       },
     },
-    host: "0.0.0.0",
+    host: "127.0.0.1",
     port: 10516,
     disableHostCheck: true,
   },
@@ -79,9 +79,9 @@ module.exports = {
       );
     }
     // if prod, add externals
-    if (isProd) {
+    /* if (isProd) {
       config.externals = assetsCDN.externals;
-    }
+    } */
   },
   chainWebpack: (config) => {
     // 生产环境下关闭css压缩的 colormin 项，因为此项优化与主题色替换功能冲突
@@ -92,12 +92,12 @@ module.exports = {
       });
     }
     // 生产环境下使用CDN
-    if (isProd) {
+    /* if (isProd) {
       config.plugin("html").tap((args) => {
         args[0].cdn = assetsCDN;
         return args;
       });
-    }
+    } */
   },
   css: {
     loaderOptions: {

@@ -13,9 +13,9 @@
 		<!-- <tui-fab bgColor="#FFE933" :width="98" :height="98" :bottom="150" :right="50" @click="publish"></tui-fab> -->
 		<swiper-tab-head :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap">
 		</swiper-tab-head>
+		
 		<view class="uni-tab-bar">
-			<swiper class="swiper-box" :style="{height:swiperheight+'px'}"
-			 :current="tabIndex" @change="tabChange">
+			<swiper class="swiper" style="height: 90vh;" :current="tabIndex" @change="tabChange">
 				<swiper-item v-for="(items,index) in newslist" :key="index">
 					<scroll-view
 					@scroll="handleScroll"
@@ -55,44 +55,6 @@
 					</scroll-view>
 				</swiper-item>
 			</swiper>
-		</view>
-
-
-		<!--底部分享弹窗-->
-		<tui-bottom-popup :show="popupShow" @close="popup">
-			<view class="tui-share">
-				<view class="tui-share-title">分享到</view>
-				<scroll-view scroll-x style="padding-right:20rpx">
-					<view class="tui-share-top">
-						<view class="tui-share-item" :class="[shareList[0].share.length-1===index?'tui-item-last':'']" v-for="(item,index) in shareList[0].share"
-						 :key="index" @tap="popup">
-							<view class="tui-share-icon" hover-class="tui-hover" :hover-stay-time="150">
-								<tui-icon :name="item.icon" :color="item.color" :size="item.size?item.size:36"></tui-icon>
-							</view>
-							<view class="tui-share-text">{{item.name}}</view>
-						</view>
-						<view class="tui-empty">!</view>
-					</view>
-
-				</scroll-view>
-				<scroll-view scroll-x class="tui-mt">
-					<view class="tui-share-bottom">
-						<view class="tui-share-item" :class="[shareList[1].operate.length-1===index?'tui-item-last':'']" v-for="(item,index) in shareList[1].operate"
-						 :key="index" @tap="popup">
-							<view class="tui-share-icon" hover-class="tui-hover" :hover-stay-time="150">
-								<tui-icon :name="item.icon" color="#404040" :size="item.size" :bold="index===2"></tui-icon>
-							</view>
-							<view class="tui-share-text">{{item.name}}</view>
-						</view>
-					</view>
-				</scroll-view>
-				<view class="tui-btn-cancle" @tap="popup">取消</view>
-			</view>
-		</tui-bottom-popup>
-		<!--底部分享弹窗-->
-		<view>
-			<uni-calendar :start-date="'2019-3-2'" :end-date="'2019-5-20'" @change="change" ref="calendar" :insert="false"
-			 @confirm="confirm" />
 		</view>
 	</view>
 </template>
