@@ -123,7 +123,7 @@ VUE_APP_API_BASE_URL=https://www.server.com
 ```
 开发环境，.env.development 文件：
 ```properties
-VUE_APP_API_BASE_URL=https://localhost:8000
+VUE_APP_API_BASE_URL=https://localhost:80
 ```
 ## 跨域设置
 在开发环境中，通常我们的Vue应用和服务应用运行在不同的地址或端口上。我们可以通过简单的设置，代理前端请求，来避免跨域问题。如下：  

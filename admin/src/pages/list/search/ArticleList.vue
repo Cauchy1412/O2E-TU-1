@@ -288,7 +288,7 @@ export default {
                 href: "javascript:0",
                 title: res.data[i].title,
                 avatar:
-                  " http://127.0.0.1:8000/api/" + res.data[i].userpic,
+                  " http://127.0.0.1:80/api/" + res.data[i].userpic,
 
                 description:
                   res.data[i].created_by.username +
