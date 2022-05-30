@@ -44,6 +44,15 @@
 			/>
 		</view>
 		
+		<view class="add-topic-text" style='height: 250px'>
+			<textarea
+				v-model='demandData.keywords'
+				focus
+				placeholder="关键词描述,不同关键词请用,分开"
+				spellcheck="false"
+			/>
+		</view>
+		
 		<view class="example">
 			<uni-forms :modelValue="formData">
 				<uni-forms-item label='研发经费'>
@@ -76,7 +85,8 @@
 				},
 				demandData: {
 					title: '',
-					description: ''
+					description: '',
+					keywords: ''
 				},
 				imageData: [],
 				//上传地址
@@ -108,6 +118,8 @@
 				const { demandData, formData } = this;
 				const title = demandData.title.trim();
 				const description = demandData.description.trim();
+				const keywords = demandData.keywords.trim().split(',');
+				
 
 				if (!title)
 					return this.toast("请填写需求标题");
@@ -116,7 +128,7 @@
 					return this.toast("请填写需求描述");
 
 				const resp = await api.post('demand/create', {
-					title, description, meta: formData
+					title, description, meta: formData,keywords
 				});
 				if (!resp) {
 					uni.navigateBack({
