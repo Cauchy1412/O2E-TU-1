@@ -38,7 +38,7 @@
 								</block>
 							</view>
 						</template>
-						
+
 						<template v-if="items.list.length>0 && tabIndex == 2">
 							<view class="topic-list">
 								<view v-for="(list,index1) in items.list" :key="index1" @tap='() => openDemandDetail(list)'>
@@ -48,7 +48,7 @@
 							</view>
 						</template>
 
-						<template v-if="shoNo">
+						<template v-if="shoNo || !items.list.length">
 							<!-- 无内容默认 -->
 							<no-thing></no-thing>
 						</template>
@@ -222,8 +222,12 @@
 		onTabItemTap() {
 			this.requestData()
 		},
+		onBackPress() {
+			this.requestData();
+		},
 		mounted() {
 			this.requestData();
+			uni.$on('user_change', this.requestData);
 		},
 		computed: {
 			...mapState(['userInfo']),
@@ -256,13 +260,6 @@
 					}
 				} catch (e) {
 					items = [];
-					return
-				}
-
-				if (items && items.length === 0) {
-					/*this.tabBars[this.tabIndex].page = page
-					this.newslist[this.tabIndex].loadtext = "没有更多数据了";*/
-					return
 				}
 				// this.tabBars[this.tabIndex].page = page
 				// if(this.tabIndex === 1){
@@ -270,11 +267,12 @@
 				// }else{
 				// 	this.newslist[this.tabIndex].list = this.newslist[this.tabIndex].list.concat(items)
 				// }
-				this.newslist[this.tabIndex].list = items
-				if (items) {
-					this.newslist[this.tabIndex].loadtext = "没有更多数据了";
-				}else{
+				if (items && items.length > 0) {
+					this.newslist[this.tabIndex].list = items
 					this.newslist[this.tabIndex].loadtext = "上拉加载更多";
+				}else{
+					this.newslist[this.tabIndex].list = []
+					this.newslist[this.tabIndex].loadtext = "没有更多数据了";
 				}
 			},
 			publish() {

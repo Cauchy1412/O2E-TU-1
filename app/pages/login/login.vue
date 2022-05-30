@@ -210,6 +210,7 @@
 				uni.switchTab({
 					url: '/pages/home/home'
 				});	
+				uni.$emit('user_change');
 				return;
 			}
 
