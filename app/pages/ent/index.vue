@@ -7,32 +7,25 @@
 		</swiper-tab-head>
 
 		<uni-fab horizontal="right" @fabClick='onFabClick'>
-
 		</uni-fab>
-
-		<view class="uni-tab-bar">
-			<swiper class="swiper-box" :style="{height:swiperheight+'px'}">
-				<swiper-item>
-					<scroll-view
-					 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
-					 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh" >
-
-						<template v-if="demands.length">
-							<view class="topic-list">
-								<view v-for="(list,index1) in demands" :key="index1" @tap='() => openDetail(list)'>
-									<!--card @opendDetail="list.title" :cardinfo="list" :index="index1"></card-->
-									<demand-row :demand="list"></demand-row>
-								</view>
-							</view>
-						</template>
-						<template v-else>
-							<!-- 无内容默认 -->
-							<no-thing></no-thing>
-						</template>
-					</scroll-view>
-				</swiper-item>
-			</swiper>
-		</view>
+		<scroll-view
+		 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
+		 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh"
+		 style='height: 90vh;'
+		 >
+			<template v-if="demands.length">
+				<view class="topic-list">
+					<view v-for="(list,index1) in demands" :key="index1" @tap='() => openDetail(list)'>
+						<!--card @opendDetail="list.title" :cardinfo="list" :index="index1"></card-->
+						<demand-row :demand="list"></demand-row>
+					</view>
+				</view>
+			</template>
+			<template v-else>
+				<!-- 无内容默认 -->
+				<no-thing></no-thing>
+			</template>
+		</scroll-view>
 	</view>
 </template>
 
