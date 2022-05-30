@@ -10,7 +10,13 @@ export async function get_resolution_all() {
     return request(url, METHOD.GET);
 }
 
+export const del_demand = (params) => {
+    const url = '/api/demand/delete'
+    return request(url, METHOD.POST, params);
+}
+
 export default {
     get_demand_all,
     get_resolution_all,
+    del_demand,
 }

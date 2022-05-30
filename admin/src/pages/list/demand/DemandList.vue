@@ -30,6 +30,7 @@
               <a-Row> 研发周期: {{showData.period}}</a-Row>
               <a-Row> 研发经费: {{showData.fund}}</a-Row>
               <a-Row> 研发地点: {{showData.place}}</a-Row>
+              <a-Row> 关键词: {{showData.keywords}}</a-Row>
             </a-card>
           </a-Modal>
           <div class="list-content">
@@ -53,12 +54,25 @@
               <span>研发地点</span>
               <p>{{item.place}}</p>
             </div>
+            <div class="list-content-item">
+              <span>关键词</span>
+              <p>{{item.keywords}}</p>
+            </div>
           </div>
           <div slot="actions">
             <a-dropdown>
               <a-menu slot="overlay">
                 <a-menu-item @click="handleClick(index)"><a>查看详情</a></a-menu-item>
-                <a-menu-item><a>删除</a></a-menu-item>
+                <a-menu-item>
+                  <a-popconfirm
+                  title="确定要删除此需求？"
+                  ok-text="确定"
+                  cancel-text="取消"
+                  @confirm="delDemand(index)"
+                >
+                  <a>删除</a>
+                </a-popconfirm>
+                </a-menu-item>
               </a-menu>
               <a>更多<a-icon type="down"/></a>
             </a-dropdown>
@@ -73,7 +87,7 @@
 
 
 <script>
-import {get_demand_all} from "../../../services/demand";
+import {get_demand_all, del_demand} from "../../../services/demand";
 
 const listData = [];
 
@@ -124,6 +138,7 @@ export default {
                 fund:res.data.demand_list[i]['meta'].fund?res.data.demand_list[i]['meta'].fund:"暂定",
                 period:res.data.demand_list[i]['meta'].period?res.data.demand_list[i]['meta'].period:"暂定",
                 place:res.data.demand_list[i]['meta'].place?res.data.demand_list[i]['meta'].place:"暂定",
+                keywords:res.data.demand_list[i].keywords?this.keywordTrans(res.data.demand_list[i].keywords):"无",
               })
             }
             console.log(listData)
@@ -138,6 +153,29 @@ export default {
       dateTime = dateTime.toJSON()
       dateTime = dateTime.substring(0,19).replace('T', ' ')
       return dateTime
+    },
+    keywordTrans(list) {
+      let words = ""
+      for(let i = 0; i < list.size() - 1; i++) {
+        words = words + list[i] + ","
+      }
+      words = words + list[list.size() - 1]
+      return words
+    },
+    delDemand(index) {
+      let del_data = listData[index]
+      const params = {
+        id: del_data.key
+      };
+      del_demand(params)
+      .then((res) => {
+        this.$message.info("成功删除");
+        this.getDemand()
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     },
     handleClick(index) {
       this.showData = listData[index]
