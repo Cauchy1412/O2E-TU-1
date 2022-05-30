@@ -3,28 +3,30 @@
 	<view class="index-icontainer">
 		<myNavBar @signIn="signIn"></myNavBar>
 
-		<swiper-tab-head :tabBars="tabBars" :tabIndex="0">
-		</swiper-tab-head>
-
 		<uni-fab horizontal="right" @fabClick='onFabClick'>
 		</uni-fab>
+		
 		<scroll-view
 		 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
 		 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh"
-		 style='height: 90vh;'
+		 style='height: 90vh; background-color: white;'
 		 >
-			<template v-if="demands.length">
-				<view class="topic-list">
-					<view v-for="(list,index1) in demands" :key="index1" @tap='() => openDetail(list)'>
-						<!--card @opendDetail="list.title" :cardinfo="list" :index="index1"></card-->
-						<demand-row :demand="list"></demand-row>
-					</view>
-				</view>
+			<template v-if='sects.length'>
+				<uni-section v-for='s in sects' :title='s.name' type="line">
+					<uni-list>
+						<uni-list-item
+							v-for="o in s.items"
+							:title='o.title'
+							:note='formatDate(o.created_at)'
+							:rightText='getStatus(o)'
+							@click="openDetail(o)"
+						></uni-list-item>
+					</uni-list>
+				</uni-section>
 			</template>
-			<template v-else>
-				<!-- 无内容默认 -->
+			<view v-else>
 				<no-thing></no-thing>
-			</template>
+			</view>
 		</scroll-view>
 	</view>
 </template>
@@ -89,8 +91,24 @@
 		},
 		computed: {
 			...mapState(['userInfo']),
+			sects() {
+				const r = ['未开始', '进行中', '已完成'].map(s => ({
+					name: s,
+					items: [],
+				}));
+				for (const o of this.demands) {
+					const s = r[Number(o.state)];
+					if (s)
+						s.items.push(o);
+				}
+				return r.filter(s => s.items.length);
+			}
 		},
 		methods: {
+			getStatus(o) {
+				const s = ['未开始', '进行中', '已完成'];
+				return s[Number(o.state)];
+			},
 			async requestData() {
 				/* this.demands =
 				[
