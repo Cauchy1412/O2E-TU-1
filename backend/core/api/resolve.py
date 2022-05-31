@@ -157,6 +157,9 @@ def resolution2json(resolution: Resolution) -> dict:
     verified_scholar = resolution.user.verified_info.first()
     data = {
         'id' : resolution.id,
+        'company_id' : user.id,
+        'scholar_id' : resolution.user.id,
+        'demand_id' : demand.id,
         'company_meta' : json.loads(verified_user.meta) if verified_user else None,
         'scholar_meta' : json.loads(verified_scholar.meta) if verified_scholar else None,
         'time' : resolution.time,
