@@ -51,6 +51,7 @@
 import comment from "./comment.vue";
 import Editor from "@/pages/components/editor/editor.vue";
 import editor from "@/pages/components/editor/editor.vue";
+import { BASE_URL } from '@/services/api';
 
 import {
   getInterpretationComments,
@@ -167,7 +168,7 @@ export default {
 
     userpic:{
       type: String,
-      default: 'http://127.0.0.1:80/api/images/default_user_icon.jpg'
+      default: BASE_URL + '/images/default_user_icon.jpg'
     }
   },
   data() {
@@ -256,7 +257,7 @@ export default {
         to: x.to_user ? x.to_user.username : 0,
         toId: x.to_user ? x.to_user.id : "",
         inputShow: false,
-        headImg: 'http://127.0.0.1:80/api/'+x.userpic,
+        headImg: BASE_URL + '/' +x.userpic,
         parent_comment_id: x.parent_comment_id,
         reply: [],
       }));
@@ -281,7 +282,7 @@ export default {
       await getUserInfo().then(res => {
         userid = res.data.id
         username = res.data.username
-        userpic ='http://127.0.0.1:80/api/'+res.data.userpic
+        userpic = BASE_URL + '/' +res.data.userpic
       }).catch(error => {
         console.log(error)
       })
@@ -306,6 +307,6 @@ export default {
     },
   },
 
-  
+
 };
 </script>

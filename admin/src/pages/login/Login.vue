@@ -86,9 +86,8 @@
 
 <script>
 import CommonLayout from "@/layouts/CommonLayout";
-import { login, getRoutesConfig } from "@/services/user";
+import { login } from "@/services/user";
 import { setAuthorization } from "@/utils/request";
-import { loadRoutes } from "@/utils/routerUtil";
 import { mapMutations } from "vuex";
 
 export default {
@@ -130,7 +129,7 @@ export default {
             // console.log(password);
           });
           }
-          
+
         }
       });
     },
@@ -165,13 +164,8 @@ export default {
         token: res.data.access_token,
         expireAt: new Date(new Date().getTime() + 30 * 60 * 1000),
       });
-      // 获取路由配置
-      getRoutesConfig().then((result) => {
-        const routesConfig = result.data.data;
-        loadRoutes(routesConfig);
-        this.$router.push("/dashboard");
-        this.$message.success(loginRes.message, 3);
-      });
+      this.$router.push("/dashboard");
+      this.$message.success(loginRes.message, 3);
       // console.log(res);
     },
   },

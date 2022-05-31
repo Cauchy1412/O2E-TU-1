@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookie from 'js-cookie'
+import { BASE_AXIOS_URL } from '@/services/api'
 
 // 跨域认证信息 header 名
 const xsrfHeaderName = 'Authorization'
@@ -8,6 +9,7 @@ axios.defaults.timeout = 5000
 axios.defaults.withCredentials= true
 axios.defaults.xsrfHeaderName= xsrfHeaderName
 axios.defaults.xsrfCookieName= xsrfHeaderName
+axios.defaults.baseURL = BASE_AXIOS_URL;
 
 // 认证类型
 const AUTH_TYPE = {
@@ -32,6 +34,9 @@ const METHOD = {
  * @returns {Promise<AxiosResponse<T>>}
  */
 async function request(url, method, params, config) {
+  if (!url.includes('api'))
+    config = {baseURL: '', ...config}
+
   switch (method) {
     case METHOD.GET:
       // console.log(axios.get(url, {params, ...config}))

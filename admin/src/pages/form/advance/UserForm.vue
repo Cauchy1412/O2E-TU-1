@@ -8,7 +8,7 @@
       >
         <div :key="col">
           <a-input
-            v-if="record.editable"
+            v-if="record.editable && col !== 'truename' && col !== 'verified_type'"
             style="margin: -5px 0"
             :value="text"
             @change="(e) => handleChange(e.target.value, record.key, col)"
@@ -173,6 +173,7 @@ export default {
             });
           }
           this.totalCnt = res.data.total_count;
+          this.cacheData = data.map((item) => ({ ...item }));   //更新缓存数据，在编辑用户时可还原数据
           this.loading = false;
         })
         .catch((error) => {
@@ -183,19 +184,8 @@ export default {
       const newData = [...this.data];
       this.data = newData.filter((item) => item.key !== key);
       const target = newData.filter((item) => key === item.key)[0];
-      if(target.type=="个人"){
-        this.type1=0
-      }else if(target.type=="学校"){
-        this.type1=1
-      }else{
-        this.type1=2
-      }
       const params = {
         id:target.key,
-        name: target.name,
-        usertype: this.type1,
-        //institution:target.ins,
-        mail: target.email,
       };
       UserDel(params)
         .then((res) => {
@@ -207,8 +197,10 @@ export default {
           console.log(error);
         });
     },
-    handleChange() {
-      this.loadUser()
+    handleChange(value, key, col) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      target[col] = value
     },
     edit(key) {
       const newData = [...this.data];
@@ -224,6 +216,14 @@ export default {
       const newCacheData = [...this.cacheData];
       const target = newData.filter((item) => key === item.key)[0];
       const targetCache = newCacheData.filter((item) => key === item.key)[0];
+      if(target.type=="专家"){
+        this.type1=0
+      }else if(target.type=="企业"){
+        this.type1=2
+      }else{
+        this.$message.info("用户类型不合法！");   //非法输入处理
+        return
+      }
       if (target && targetCache) {
         delete target.editable;
         this.data = newData;
@@ -231,13 +231,6 @@ export default {
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
-      if(target.type=="个人"){
-        this.type1=0
-      }else if(target.type=="学校"){
-        this.type1=1
-      }else{
-        this.type1=2
-      }
       const params = {
         id:target.key,
         name: target.name,
@@ -245,6 +238,7 @@ export default {
         //institution:target.ins,
         mail: target.email,
       };
+      console.log(params)
       UserModify(params)
         .then((res) => {
           this.$message.info("成功修改");
@@ -270,6 +264,8 @@ export default {
       const newData = [...this.data];
       const target = newData.filter((item) => key === item.key)[0];
       this.editingKey = "";
+      console.log(this.cacheData.filter((item) => key === item.key)[0])
+      console.log(target)
       if (target) {
         Object.assign(
           target,
