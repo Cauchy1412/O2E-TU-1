@@ -64,6 +64,7 @@ def demand2json(demand: Demand) -> dict:
         'title': demand.title,
         'meta': json.loads(demand.meta),
         'state': demand.state,
+        'keywords': json.loads(demand.keywords)
     }
 
     try:
