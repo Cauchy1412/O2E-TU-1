@@ -17,3 +17,7 @@
 .u-f-column{
 	flex-direction: column;
 }
+
+.container {
+	margin-top: 20px;
+}
