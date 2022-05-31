@@ -116,6 +116,7 @@
 import editor from "@/pages/components/editor/editor.vue";
 import PaperCard from "./paperCard";
 import { getPaperAll, InterpretationIdReq } from "@/services/paper";
+import { BASE_URL } from '@/services/api';
 
 const listData = [];
 
@@ -288,7 +289,7 @@ export default {
                 href: "javascript:0",
                 title: res.data[i].title,
                 avatar:
-                  " http://127.0.0.1:80/api/" + res.data[i].userpic,
+                  BASE_URL + '/' + res.data[i].userpic,
 
                 description:
                   res.data[i].created_by.username +
