@@ -26,7 +26,7 @@ WantedBy=multi-user.target
 加载并启动系统服务：
 
 
-```bash
+```shell
 # systemctl daemon-reload
 # systemd enable --now ote-admin.service
 ```
@@ -61,7 +61,7 @@ WantedBy=multi-user.target
 加载并启动系统服务：
 
 
-```bash
+```shell
 # systemctl daemon-reload
 # systemd enable --now ote-backend.service
 ```
