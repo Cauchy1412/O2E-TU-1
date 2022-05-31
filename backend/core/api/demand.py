@@ -39,13 +39,15 @@ def create_demand(request: HttpRequest):
     description = data['description']
     meta = json.dumps(data['meta'])
     keywords = data['keywords']
+    orikeywords = ": ".join(keywords)
     translator = Translator(service_urls=[
       'translate.google.cn',])# 如果可以上外网，还可添加 'translate.google.com' 等
     translated_keywords = []
     for word in keywords:
         translated_keywords.append(translator.translate(word, src='zh-cn', dest='en').text)
     keywords = ": ".join(translated_keywords)
-    demand = Demand(user=user, description=description, title=title, meta=meta, keywords = keywords)
+
+    demand = Demand(user=user, description=description, title=title, meta=meta, keywords = keywords, orikeywords = orikeywords)
     demand.save()
     return success_api_response(None)
 
@@ -64,7 +66,7 @@ def demand2json(demand: Demand) -> dict:
         'title': demand.title,
         'meta': json.loads(demand.meta),
         'state': demand.state,
-        'keywords': demand.keywords
+        'keywords': demand.orikeywords.split(": ")
     }
 
     try:
