@@ -27,8 +27,8 @@ WantedBy=multi-user.target
 
 
 ```bash
-$ systemctl daemon-reload
-$ systemd enable --now ote-admin.service
+# systemctl daemon-reload
+# systemd enable --now ote-admin.service
 ```
 
 ## 后端部署
@@ -62,6 +62,6 @@ WantedBy=multi-user.target
 
 
 ```bash
-$ systemctl daemon-reload
-$ systemd enable --now ote-backend.service
+# systemctl daemon-reload
+# systemd enable --now ote-backend.service
 ```
