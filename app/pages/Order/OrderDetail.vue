@@ -1,9 +1,9 @@
 <template>
-	<view>
-		<view class="container">
+	<view class='index-icontainer'>
+		<view class="">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
-					<view class="tui-avatar-box" v-on:click="goback()">
+					<view class="tui-avatar-box" v-on:click="goBack()">
 						<tui-icon name="back" color="#FFE933" :size="64"></tui-icon>
 					</view>
 					<view class="tui-search-box">
@@ -15,21 +15,21 @@
 				</view>
 			</tui-navigation-bar>
 		</view>
-		<uni-section title="订单标题":note="Data.title" type="line">
+		<uni-section title="订单标题":note="d.title" type="line">
 			<uni-list>
-				<uni-list-item title="发布公司":note="data.company_meta.name"></uni-list-item>
-				<uni-list-item title="需求经费":note="Data.Price"></uni-list-item>
-				<uni-list-item title="需求周期":note="Data.Lasttime"></uni-list-item>
-				<uni-list-item title="发起时间":note="formatDate(data.created_at)" ></uni-list-item>
-				<uni-list-item v-if="!userInfo.user_type" title="联系企业" clickable @click="goToChat()"></uni-list-item>
+				<uni-list-item title="发布公司":note="ent.name"></uni-list-item>
+				<uni-list-item title="需求经费":note="d.price"></uni-list-item>
+				<uni-list-item title="需求周期":note="d.time"></uni-list-item>
+				<uni-list-item title="发起时间":note="formatDate(d.created_at)" ></uni-list-item>
+				<uni-list-item v-if="!userInfo.user_type" title="联系企业" clickable @click="goToChat(d.company_id)"></uni-list-item>
 			</uni-list>
 		</uni-section>
-		<uni-section title="专家信息":note="data.scholar_meta.name" type="line">
+		<uni-section title="专家信息":note="sch.name" type="line">
 			<uni-list>
-				<uni-list-item title="性别":note="data.scholar_meta.gender" ></uni-list-item>
-				<uni-list-item title="职位":note="data.scholar_meta.professor" ></uni-list-item>
-				<uni-list-item title="擅长领域":note="getDomain(data.scholar_meta.domains)" ></uni-list-item>
-				<uni-list-item v-if="userInfo.user_type" title="联系专家" clickable @click="goToChat()"></uni-list-item>
+				<uni-list-item title="性别":note="sch.gender" ></uni-list-item>
+				<uni-list-item title="职位":note="sch.professor" ></uni-list-item>
+				<uni-list-item title="擅长领域":note="getDomain(sch.domains)" ></uni-list-item>
+				<uni-list-item v-if="userInfo.user_type" title="联系专家" clickable @click="goToChat(d.scholar_id)"></uni-list-item>
 			</uni-list>
 		</uni-section>
 		<view v-if="!userInfo.user_type">
@@ -61,57 +61,52 @@
 	export default {
 		data() {
 			return {
-				Data:{
-					user_state:'',
-					order_id:'',
-					title:'',
-					Detail:'',
-					Price:'',
-					Lasttime:'',
-					state:'',
-					Name:''
-				},
-				data: null
+				order_id: null,
+				d: {}
 			}
 		},
 		onLoad: function(option){
 			this.order_id = option.id;
-			this.Data.order_id = option.id
-			let orderdata = this.getData(option.id)
+			this.getData(option.id)
 		},
 		computed: {
-			...mapState(['userInfo'])
+			...mapState(['userInfo']),
+			sch() {
+				return this.d.scholar_meta || {};
+			},
+			ent() {
+				return this.d.company_meta || {};
+			}
 		},
 		methods: {
-			goToChat() {
-				uni.switchTab({
-					url:"../paper/paper"
-				})
-			},
-			goback() {
+			async goToChat(eid) {
+				const uid = this.userInfo.id;
+				const demand_id = this.demandId;
+				const res = await api.post('chat/create', {
+					chatroom_name: "聊天",
+					from_user_id: uid,
+					to_user_id: eid,
+					demand_id: this.d.demand_id
+				});
 				uni.navigateTo({
-					url:'./OrderManagement'
-				})
+					url: '../user-chat/user-chat?cid=' + res.id + '&fid=' + eid
+				});
 			},
-			getDomain(o) {
-				let x = o
-				return x.toString()
+			goBack() {
+				uni.navigateBack()
+			},
+			getDomain(x) {
+				if (x)
+					return typeof(x) === 'string' ? x : (x.join('，'))
+				return '';
 			},
 			AnalyzeState() {
-				if (this.data.state == 1) {
-					return false
-				}
-				else {
-					return true
-				}
+				return this.d.state != 1
 			},
 			async getData(stringofid) {
-				let result = await api.get('resolution/'+stringofid)
-				const orderdata = this.data = result;
-				this.Data.user_state = orderdata.state
-				this.Data.title = orderdata.title
-				this.Data.Price = orderdata.price
-				this.Data.Lasttime = orderdata.time
+				const result = await api.get('resolution/'+stringofid)
+				// console.log('got res ' + JSON.stringify(result));
+				this.d = result;
 				return result
 			},
 			async Complete() {
@@ -217,48 +212,48 @@
 		box-sizing: border-box;
 		position: relative;
 	}
-	
+
 	.header {
 		padding: 80upx 90upx 60upx 90upx;
 		box-sizing: border-box;
 	}
-	
+
 	.title {
 		font-size: 34upx;
 		color: #333;
 		font-weight: 500;
 	}
-	
+
 	.sub-title {
 		font-size: 24upx;
 		color: #7a7a7a;
 		padding-top: 18upx;
 	}
-	
+
 	.tui-box-upload {
 		padding-left: 25upx;
 		margin-bottom: 90upx;
 		box-sizing: border-box;
 	}
-	
+
 	.tui-title {
 		width: 100%;
 		padding: 50upx 30upx 30upx;
 		box-sizing: border-box;
 		font-weight: bold;
 	}
-	
+
 	.tui-header-bg {
 		width: 100%;
 		margin: 0;
 	}
-	
+
 	.tui-header-img {
 		width: 100%;
 		height: 440upx;
 		display: block;
 	}
-	
+
 	.tui-header-icon {
 		width: 100%;
 		position: fixed;
@@ -271,7 +266,7 @@
 		z-index: 99999;
 		box-sizing: border-box;
 	}
-	
+
 	.tui-content-box {
 		width: 100%;
 		height: 88upx;
@@ -281,7 +276,7 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	
+
 	.tui-avatar-box {
 		width: 60upx;
 		height: 60upx;
@@ -290,13 +285,13 @@
 		justify-content: center;
 		flex-shrink: 0;
 	}
-	
+
 	.tui-avatar {
 		width: 56upx;
 		height: 56upx;
 		border-radius: 50%;
 	}
-	
+
 	.tui-search-box {
 		height: 64upx;
 		margin: 0 28upx;
@@ -310,7 +305,7 @@
 		font-weight: 700;
 		color: #000000;
 	}
-	
+
 	.select-topic-class {
 		height: 72upx;
 		margin: 20upx 20upx;
@@ -323,7 +318,7 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	
+
 	.select-title {
 		color: #000000;
 		font-size: 34upx;
@@ -342,11 +337,11 @@
 	.tui-bg-white {
 		background-color: #ffffff !important;
 	}
-	
+
 	.tui-search-text {
 		padding-left: 10upx;
 	}
-	
+
 	.tui-add-text {
 		color: #000000;
 		padding: 10upx 30upx;
@@ -368,27 +363,27 @@
 		font-size: 44upx;
 		color: #fff;
 	}
-	
+
 		.example {
 			padding: 15px;
 			background-color: #fff;
 		}
-	
+
 		.segmented-control {
 			margin-bottom: 15px;
 		}
-	
+
 		.button-group {
 			margin-top: 15px;
 			display: flex;
 			justify-content: space-around;
 		}
-	
+
 		.form-item {
 			display: flex;
 			align-items: center;
 		}
-	
+
 		.button {
 			display: flex;
 			align-items: center;
@@ -417,13 +412,13 @@
 		margin-left: 20rpx;
 	}
 	.order-info-detail-refuse {
-		color: #CD1225;	
+		color: #CD1225;
 		font-size: 40upx;
 		margin-top: 40rpx;
 		margin-left: 20rpx;
 		}
 	.order-info-detail-Complete {
-		color: #01B90B;	
+		color: #01B90B;
 		font-size: 40upx;
 		margin-top: 25rpx;
 		margin-left: 20rpx;

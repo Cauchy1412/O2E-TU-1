@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="index-icontainer">
 		<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 			<view class="tui-content-box">
 				<view class="tui-avatar-box" @tap="back">
@@ -157,10 +157,10 @@
 				return this.$store.state.expert_detail;
 			},
 			domain() {
-				if (this.expertinfo.field)
-					return this.expertinfo.field;
-				if (this.expertinfo.domains)
-					return this.expertinfo.domains.join('，');
+				const o = this.expertinfo;
+				const x = o.field || o.domains;
+				if (x)
+					return typeof(x) === 'string' ? x : (x.join('，'))
 				return '';
 			},
 			...mapState(['userInfo']),
@@ -221,7 +221,7 @@
 				}
 				else {
 					this.toast('发布失败');
-				}				
+				}
 			},
 			async chat() {
 				const uid = this.$store.state.userInfo.id;

@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="index-icontainer">
 		<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 			<view class="tui-content-box">
 				<view class="tui-avatar-box" @tap="back">

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="container">
+		<view class="index-icontainer">
 			<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 				<view class="tui-content-box">
 					<view class="tui-avatar-box" v-on:click="goBack()">
@@ -39,7 +39,7 @@
 	import {mapState, mapMutations} from 'vuex'
 	import {api} from '@/api'
 	import noThing from "@/components/common/no-thing";
-	
+
 	export default {
 		components: {
 			noThing
@@ -107,48 +107,48 @@
 	page {
 		background-color: #f8f8f8;
 	}
-	
+
 	.header {
 		padding: 80upx 90upx 60upx 90upx;
 		box-sizing: border-box;
 	}
-	
+
 	.title {
 		font-size: 34upx;
 		color: #333;
 		font-weight: 500;
 	}
-	
+
 	.sub-title {
 		font-size: 24upx;
 		color: #7a7a7a;
 		padding-top: 18upx;
 	}
-	
+
 	.tui-box-upload {
 		padding-left: 25upx;
 		margin-bottom: 90upx;
 		box-sizing: border-box;
 	}
-	
+
 	.tui-title {
 		width: 100%;
 		padding: 50upx 30upx 30upx;
 		box-sizing: border-box;
 		font-weight: bold;
 	}
-	
+
 	.tui-header-bg {
 		width: 100%;
 		margin: 0;
 	}
-	
+
 	.tui-header-img {
 		width: 100%;
 		height: 440upx;
 		display: block;
 	}
-	
+
 	.tui-header-icon {
 		width: 100%;
 		position: fixed;
@@ -161,7 +161,7 @@
 		z-index: 99999;
 		box-sizing: border-box;
 	}
-	
+
 	.tui-content-box {
 		width: 100%;
 		height: 88upx;
@@ -171,7 +171,7 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	
+
 	.tui-avatar-box {
 		width: 60upx;
 		height: 60upx;
@@ -180,13 +180,13 @@
 		justify-content: center;
 		flex-shrink: 0;
 	}
-	
+
 	.tui-avatar {
 		width: 56upx;
 		height: 56upx;
 		border-radius: 50%;
 	}
-	
+
 	.tui-search-box {
 		height: 64upx;
 		margin: 0 28upx;
@@ -200,7 +200,7 @@
 		font-weight: 700;
 		color: #000000;
 	}
-	
+
 	.select-topic-class {
 		height: 72upx;
 		border-radius: 10upx;
@@ -212,8 +212,8 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	
-	
+
+
 	.select-title {
 		color: #000000;
 		font-size: 34upx;
@@ -232,11 +232,11 @@
 	.tui-bg-white {
 		background-color: #ffffff !important;
 	}
-	
+
 	.tui-search-text {
 		padding-left: 10upx;
 	}
-	
+
 	.tui-add-text {
 		color: #000000;
 		padding: 10upx 30upx;
@@ -258,27 +258,27 @@
 		font-size: 44upx;
 		color: #fff;
 	}
-	
+
 		.example {
 			padding: 15px;
 			background-color: #fff;
 		}
-	
+
 		.segmented-control {
 			margin-bottom: 15px;
 		}
-	
+
 		.button-group {
 			margin-top: 15px;
 			display: flex;
 			justify-content: space-around;
 		}
-	
+
 		.form-item {
 			display: flex;
 			align-items: center;
 		}
-	
+
 		.button {
 			display: flex;
 			align-items: center;

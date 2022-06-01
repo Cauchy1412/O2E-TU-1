@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="index-icontainer">
 		<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 			<view class="tui-content-box">
 				<view class="tui-avatar-box" @tap="back">
@@ -86,10 +86,9 @@
 				}));
 			},
 			toDomain(o) {
-				if (o.field)
-					return o.field;
-				if (o.domains)
-					return o.domains.join('，');
+				const x = o.field || o.domains;
+				if (x)
+					return typeof(x) === 'string' ? x : (x.join('，'))
 				return ''
 			}
 		}

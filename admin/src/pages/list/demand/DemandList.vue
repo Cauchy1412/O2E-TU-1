@@ -156,10 +156,10 @@ export default {
     },
     keywordTrans(list) {
       let words = ""
-      for(let i = 0; i < list.size() - 1; i++) {
+      for(let i = 0; i < list.length - 1; i++) {
         words = words + list[i] + ","
       }
-      words = words + list[list.size() - 1]
+      words = words + list[list.length - 1]
       return words
     },
     delDemand(index) {
