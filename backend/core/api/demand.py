@@ -179,6 +179,7 @@ def update_demand_info(request: HttpRequest):
     title = data.get('title')
     meta = data.get('meta')
     id = data.get('id')
+    keywords = data.get('keywords')
     try:
         demand = Demand.objects.get(id=id)
     except ObjectDoesNotExist:
@@ -186,6 +187,13 @@ def update_demand_info(request: HttpRequest):
     demand.description = description
     demand.title = title
     demand.meta = json.dumps(meta)
+    demand.orikeywords = ": ".join(keywords)
+    translator = Translator(service_urls=[
+      'translate.google.cn',])# 如果可以上外网，还可添加 'translate.google.com' 等
+    translated_keywords = []
+    for word in keywords:
+        translated_keywords.append(translator.translate(word, src='zh-cn', dest='en').text)
+    demand.keywords = ": ".join(translated_keywords)
     demand.save()
     return success_api_response({'msg': 'Resolution state is updated'})
 
