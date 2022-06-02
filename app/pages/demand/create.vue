@@ -11,9 +11,14 @@
 						{{isEditing ? '编辑需求' : '发布需求'}}
 					</view>
 				</view>
-				<view class="tui-notice-box" @tap="submit">
+				<view v-if='isEditing'class="tui-notice-box" @tap="submit2">
 					<text class="tui-add-text">
-						{{isEditing ? '保存' : '发布'}}
+						保存
+					</text>
+				</view>
+				<view v-else='isEditing'class="tui-notice-box" @tap="submit">
+					<text class="tui-add-text">
+						发布
 					</text>
 				</view>
 			</view>
@@ -119,8 +124,7 @@
 				const title = demandData.title.trim();
 				const description = demandData.description.trim();
 				const keywords = demandData.keywords.trim().split(',');
-				
-
+				console.log(formData);
 				if (!title)
 					return this.toast("请填写需求标题");
 
@@ -144,6 +148,36 @@
 					});
 				}
 				this.toast('发布失败');
+			},
+			async submit2() {
+				const { demandData, formData } = this;
+				const title = demandData.title.trim();
+				const description = demandData.description.trim();
+				const keywords = [demandData.keywords[0],demandData.keywords[1],demandData.keywords[2]]
+				const id = demandData.id;
+				if (!title)
+					return this.toast("请填写需求标题");
+			
+				if (!description)
+					return this.toast("请填写需求描述");
+			
+				const resp = await api.post('demand/update-demand-info', {
+					id, title, description, meta: formData, keywords
+				});
+				if (resp) {
+					uni.navigateBack({
+						complete() {
+							setTimeout(() => {
+								uni.showToast({
+									title: '保存成功',
+									icon: "success",
+									duration: 1000
+								});
+							}, 100);
+						}
+					});
+				}
+				this.toast('保存失败');
 			},
 			onDelete() {
 				const id = this.demandData.id;
