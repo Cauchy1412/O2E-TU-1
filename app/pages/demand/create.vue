@@ -107,7 +107,10 @@
 		onLoad(p) {
 			if ((this.isEditing = p.edit)) {
 				const o = this.$store.state.demand_detail;
-				this.demandData = o;
+				this.demandData = {
+					...o,
+					keywords: o.keywords.join(',')
+				};
 				this.formData = o.meta;
 			}
 		},
@@ -132,8 +135,9 @@
 					return this.toast("请填写需求描述");
 
 				const resp = await api.post('demand/create', {
-					title, description, meta: formData,keywords
+					title, description, meta: formData, keywords
 				});
+				uni.$emit('ent-demands-update');
 				if (!resp) {
 					uni.navigateBack({
 						complete() {
@@ -153,7 +157,7 @@
 				const { demandData, formData } = this;
 				const title = demandData.title.trim();
 				const description = demandData.description.trim();
-				const keywords = [demandData.keywords[0],demandData.keywords[1],demandData.keywords[2]]
+				const keywords = demandData.keywords.trim().split(',');
 				const id = demandData.id;
 				if (!title)
 					return this.toast("请填写需求标题");
@@ -164,6 +168,7 @@
 				const resp = await api.post('demand/update-demand-info', {
 					id, title, description, meta: formData, keywords
 				});
+				uni.$emit('ent-demands-update');
 				if (resp) {
 					uni.navigateBack({
 						complete() {
@@ -189,8 +194,8 @@
 							await api.post('demand/delete', {
 								id
 							});
-							uni.navigateTo({
-								url: '/pages/ent/index',
+							uni.$emit('ent-demands-update');
+							uni.navigateBack({
 								complete() {
 									setTimeout(() => {
 										uni.showToast({

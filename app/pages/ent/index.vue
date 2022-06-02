@@ -85,8 +85,12 @@
 				}
 			});
 			this.requestData();
+			uni.$on('ent-demands-update', this.requestData);
 		},
 		onShow() {
+			this.requestData();
+		},
+		onBackPress() {
 			this.requestData();
 		},
 		computed: {
