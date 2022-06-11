@@ -21,7 +21,11 @@
 				<!--clicktype不为空则需要跳转-->
 				<view class="user-set-list-item" @tap="clickevent(item.clicktype)">
 					<view>{{item.name}}</view>
-					<input class="user-set-list-item-info" :disabled="!item.clicktype.length==0" v-model="meta_info[item.datatype]"/> 
+					<input v-if="item.datatype !== 'gender'"
+						class="user-set-list-item-info" :disabled="!item.clicktype.length==0" v-model="meta_info[item.datatype]"/>
+					<picker v-else @change="e => meta_info.gender = e.detail.value ? '女' : '男'" :value="meta_info.gender === '男' ? 0 : 1" :range="['男', '女']">
+						<view class="user-set-list-item-info">{{meta_info.gender || '女'}}</view>
+					</picker>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :arrow="true">
@@ -75,7 +79,7 @@
 			console.log(this.userInfo)
 			if(this.userInfo.id){		//验证用户存在
 				if(this.userInfo.user_type == 0) {	//区分用户类型，浅拷贝
-					this.list = this.scholarlist	
+					this.list = this.scholarlist
 				}else if(this.userInfo.user_type == 2) {
 					this.list = this.companylist
 				}
@@ -91,7 +95,7 @@
 							url:"../user-set-domains/user-set-domains"
 						})
 						break;
-					default:;	
+					default:;
 				}
 			},
 			editname(){
@@ -113,11 +117,11 @@
 							url:'../user-face/user-face?tempFilePath='+res.tempFiles[0].path
 						})
 					}
-				})	
+				})
 			},
 			async submit(){
 				let new_user = this.deepcopy(this.userInfo)
-				if(this.userInfo.user_type == 0) {	
+				if(this.userInfo.user_type == 0) {
 					//此页面不修改domains
 					new_user.meta['name'] = this.meta_info['name']
 					new_user.meta['gender'] = this.meta_info['gender']
@@ -145,7 +149,7 @@
 </script>
 
 <style>
-@import "../../common/form.css";	
+@import "../../common/form.css";
 .user-set-head-img{
 	width: 90upx;
 	height: 90upx;
