@@ -115,20 +115,25 @@
 					password: this.password,
 					code: this.code,
 				})
-				if (data.status == 400) {
+				if (data.code && data.code >= 400) {
 					uni.showToast({
-						title: '用户不存在',
+						title: '验证码错误或用户不存在',
 						icon: 'none'
 					})
 					return
 				}
-				uni.showToast({
-					title: '密码修改成功',
-					icon:'none'
-				})
-				uni.navigateBack()
+				uni.navigateBack({
+					complete() {
+						setTimeout(() => {
+							uni.showToast({
+								title: '修改成功',
+								icon: 'none'
+							});
+						}, 100);
+					}
+				});
 			}
-				
+
 		}
 	};
 </script>
