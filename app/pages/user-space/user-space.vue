@@ -181,7 +181,7 @@
 					this.info.email = data.email
 					this.info.user_type = data.user_type
 					if (this.info.user_type == 0) {
-						this.tabBars.push({ name:"论文解读",id:"lunwenjiedu" })
+						this.tabBars = [this.tabBars[0], {name:"论文解读",id:"lunwenjiedu" }];
 					}
 					this.initmeta(this.info.user_type, data.meta)
 					this.info.isguanzhu = data.is_following
