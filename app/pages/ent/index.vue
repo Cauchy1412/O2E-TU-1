@@ -1,11 +1,10 @@
 <!-- This file is based on pages/index/index -->
 <template>
 	<view class="index-icontainer">
-		<myNavBar @signIn="signIn"></myNavBar>
-
-		<uni-fab horizontal="right" @fabClick='onFabClick'>
+		<!--myNavBar @signIn="signIn"></myNavBar-->
+		<uni-fab horizontal="right" @fabClick='onFabClick' v-if='userInfo.verified_type != null'>
 		</uni-fab>
-		
+
 		<scroll-view
 		 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
 		 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh"
@@ -133,6 +132,7 @@
 					...o,
 					created_at: new Date(o.created_at)
 				}));
+				
 			},
 			async onrefresh() {
 				if (this.refreshing) return;
