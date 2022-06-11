@@ -1,6 +1,6 @@
 <!-- This file is based on pages/add-input -->
 <template>
-	<view class="container">
+	<view class="index-icontainer">
 		<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 			<view class="tui-content-box">
 				<view class="tui-avatar-box" @tap="back">
@@ -61,10 +61,10 @@
 		<view class="example">
 			<uni-forms :modelValue="formData">
 				<uni-forms-item label='研发经费'>
-					<uni-easyinput v-model="formData.fund" placeholder='可选' />
+					<uni-easyinput v-model="formData.fund" placeholder='可选（万元）' type='number' trim='all'  />
 				</uni-forms-item>
 				<uni-forms-item label='研发周期'>
-					<uni-easyinput v-model="formData.period" placeholder='可选' />
+					<uni-easyinput v-model="formData.period" placeholder='可选'/>
 				</uni-forms-item>
 				<uni-forms-item label='研发地点'>
 					<uni-easyinput v-model="formData.place" placeholder='可选' />
@@ -150,8 +150,8 @@
 							}, 100);
 						}
 					});
-				}
-				this.toast('发布失败');
+				} else
+					this.toast('发布失败');
 			},
 			async submit2() {
 				const { demandData, formData } = this;
@@ -196,6 +196,7 @@
 							});
 							uni.$emit('ent-demands-update');
 							uni.navigateBack({
+								delta: 3,
 								complete() {
 									setTimeout(() => {
 										uni.showToast({
