@@ -6,7 +6,7 @@
 			<view class="user-space-margin u-f-ac">
 				{{userinfo.username}}
 			</view>
-			<view 
+			<view
 				v-if="userinfo.id==userinfo.currentId"
 				@tap="goToInfo"
 				class="icon iconfont user-space-head-btn user-space-margin"
@@ -18,7 +18,7 @@
 				class="icon iconfont user-space-head-btn user-space-margin" :class="[isguanzhu?'active':'icon-zengjia']" @tap.stop="guanzhu">
 				{{isguanzhu?'已关注':'关注'}}
 			</view>
-			
+
 		</view>
 	</view>
 </template>
@@ -69,7 +69,7 @@
 					await this.$emit("refreshData")
 				}else{
 					data=this.$http.post('user/'+this.userinfo.id+'/follow',{},headers)
-					this.$http.toast("关注成功!")	
+					this.$http.toast("关注成功!")
 					await this.$emit("refreshData")
 				}
 				if(data.code==0){
@@ -83,7 +83,7 @@
 			},
 			goToInfo(){
 				uni.navigateTo({
-					url:'../../pages/user-set-userinfo/user-set-userinfo'
+					url:'/pages/user-set-userinfo/user-set-info'
 				})
 			}
 		}
