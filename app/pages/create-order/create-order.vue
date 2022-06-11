@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="index-icontainer">
 		<tui-navigation-bar backgroundColor="255,255,255" :isFixed="false" :isOpcity="false">
 			<view class="tui-content-box">
 				<view class="tui-avatar-box" @tap="back">
@@ -24,7 +24,7 @@
 		<view class="example">
 			<uni-forms>
 				<uni-forms-item label='研发经费'>
-					<uni-easyinput v-model="form_price" placeholder='必填' />
+					<uni-easyinput v-model="form_price" placeholder='必填（万元）' type='number' trim='all' />
 				</uni-forms-item>
 				<uni-forms-item label='研发周期'>
 					<uni-easyinput v-model="form_time" placeholder='必填' />

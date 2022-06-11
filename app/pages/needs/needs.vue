@@ -20,7 +20,7 @@
 			<view class="demand-info-item">
 				<view>需求题目：{{ demandinfo.title}} </view>
 				<view>企业名称：{{ demandinfo.comName}} </view>
-				<view>研发经费：{{ demandinfo.fund}} </view>
+				<view>研发经费：{{ demandinfo.fund}} 万元</view>
 				<view>研发周期：{{ demandinfo.period}} </view>
 				<view>研发地点：{{ demandinfo.place}} </view>
 			</view>

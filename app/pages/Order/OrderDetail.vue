@@ -18,7 +18,7 @@
 		<uni-section title="订单标题":note="d.title" type="line">
 			<uni-list>
 				<uni-list-item title="发布公司":note="ent.name"></uni-list-item>
-				<uni-list-item title="需求经费":note="d.price"></uni-list-item>
+				<uni-list-item title="需求经费":note="d.price + ' 万元'"></uni-list-item>
 				<uni-list-item title="需求周期":note="d.time"></uni-list-item>
 				<uni-list-item title="发起时间":note="formatDate(d.created_at)" ></uni-list-item>
 				<uni-list-item v-if="!userInfo.user_type" title="联系企业" clickable @click="goToChat(d.company_id)"></uni-list-item>
