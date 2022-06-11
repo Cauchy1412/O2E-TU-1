@@ -9,7 +9,7 @@
 			<view class="iconfont icon-fabiao font-x" @tap="publish"></view>
 		</view> -->
 		<!-- #endif -->
-		<myNavBar @signIn="signIn"></myNavBar>
+		<!--myNavBar @signIn="signIn"></myNavBar-->
 		<!-- <tui-fab bgColor="#FFE933" :width="98" :height="98" :bottom="150" :right="50" @click="publish"></tui-fab> -->
 		<swiper-tab-head :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap">
 		</swiper-tab-head>
