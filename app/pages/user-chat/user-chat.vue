@@ -8,7 +8,7 @@
 		:refresher-triggered="triggered"
 		:style="{height:style.contentH+'px'}">
 			<!-- 聊天列表 -->
-			<block v-for="(item,index) in currentChatMsgs" :key="index">
+			<block v-for="(item,index) in getSanitizedCurrentChatMsgs()" :key="index">
 				<view class="chat-item">
 				<user-chat-list 
 					@goToUserInfo="goToUserInfo"
@@ -29,6 +29,7 @@
 	import {mapState,mapMutations,mapGetters} from 'vuex'
 	import {pushMessage, createChat, getChat} from '@/api/user-chat.js'
 	import {picUrl} from '@/api/common.js'
+    import { sanitizeMsg } from '@/api/paper';
 	import Vue from 'vue'
 	export default {
 		components:{
@@ -235,6 +236,9 @@
 					}
 				this.addChatMessage(obj)
 				this.pageToBottom(true);
+			},
+			getSanitizedCurrentChatMsgs() {
+				return this.currentChatMsgs?.length ? this.currentChatMsgs.map(o => sanitizeMsg(o, this.userInfo.id)) : [];
 			}
 		}
 	}

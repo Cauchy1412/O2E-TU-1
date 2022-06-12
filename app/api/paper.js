@@ -106,3 +106,21 @@ export const createSocket = async (uid) => {
 	let socket = await axios.websocket('POST', "msg/" + uid);
 	return socket
 }
+
+export const sanitizeMsg = (mItem, uid) => {
+    if (mItem.message_id == null)
+        return mItem;
+    const t = time.gettime.gettime(mItem.created_at);
+    return {
+        id: mItem.message_id,
+        isme: mItem.from_user_id == uid,
+        uid: mItem.from_user_id,
+        userpic: picUrl+mItem.from_user_pic,
+        type: "text",
+        message: mItem.content,
+        time: t,
+        gstime: t,
+        created_at:mItem.created_at,
+        status: mItem.read_state,
+    }
+}
