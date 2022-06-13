@@ -2,7 +2,7 @@
 <template>
 	<view class="index-icontainer">
 		<!--myNavBar @signIn="signIn"></myNavBar-->
-		<uni-fab horizontal="right" @fabClick='onFabClick' v-if='userInfo.verified_type != null'>
+		<uni-fab horizontal="right" @fabClick='onFabClick' v-if='userInfo.verified_type'>
 		</uni-fab>
 
 		<scroll-view
@@ -132,7 +132,7 @@
 					...o,
 					created_at: new Date(o.created_at)
 				}));
-				
+				uni.$emit('update-userinfo');
 			},
 			async onrefresh() {
 				if (this.refreshing) return;

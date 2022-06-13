@@ -131,6 +131,7 @@
 		},
 		// 监听下拉刷新
 		async onPullDownRefresh() {
+			uni.$emit('update-userinfo');
 			await this.initDat()
 			uni.stopPullDownRefresh();
 		},

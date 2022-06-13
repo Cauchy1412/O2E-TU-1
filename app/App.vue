@@ -19,10 +19,18 @@
 				 }
 				 	this.setChatList(chatList||[])
 			}catch(e){
-			
+
 			}
-			
+
 			// 更新检测
+			uni.$on('update-userinfo', async () => {
+				const res = await tokenRefresh();
+				if (res?.access_token) {
+					uni.setStorageSync('token',res.access_token)
+					res.userInfo.userpic=picUrl+res.userInfo.userpic
+					this.setUserInfo(res.userInfo)
+				}
+			})
 		},
 		async onShow () {
 			console.log('App Show')
@@ -45,7 +53,7 @@
 					this.$http.href("pages/home/home")
 				}else{
 					this.$http.href("pages/login/login")
-				}		
+				}
 			}
 		},
 		onHide: function () {
@@ -53,7 +61,7 @@
 		},
 		methods:{
 			...mapMutations(['setUserInfo','setChatList'])
-					
+
 		}
 	}
 </script>
