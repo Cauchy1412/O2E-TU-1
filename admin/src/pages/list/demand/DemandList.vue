@@ -5,13 +5,13 @@
           size="large"
           :pagination="pagination"
           :data-source="listData">
-        <a-list-item slot="renderItem" key="item.title" slot-scope="item,index">
+        <a-list-item slot="renderItem" key="item.title" slot-scope="item">
           <a-list-item-meta>
             <a slot="title" >{{item.title}}</a>
             <a slot="description"
                class="textbreak"
                href="javascript:void(0)"
-               @click="handleClick(index)">
+               @click="handleClick(item.key)">
               {{item.description|ellipsis}}</a>
           </a-list-item-meta>
           <a-Modal v-model="showDetail" title="" @ok="handleOk" width="750px" v-bind="showData">
@@ -62,13 +62,13 @@
           <div slot="actions">
             <a-dropdown>
               <a-menu slot="overlay">
-                <a-menu-item @click="handleClick(index)"><a>查看详情</a></a-menu-item>
+                <a-menu-item @click="handleClick(item.key)"><a>查看详情</a></a-menu-item>
                 <a-menu-item>
                   <a-popconfirm
                   title="确定要删除此需求？"
                   ok-text="确定"
                   cancel-text="取消"
-                  @confirm="delDemand(index)"
+                  @confirm="delDemand(item.key)"
                 >
                   <a>删除</a>
                 </a-popconfirm>
@@ -163,7 +163,7 @@ export default {
       return words
     },
     delDemand(index) {
-      let del_data = listData[index]
+      let del_data = listData.filter((item) => index === item.key)[0];
       const params = {
         id: del_data.key
       };
@@ -178,7 +178,7 @@ export default {
       })
     },
     handleClick(index) {
-      this.showData = listData[index]
+      this.showData = listData.filter((item) => index === item.key)[0];
       this.showDetail = true;
     },
     handleOk() {
