@@ -23,6 +23,7 @@
 				<view>研发经费：{{ demandinfo.fund}} 万元</view>
 				<view>研发周期：{{ demandinfo.period}} </view>
 				<view>研发地点：{{ demandinfo.place}} </view>
+				<view>关键词：{{ demandinfo.keywords}} </view>
 			</view>
 			<view class="demand-info-item">
 				<view>需求内容： </view>
@@ -39,15 +40,6 @@
 import { api } from '@/api';
 
 	export default {
-		// onLoad(data) {
-		//  this.id = data.id
-		// 	this.demandinfo.title = data.title
-		// 	this.demandinfo.comName = data.comName
-		// 	this.demandinfo.fund = data.fund
-		// 	this.demandinfo.period = data.period
-		// 	this.demandinfo.place = data.place
-		// 	this.demandinfo.content = data.content
-		// },
 		computed: {
 			demandinfo() {
 				const o = this.rawDemand;
@@ -60,6 +52,7 @@ import { api } from '@/api';
 					period: meta.period || '',
 					place: meta.place || '',
 					content: o.description,
+					keywords: o.keywords.join(","),
 				}
 			},
 			rawDemand() {
