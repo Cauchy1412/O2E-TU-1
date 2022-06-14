@@ -322,12 +322,12 @@
 
 	.expert-info-item>view {
 		color: #AAAAAA;
-		font-size: 16upx;
+		font-size: 28upx;
 	}
 
 	.expert-info-item>view:first-child {
 		color: #333333;
-		font-size: 32upx;
+		font-size: 40upx;
 		font-weight: 700;
 		padding: 15upx 0;
 	}
@@ -339,7 +339,7 @@
 
 	.expert-info-detail>view:first-child {
 		color: #AAAAAA;
-		font-size: 20upx;
+		font-size: 28upx;
 		padding: 15upx 0;
 	}
 
